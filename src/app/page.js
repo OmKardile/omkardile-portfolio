@@ -25,7 +25,8 @@ export default function Home() {
       title: "Recipe Generator with React and OpenAI",
       description:
         "Generates recipes from available ingredients and preferences using OpenAI models in an interactive UI.",
-      action: "App Under Development",
+      action: "View Implementation",
+      actionHref: "https://recipe-generator-omkardile.vercel.app/",
       stack: "React.js, Node.js, Express.js, OpenAI (GPT-4)",
     },
     {

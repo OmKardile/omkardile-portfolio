@@ -29,9 +29,9 @@ export default function ContactPage() {
           <div data-tf-live="01K019HVH755Q4XZNQ12RGF9TB" className="typeform-live" />
           <Script src="//embed.typeform.com/next/embed.js" strategy="lazyOnload" />
         </div> */}
-        <p className="thanks-link">
+        <div className="thanks-link">
           <h3>Thank You for Visiting ! Have a great day ahead.</h3>
-        </p>
+        </div>
       </section>
     </SiteShell>
   );
