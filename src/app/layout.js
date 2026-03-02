@@ -8,7 +8,7 @@ const jost = Jost({
 
 export const metadata = {
   title: "Kardile Omkar | Portfolio",
-  description: "Portfolio website for Omkar Kardile.",
+  description: "Portfolio website [ Omkar Kardile. ]",
 };
 
 export default function RootLayout({ children }) {

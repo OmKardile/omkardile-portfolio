@@ -75,19 +75,19 @@ export default function Home() {
 
   const experience = [
     {
-      role: "PG-DMC (Mobile Computing) - Completed",
+      role: "Post Graduate Diploma in Mobile Computing (PG-DMC) - Completed",
       company: "SunBeam Infotech, Pune (Authorized Training Centre of C-DAC ACTS)",
-      period: "Latest",
-    },
-    {
-      role: "Web Design Intern",
-      company: "Arrow Technologies, Nashik",
-      period: "Jan 2023 - Jan 2024",
+      period: "Latest - Feb 2026",
     },
     {
       role: "UI/UX Designer",
       company: "SWAAS TECHNO, Khardi",
       period: "Jan 2024 - Jan 2025",
+    },
+    {
+      role: "Web Design Intern",
+      company: "Arrow Technologies, Nashik",
+      period: "Jan 2023 - Jan 2024",
     },
     {
       role: "Virtual Intern",
@@ -112,7 +112,7 @@ export default function Home() {
               PG-DMC (Mobile Computing) from SunBeam Infotech, Pune.
             </p>
             <div className="quick-links">
-              <Link href="/resume" className="button-link">
+              <Link href="/resume" className="button-link ghost">
                 Resume
               </Link>
               <Link href="/contact" className="button-link ghost">
