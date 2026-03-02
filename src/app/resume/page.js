@@ -18,7 +18,7 @@ export default function ResumePage() {
         </p>
         <p></p>
         <a
-          href="https://framerusercontent.com/assets/zrr2Nb36VBJtJEBqr4FE77VG4.pdf"
+          href="https://drive.google.com/file/d/1w1w5QH3RmeUAra_yyTlp_19cIbg-KPDC/view?usp=sharing"
           target="_blank"
           rel="noreferrer"
           className="button-link"
