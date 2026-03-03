@@ -5,9 +5,9 @@ import SiteShell from "@/components/site-shell";
 export default function Home() {
   const projectCards = [
     {
-      title: "SSShopee ERP (Latest Project)",
+      title: "SSShopee Stock Management System ERP",
       description:
-        "Modern single-shop ERP for income, expenses, inventory, purchases, and udhar ledgers. Built as an offline-first system with multi-platform support for Web, Android APK, and Windows desktop.",
+        "Real time implemented single-shop ERP for income, expenses, inventory, purchases, and udhar ledgers. Built as an offline-first system with multi-platform support for Web, Android APK, and Windows desktop.",
       action: "View Implementation",
       actionHref: "https://shubhamsupershopee.onrender.com/",
       stack:
