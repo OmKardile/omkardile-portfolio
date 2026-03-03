@@ -5,6 +5,15 @@ import SiteShell from "@/components/site-shell";
 export default function Home() {
   const projectCards = [
     {
+      title: "SSShopee ERP (Latest Project)",
+      description:
+        "Modern single-shop ERP for income, expenses, inventory, purchases, and udhar ledgers. Built as an offline-first system with multi-platform support for Web, Android APK, and Windows desktop.",
+      action: "View Implementation",
+      actionHref: "https://shubhamsupershopee.onrender.com/",
+      stack:
+        "React 19, TypeScript, Vite 6, Tailwind CSS 4, Capacitor (Android), Electron (Windows)",
+    },
+    {
       title: "Online Car Service Station (CDAC PG-DMC Major Project)",
       description:
         "Major project completed during PG-DMC at SunBeam Infotech. Built as a hybrid mobile app for service booking and tracking, along with a React-based admin panel for operations.",
