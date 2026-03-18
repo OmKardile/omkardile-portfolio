@@ -59,13 +59,34 @@ a {
   padding: 0.45rem 0.85rem;
   color: var(--muted);
   border-radius: 999px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .nav-link:hover,
 .nav-link.is-active {
   background: #ffffff;
   color: #000000;
+}
+
+.nav-link.is-featured {
+  border: 1px solid rgba(212, 124, 47, 0.45);
+  color: #f0b26f;
+  background: rgba(212, 124, 47, 0.08);
+  box-shadow: 0 0 0 1px rgba(212, 124, 47, 0.12) inset;
+}
+
+.nav-link.is-featured:hover,
+.nav-link.is-featured.is-active {
+  background: #d47c2f;
+  color: #ffffff;
+  border-color: #d47c2f;
+  box-shadow: 0 10px 24px rgba(212, 124, 47, 0.2);
+  transform: translateY(-1px);
 }
 
 .page-content {

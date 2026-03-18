@@ -4,6 +4,7 @@ const navItems = [
   { href: "/", label: "Home" },
   { href: "/resume", label: "Resume" },
   { href: "/contact", label: "Contact" },
+  { href: "/uiux", label: "UI/UX Portfolio", featured: true },
 ];
 
 export default function SiteShell({ active, pageLabel, children }) {
@@ -16,7 +17,7 @@ export default function SiteShell({ active, pageLabel, children }) {
             <Link
               key={item.href}
               href={item.href}
-              className={`nav-link${active === item.href ? " is-active" : ""}`}
+              className={`nav-link${item.featured ? " is-featured" : ""}${active === item.href ? " is-active" : ""}`}
             >
               {item.label}
             </Link>
