@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "../styles/liquid-glass.css";
 
 :root {
   --bg: #000000;

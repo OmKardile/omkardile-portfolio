@@ -1,6 +1,7 @@
 import UIUXNav from "@/components/uiux/UIUXNav";
 import UIUXHero from "@/components/uiux/UIUXHero";
 import ProjectCard from "@/components/uiux/ProjectCard";
+import LiquidGlassProjects from "@/components/uiux/LiquidGlassProjects";
 import UIUXFooter from "@/components/uiux/UIUXFooter";
 import RevealOnScroll from "@/components/uiux/RevealOnScroll";
 import { shippedProjects, uiuxProjects } from "@/data/uiuxProjects";
@@ -64,6 +65,8 @@ export default function UIUXPortfolioPage() {
             ))}
           </div>
         </section>
+
+        <LiquidGlassProjects />
 
         <section className={styles.section}>
           <RevealOnScroll>

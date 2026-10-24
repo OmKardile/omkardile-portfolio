@@ -1,4 +1,3 @@
-import Link from "next/link";
 import SiteShell from "@/components/site-shell";
 
 export default function ResumePage() {
@@ -18,7 +17,7 @@ export default function ResumePage() {
         </p>
         <p></p>
         <a
-          href="https://drive.google.com/file/d/1UHprb2Kt-taV8H3N3NFgqM0WCt4NePJ1/view?usp=drive_link"
+          href="https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=sharing"
           target="_blank"
           rel="noreferrer"
           className="button-link"

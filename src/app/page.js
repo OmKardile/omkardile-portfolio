@@ -23,6 +23,15 @@ export default function Home() {
         "React.js, Hybrid Mobile App Stack, Admin Workflows, Service Management",
     },
     {
+      title: "GoldDrip - Vibe-Coded Market Intelligence Dashboard",
+      description:
+        "India-first full-stack dashboard for tracking live gold and silver prices, USD/INR, historical charts, market news, and deterministic market insights in one fast-scanning interface.",
+      action: "View Implementation",
+      actionHref: "https://gold-drip.onrender.com/",
+      stack:
+        "React 19, TypeScript, Vite, Express, Tailwind CSS 4, Recharts, Yahoo Finance",
+    },
+    {
       title: "Weather App with Next.js and OpenWeatherMap API",
       description:
         "A simple weather app that fetches real-time data by city name and shows temperature, humidity, and conditions.",
@@ -121,9 +130,14 @@ export default function Home() {
               PG-DMC (Mobile Computing) from SunBeam Infotech, Pune.
             </p>
             <div className="quick-links">
-              <Link href="/resume" className="button-link ghost">
+              <a
+                href="https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=sharing"
+                target="_blank"
+                rel="noreferrer"
+                className="button-link ghost"
+              >
                 Resume
-              </Link>
+              </a>
               <Link href="/contact" className="button-link ghost">
                 Contact
               </Link>
