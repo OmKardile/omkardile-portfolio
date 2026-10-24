@@ -1,4 +1,5 @@
 import { Jost } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const jost = Jost({
@@ -14,7 +15,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={jost.variable}>{children}</body>
+      <body className={jost.variable}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
