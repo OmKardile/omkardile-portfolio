@@ -2,8 +2,6 @@ import styles from "@/styles/uiux.module.css";
 import RevealOnScroll from "@/components/uiux/RevealOnScroll";
 
 export default function ProjectCard({ project, delay = 0 }) {
-  const availableLinks = (project.links || []).filter((link) => link.href && link.href !== "#");
-
   return (
     <RevealOnScroll delay={delay}>
       <article
@@ -34,25 +32,25 @@ export default function ProjectCard({ project, delay = 0 }) {
             <span className={styles.projectMetaLabel}>Tools:</span>
             <div className={styles.toolList}>
               {project.tools.map((tool) => (
-                <span key={tool} className={styles.toolPill}>{tool}</span>
+                <span key={tool} className={styles.toolPill}>
+                  {tool}
+                </span>
               ))}
             </div>
           </div>
-          {availableLinks.length > 0 ? (
-            <div className={styles.linkRow}>
-              {availableLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={styles.projectLink}
-                >
-                  {link.label} →
-                </a>
-              ))}
-            </div>
-          ) : null}
+          <div className={styles.linkRow}>
+            {project.links.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target={link.href === "#" ? undefined : "_blank"}
+                rel={link.href === "#" ? undefined : "noreferrer"}
+                className={styles.projectLink}
+              >
+                {link.label} →
+              </a>
+            ))}
+          </div>
         </div>
       </article>
     </RevealOnScroll>

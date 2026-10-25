@@ -2,7 +2,7 @@ import AppRouteFrame from '@/components/liquid-glass/app-route-frame';
 import LinkedInLiquidGlassApp from '@/components/liquid-glass/linkedin-app';
 
 export const metadata = {
-  title: 'LinkedIn — Liquid Glass Redesign',
+  title: 'LinkedIn — Liquid Glass Redesign | Omkar Kardile',
   description: 'An interactive LinkedIn redesign study in the Omkar Kardile UI/UX portfolio.',
 };
 

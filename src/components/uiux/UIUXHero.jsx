@@ -10,18 +10,16 @@ export default function UIUXHero() {
         </div>
         <div className={styles.heroGrid}>
           <div className={styles.heroNameBlock}>
-            <h1 className={styles.heroName}>
-              <span>OMKAR</span>
-              <span>KARDILE</span>
-            </h1>
+            <h1 className={styles.heroName}>OMKAR</h1>
+            <h1 className={styles.heroName}>KARDILE</h1>
           </div>
           <div className={styles.heroCopyBlock}>
-            <div className={styles.heroLine} aria-hidden="true" />
+            <div className={styles.heroLine} />
             <div>
-              <p className={styles.heroRole}>UI/UX Designer &amp; Frontend Developer</p>
+              <p className={styles.heroRole}>UI/UX Designer & Frontend Developer</p>
               <p className={styles.heroLocation}>Pune, Maharashtra · Open to remote</p>
               <p className={styles.heroStatement}>
-                I design interfaces that are honest. Then I build them.
+                I design interfaces that are honest, Then I build them.
               </p>
             </div>
           </div>
