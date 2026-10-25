@@ -5,17 +5,19 @@ const display = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-uiux-display",
   weight: ["400", "600"],
+  display: "swap",
 });
 
 const body = DM_Sans({
   subsets: ["latin"],
   variable: "--font-uiux-body",
   weight: ["300", "400", "500"],
+  display: "swap",
 });
 
 export const metadata = {
-  title: "Omkar Kardile — Design Portfolio",
-  description: "Editorial UI/UX portfolio page for Omkar Kardile.",
+  title: "UI/UX Design Portfolio",
+  description: "Selected UI/UX work and interactive Liquid Glass app redesigns by Omkar Kardile.",
 };
 
 export default function UIUXPage() {

@@ -2,7 +2,7 @@ import AppRouteFrame from '@/components/liquid-glass/app-route-frame';
 import StripeLiquidGlassApp from '@/components/liquid-glass/stripe-app';
 
 export const metadata = {
-  title: 'Stripe — Liquid Glass Redesign | Omkar Kardile',
+  title: 'Stripe — Liquid Glass Redesign',
   description: 'An interactive Stripe redesign study in the Omkar Kardile UI/UX portfolio.',
 };
 
