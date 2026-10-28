@@ -146,11 +146,25 @@ main {
 }
 
 .header-name {
-  font-weight: 650;
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
   text-decoration: none;
   color: var(--fg);
   white-space: nowrap;
+}
+
+/* Signature logo (white script on transparency, 642x216): light theme
+   inverts it to black for the light bar; dark theme wears it white. */
+.header-signature {
+  display: block;
+  height: 2rem;
+  width: auto;
+  filter: invert(1);
+}
+
+html.dark .header-signature {
+  filter: none;
 }
 
 .header-nav {

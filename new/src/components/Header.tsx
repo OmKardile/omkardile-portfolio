@@ -56,7 +56,13 @@ export function Header() {
     <header className="site-header">
       <div className="container header-inner">
         <Link href="/" className="header-name">
-          {site.name}
+          <img
+            src="/signature.png"
+            alt={site.name}
+            className="header-signature"
+            width={642}
+            height={216}
+          />
         </Link>
         <nav className="header-nav" aria-label="Primary">
           {/* Mobile: the burger leads the row (pushed left via margin-right:
