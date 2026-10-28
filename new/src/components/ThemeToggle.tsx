@@ -7,12 +7,29 @@
 
 export function ThemeToggle() {
   function toggle() {
-    const next = !document.documentElement.classList.contains('dark');
-    document.documentElement.classList.toggle('dark', next);
-    try {
-      localStorage.setItem('theme', next ? 'dark' : 'light');
-    } catch {
-      /* private mode: choice just won't persist */
+    const root = document.documentElement;
+    const next = !root.classList.contains('dark');
+    const apply = () => {
+      root.classList.toggle('dark', next);
+      try {
+        localStorage.setItem('theme', next ? 'dark' : 'light');
+      } catch {
+        /* private mode: choice just won't persist */
+      }
+    };
+    // Chromium/Safari 18+: cross-fade the WHOLE document via View Transitions
+    // (CSS sizes the sweep at 0.35s ease-apple). Engines without it fall back
+    // to the body/.site-header color transitions; reduced-motion gets instant.
+    const doc = document as Document & {
+      startViewTransition?: (update: () => void) => unknown;
+    };
+    if (
+      typeof doc.startViewTransition === 'function' &&
+      !matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      doc.startViewTransition(apply);
+    } else {
+      apply();
     }
   }
 

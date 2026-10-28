@@ -2191,7 +2191,9 @@ details[open]::details-content {
   block-size: auto;
 }
 
-/* Theme switch cross-fades instead of snapping. */
+/* Theme switch cross-fades instead of snapping. body/.site-header transitions
+   are the fallback; on Chromium/Safari the View Transitions rule below
+   cross-fades the entire document (cards, borders, icons — everything). */
 body {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
@@ -2200,12 +2202,19 @@ body {
   transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
-/* Gentle hover lift on cards (same float language as buttons). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+  animation-timing-function: var(--ease-apple);
+}
+
+/* Gentle hover lift on cards (same float language as buttons). Enter keeps
+   the long expo settle; leaving is quicker so the grid never feels floaty. */
 .work-card,
 .process-card,
 .cs-card {
-  transition: transform 0.45s var(--ease-apple), box-shadow 0.45s var(--ease-apple),
-    border-color 0.3s ease;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out),
+    border-color 0.2s ease;
 }
 
 .work-card:hover,
@@ -2213,40 +2222,47 @@ body {
 .cs-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 24px var(--lift-shadow);
+  transition-duration: 0.5s, 0.5s, 0.3s;
 }
 
 /* Scroll reveal: [data-reveal] fades/rises once on first viewport entry;
-   [data-reveal-group] staggers its children. Hidden state only exists under
-   html.js-reveal (set pre-paint by the inline script), so no-JS visitors and
-   reduced-motion users always get fully visible content. */
+   [data-reveal-group] staggers its children. Implemented as one-shot keyframe
+   ANIMATIONS, not transitions — the animation (and its stagger delay) ends
+   with the reveal, so it never overrides the elements' own hover transitions
+   afterwards. Hidden state only exists under html.js-reveal (set pre-paint by
+   the inline script), so no-JS visitors and reduced-motion users always get
+   fully visible content. */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
 html.js-reveal [data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s var(--ease-apple), transform 0.7s var(--ease-apple);
 }
 
 html.js-reveal [data-reveal].revealed {
   opacity: 1;
-  transform: none;
+  animation: reveal-in 0.7s var(--ease-apple) backwards;
 }
 
 html.js-reveal [data-reveal-group] > * {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s var(--ease-apple), transform 0.7s var(--ease-apple);
 }
-
-html.js-reveal [data-reveal-group] > *:nth-child(2) { transition-delay: 0.07s; }
-html.js-reveal [data-reveal-group] > *:nth-child(3) { transition-delay: 0.14s; }
-html.js-reveal [data-reveal-group] > *:nth-child(4) { transition-delay: 0.21s; }
-html.js-reveal [data-reveal-group] > *:nth-child(5) { transition-delay: 0.28s; }
-html.js-reveal [data-reveal-group] > *:nth-child(6) { transition-delay: 0.35s; }
-html.js-reveal [data-reveal-group] > *:nth-child(n + 7) { transition-delay: 0.42s; }
 
 html.js-reveal [data-reveal-group].revealed > * {
   opacity: 1;
-  transform: none;
+  animation: reveal-in 0.7s var(--ease-apple) backwards;
 }
+
+html.js-reveal [data-reveal-group].revealed > *:nth-child(2) { animation-delay: 0.07s; }
+html.js-reveal [data-reveal-group].revealed > *:nth-child(3) { animation-delay: 0.14s; }
+html.js-reveal [data-reveal-group].revealed > *:nth-child(4) { animation-delay: 0.21s; }
+html.js-reveal [data-reveal-group].revealed > *:nth-child(5) { animation-delay: 0.28s; }
+html.js-reveal [data-reveal-group].revealed > *:nth-child(6) { animation-delay: 0.35s; }
+html.js-reveal [data-reveal-group].revealed > *:nth-child(n + 7) { animation-delay: 0.42s; }
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -2272,10 +2288,19 @@ html.js-reveal [data-reveal-group].revealed > * {
     box-shadow: none;
   }
 
+  html {
+    scroll-behavior: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
   html.js-reveal [data-reveal],
   html.js-reveal [data-reveal-group] > * {
     opacity: 1;
     transform: none;
-    transition: none;
+    animation: none;
   }
 }
