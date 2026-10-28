@@ -119,7 +119,9 @@ export function Header() {
 
       {/* Mobile drop sheet: section links plus Resume / email in the foot.
           Closes on link tap, scrim tap, Escape and route change. */}
-      <div id="mobile-menu" className={menuOpen ? 'nav-sheet open' : 'nav-sheet'}>
+      {/* data-lenis-prevent: wheel over the open sheet must scroll the sheet
+          (when it overflows), never the page behind it. */}
+      <div id="mobile-menu" className={menuOpen ? 'nav-sheet open' : 'nav-sheet'} data-lenis-prevent>
         <ul className="nav-sheet-list">
           {SECTIONS.map((s, i) => (
             <li key={s.id} style={{ '--i': i } as CSSProperties}>

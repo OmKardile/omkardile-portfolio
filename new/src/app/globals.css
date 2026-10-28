@@ -128,6 +128,27 @@ main {
   top: 1rem;
 }
 
+/* ---------- Lenis inertial scroll ---------- */
+/* Contract required by the Lenis engine (it toggles the classes on <html>).
+   scroll-behavior:smooth above stays for no-JS visitors; while Lenis owns
+   the scroll it must be neutralized or the two fight each other. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 /* ---------- Header ---------- */
 
 .site-header {

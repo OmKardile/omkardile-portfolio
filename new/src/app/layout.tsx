@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { Header } from '@/components/Header';
 import { ScrollReveal } from '@/components/ScrollReveal';
+import { SmoothScroll } from '@/components/SmoothScroll';
 import { site } from '@/data/site';
 import { display, mono } from './fonts';
 import './globals.css';
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           Skip to content
         </a>
         <Header />
+        <SmoothScroll />
         <ScrollReveal />
         <main id="main" tabIndex={-1}>
           {children}
