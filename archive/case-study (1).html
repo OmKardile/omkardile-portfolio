@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GitHub — UI/UX Redesign Case Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+@page { size: 1080px 1530px; margin: 0; }
+:root {
+  --c-bg: #f6faf6;
+  --c-text: #1b2a1f;
+  --c-text-mute: #4f6a52;
+  --c-text-dim: #7d9580;
+  --c-line: rgba(27, 42, 31, 0.10);
+  --c-brand: #2DA44E;            /* GitHub green */
+  --c-brand-deep: #1a7f37;       /* GitHub green-dark */
+  /* REAL GLASS SPEC VALUES — green brand tint */
+  --brand-rgb: 45, 164, 78;
+  --dark-rgb: 22, 50, 32;        /* deep green-tinted charcoal for shadows */
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0; width: 1080px;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 19.5px; line-height: 1.55;
+}
+@media screen {
+  html { display: flex; justify-content: center; background: #c8d6cb; }
+  body { margin: 30px auto; box-shadow: 0 45px 90px rgba(0,0,0,0.15); }
+}
+
+/* ─── REAL GLASS SPEC ─────────────────────────────────────────────
+   The actual iOS 26 / visionOS 26 design language, ported from the
+   reference HTML. Defining traits:
+     • Light blur (4.5px) — NOT heavy 30–60px glassmorphism
+     • Adaptive brand tint (10%) — NOT 60% white
+     • Conic-gradient specular rim (the signature)
+     • Tinted drop shadows (with brand color, not pure black)
+     • Press scale + touch illumination on tap
+────────────────────────────────────────────────────────────────── */
+.glass {
+  position: relative;
+  background: rgba(var(--brand-rgb), 0.10);
+  backdrop-filter: blur(4.5px) saturate(1.7) brightness(1.04);
+  -webkit-backdrop-filter: blur(4.5px) saturate(1.7) brightness(1.04);
+  border-radius: 27px;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.12),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.32),
+    inset 0 -1.5px 1.5px rgba(255, 255, 255, 0.14),
+    0 18px 54px rgba(var(--dark-rgb), 0.24),
+    0 3px 12px rgba(var(--dark-rgb), 0.12);
+}
+/* Conic-gradient specular rim — masked to 1.8px ring */
+.glass::before {
+  content: ""; position: absolute; inset: 0;
+  border-radius: inherit; padding: 1.8px;
+  pointer-events: none;
+  background: conic-gradient(
+    from 215deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.05) 22%,
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(255, 255, 255, 0.70) 60%,
+    rgba(255, 255, 255, 0.05) 82%,
+    rgba(255, 255, 255, 0.95));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+/* Touch illumination follows the pointer */
+.glass::after {
+  content: ""; position: absolute; inset: 0;
+  border-radius: inherit; pointer-events: none;
+  opacity: 0; transition: opacity 0.35s;
+  background: radial-gradient(255px circle at 50% 50%,
+    rgba(255, 255, 255, 0.34), transparent 70%);
+}
+.glass.press { transform: scale(1.025); transition: transform 0.4s cubic-bezier(0.34, 1.5, 0.64, 1); }
+.glass.press::after { opacity: 1; }
+.glass > * { position: relative; z-index: 1; }
+
+/* Brand-strong variant for primary action / hero */
+.glass-tint {
+  background: rgba(var(--brand-rgb), 0.16);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.16),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.36),
+    0 18px 54px rgba(var(--brand-rgb), 0.24),
+    0 3px 12px rgba(var(--brand-rgb), 0.12);
+}
+
+/* Cover wallpaper — green-tinted mesh */
+.cover {
+  width: 1080px; height: 1530px;
+  position: relative; overflow: hidden;
+  break-after: page;
+  display: flex; flex-direction: column;
+  justify-content: center; padding: 96px;
+  background:
+    radial-gradient(ellipse 60% 50% at 18% 12%, #D5F2D5 0%, transparent 55%),
+    radial-gradient(ellipse 55% 60% at 82% 22%, #BFE8C8 0%, transparent 58%),
+    radial-gradient(ellipse 65% 50% at 78% 88%, #A8D8B0 0%, transparent 60%),
+    radial-gradient(ellipse 55% 70% at 18% 92%, #C8E8C0 0%, transparent 55%),
+    linear-gradient(180deg, #f6faf6 0%, #d6ead8 100%);
+}
+.cover-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16.5px; letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-brand); font-weight: 700;
+  margin-bottom: 27px;
+}
+.cover-title {
+  font-size: 126px; font-weight: 800;
+  letter-spacing: -0.035em; line-height: 0.92;
+  color: #0e2a16; margin-bottom: 33px;
+}
+.cover-title span { color: var(--c-brand); }
+.cover-sub {
+  font-size: 24px; line-height: 1.55;
+  color: var(--c-text-mute);
+  max-width: 690px; margin-bottom: 45px;
+}
+.cover-glass { padding: 54px 60px; }
+.cover-meta {
+  display: grid; grid-template-columns: repeat(3, auto);
+  gap: 48px; border-top: 1.5px solid var(--c-line);
+  padding-top: 33px; margin-top: 12px;
+}
+.cover-meta .k {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-text-mute); margin-bottom: 7.5px;
+}
+.cover-meta .v { font-size: 19.5px; font-weight: 600; color: var(--c-text); }
+.cover-foot {
+  position: absolute; bottom: 66px; left: 96px; right: 96px;
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(27,42,31,0.7);
+  z-index: 2;
+}
+.cover-dot {
+  display: inline-block; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--c-brand);
+  margin-right: 12px; vertical-align: middle;
+  box-shadow: 0 0 18px rgba(45,164,78,0.5);
+}
+
+/* Interior pages */
+.main { padding: 78px 84px 60px; }
+.chapter-header { break-after: avoid; break-inside: avoid; margin-top: 36px; margin-bottom: 18px; }
+.chapter-header:first-child { margin-top: 0; }
+.chapter-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-brand); font-weight: 700;
+  margin-bottom: 12px;
+}
+.chapter-title {
+  font-size: 39px; font-weight: 800;
+  letter-spacing: -0.025em; color: #0e2a16;
+  margin-bottom: 9px;
+}
+.chapter-divider {
+  width: 54px; height: 3px; background: var(--c-brand);
+  margin-bottom: 21px; border-radius: 1.5px;
+}
+.body-text { margin-bottom: 18px; font-size: 19.5px; line-height: 1.65; color: var(--c-text); }
+.body-text strong { color: #0e2a16; font-weight: 700; }
+.body-text em { color: var(--c-brand); font-style: normal; font-weight: 500; }
+
+.subhead {
+  font-size: 22.5px; font-weight: 700;
+  color: #0e2a16; margin: 24px 0 12px;
+  break-after: avoid; letter-spacing: -0.01em;
+}
+.bullets { list-style: none; padding: 0; margin: 0 0 21px; }
+.bullets li {
+  position: relative; padding-left: 33px;
+  margin-bottom: 10.5px; font-size: 18.75px;
+  line-height: 1.6; color: var(--c-text);
+}
+.bullets li::before {
+  content: ""; position: absolute; left: 0; top: 13.5px;
+  width: 12px; height: 3px; background: var(--c-brand);
+  border-radius: 1.5px;
+}
+.bullets li b { color: #0e2a16; }
+
+/* Stat grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 21px; break-inside: avoid; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 21px; break-inside: avoid; }
+.stat {
+  background: rgba(var(--brand-rgb), 0.08);
+  border-radius: 18px; padding: 24px 21px;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.20), 0 1.5px 4.5px rgba(var(--dark-rgb),0.08);
+}
+.stat-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 39px; font-weight: 700;
+  color: var(--c-brand); letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+.stat-label {
+  font-size: 15px; color: var(--c-text-mute);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+/* Glass demo card */
+.demo-card {
+  padding: 27px 30px; margin-bottom: 18px;
+  break-inside: avoid;
+}
+.demo-card .demo-k {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--c-brand);
+  font-weight: 700; margin-bottom: 9px;
+}
+.demo-card .demo-t { font-size: 21px; font-weight: 700; color: #0e2a16; margin-bottom: 6px; }
+.demo-card .demo-x { font-size: 17.25px; color: var(--c-text-mute); line-height: 1.55; }
+
+/* Spec table */
+.spec-wrap {
+  border-radius: 18px; overflow: hidden;
+  break-inside: avoid; margin-bottom: 21px;
+  background: rgba(var(--brand-rgb), 0.05);
+}
+table.spec { border-collapse: collapse; width: 100%; font-size: 17.25px; }
+table.spec th, table.spec td {
+  text-align: left; padding: 13.5px 18px;
+  border-bottom: 1.5px solid var(--c-line);
+  vertical-align: top;
+}
+table.spec tr:last-child td { border-bottom: 0; }
+table.spec th {
+  font-weight: 600; color: var(--c-text-mute);
+  font-size: 15px; text-transform: uppercase;
+  letter-spacing: 0.1em; background: rgba(var(--brand-rgb),0.08);
+}
+table.spec td code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; color: var(--c-brand);
+  background: rgba(var(--brand-rgb),0.10);
+  padding: 1.5px 7.5px; border-radius: 4.5px;
+}
+
+/* Code block */
+.code-block {
+  background: #0e2a16;
+  border-radius: 15px; padding: 21px 24px;
+  margin-bottom: 21px; break-inside: avoid;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15.75px; color: #d6ead8;
+  line-height: 1.55; white-space: pre;
+  overflow-x: auto;
+}
+.code-block .kw { color: #7AD48A; }
+.code-block .str { color: #B8E6A8; }
+.code-block .num { color: #E8D871; }
+.code-block .cmt { color: #4f6a52; font-style: italic; }
+
+/* Figure */
+.figure { margin-bottom: 21px; break-inside: avoid; }
+.figure-img {
+  width: 100%; border-radius: 18px;
+  border: 1.5px solid var(--c-line); display: block;
+  box-shadow: 0 12px 36px -6px rgba(var(--dark-rgb),0.16),
+              0 3px 9px -3px rgba(var(--dark-rgb),0.10);
+}
+.figure-cap {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; color: var(--c-text-mute);
+  margin-top: 12px; letter-spacing: 0.06em;
+}
+
+/* Resume bullet */
+.resume-bullet {
+  background: rgba(var(--brand-rgb), 0.08);
+  border-left: 4.5px solid var(--c-brand);
+  padding: 18px 24px; margin-bottom: 13.5px;
+  border-radius: 0 15px 15px 0;
+  break-inside: avoid;
+  font-size: 18px; line-height: 1.55;
+  color: var(--c-text);
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.22), 0 1.5px 4.5px rgba(var(--dark-rgb),0.08);
+}
+.resume-bullet b { color: #0e2a16; }
+.resume-bullet i { color: var(--c-brand); font-style: normal; font-weight: 600; }
+.resume-bullet .tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--c-text-dim);
+  margin-bottom: 6px;
+}
+
+/* LinkedIn template */
+.linkedin {
+  background: rgba(var(--brand-rgb), 0.08);
+  border-radius: 15px; padding: 21px 24px;
+  font-size: 16.5px; line-height: 1.6;
+  color: var(--c-text); margin-bottom: 18px;
+  break-inside: avoid;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.22);
+}
+.linkedin .arrow { color: var(--c-brand); font-weight: 700; }
+.linkedin b { color: #0e2a16; }
+.linkedin em { color: var(--c-brand); font-style: normal; }
+
+/* Don'ts */
+.donts { list-style: none; padding: 0; margin: 0 0 18px; }
+.donts li {
+  position: relative; padding-left: 27px;
+  margin-bottom: 9px; font-size: 17.25px;
+  color: var(--c-text-mute); line-height: 1.45;
+}
+.donts li::before {
+  content: "✕"; position: absolute; left: 0; top: 0;
+  color: var(--c-brand); font-weight: 700; font-size: 16.5px;
+}
+.donts b { color: var(--c-text); }
+
+/* Ending page */
+.ending {
+  width: 1080px; height: 1530px;
+  background:
+    radial-gradient(ellipse 60% 50% at 18% 12%, #D5F2D5 0%, transparent 55%),
+    radial-gradient(ellipse 55% 60% at 82% 22%, #BFE8C8 0%, transparent 58%),
+    radial-gradient(ellipse 65% 50% at 78% 88%, #A8D8B0 0%, transparent 60%),
+    linear-gradient(180deg, #f6faf6 0%, #d6ead8 100%);
+  break-before: page; overflow: hidden;
+  display: flex; flex-direction: column;
+  justify-content: center; padding: 96px;
+  position: relative;
+}
+.ending-glass { padding: 48px 60px; max-width: 780px; }
+.ending-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16.5px; letter-spacing: 0.2em;
+  color: var(--c-brand); text-transform: uppercase;
+  margin-bottom: 21px; font-weight: 700;
+}
+.ending-title {
+  font-size: 72px; font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1;
+  margin-bottom: 27px; color: #0e2a16;
+}
+.ending-body {
+  font-size: 21px; line-height: 1.65;
+  color: var(--c-text-mute);
+}
+.ending-foot {
+  position: absolute; bottom: 66px; left: 96px; right: 96px;
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; color: var(--c-text-mute);
+  letter-spacing: 0.14em; text-transform: uppercase;
+  z-index: 2;
+}
+
+/* Note */
+.note {
+  background: rgba(var(--brand-rgb), 0.08);
+  border-radius: 15px; padding: 16.5px 21px;
+  font-size: 17.25px; color: var(--c-text);
+  margin-bottom: 18px; break-inside: avoid;
+  box-shadow: inset 0 0 0 1.5px rgba(var(--brand-rgb),0.22);
+}
+.note .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--c-brand);
+  font-weight: 700; margin-bottom: 6px; display: block;
+}
+
+
+/* ── NOTION-STYLE COVER (injected by redesign.py) ── */
+.topstrip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 31.5px;
+  border-bottom: 1.5px solid var(--border);
+  margin-bottom: 63px;
+}
+.topstrip .brand {
+  font-size: 24.75px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.topstrip .brand .mark {
+  width: 31.5px; height: 31.5px;
+  background: var(--accent);
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 22.5px;
+}
+.topstrip .meta {
+  font-size: 22.5px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cover-stack { display: flex; flex-direction: column; height: 100%; }
+.notion-cover-eyebrow {
+  font-size: 22.5px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 49.5px;
+}
+.notion-cover-title {
+  font-size: 216px;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 54px 0;
+}
+.notion-cover-sub {
+  font-size: 49.5px;
+  line-height: 1.3;
+  color: var(--body);
+  font-weight: 400;
+  max-width: 1215px;
+  margin: 0 0 108px 0;
+  letter-spacing: -0.01em;
+}
+.cover-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 108px;
+  row-gap: 49.5px;
+  margin-top: auto;
+  padding-top: 63px;
+  border-top: 1.5px solid var(--border);
+}
+.cover-facts .fact .label {
+  font-size: 21.38px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 13.5px;
+}
+.cover-facts .fact .value {
+  font-size: 31.5px;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.notion-pager {
+  position: absolute;
+  bottom: 63px;
+  left: 126px;
+  right: 126px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 21.38px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding-top: 22.5px;
+  border-top: 1.5px solid var(--border);
+}
+.notion-pager .accent-dot {
+  display: inline-block;
+  width: 9px; height: 9px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin: 0 18px;
+  vertical-align: middle;
+}
+.notion-cover-page {
+  width: 1620px;
+  height: 2295px;
+  padding: 144px 126px 126px 126px;
+  position: relative;
+  background: var(--bg);
+  page-break-after: always;
+  break-after: page;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════ COVER ═══════════ -->
+<section class="notion-cover-page">
+  <div class="cover-stack">
+    <div class="topstrip">
+      <div class="brand"><span class="mark"></span>GitHub</div>
+      <div class="meta">UI/UX Redesign · Case Study · 01</div>
+    </div>
+    <div class="notion-cover-eyebrow">A research-driven redesign</div>
+    <h1 class="notion-cover-title">GitHub,<br>un-jargoned.</h1>
+    <p class="notion-cover-sub">A solo UX redesign of GitHub's repo and issue experience — fewer tabs, clearer status, and an issue detail that surfaces what matters in the first scroll.</p>
+    <div class="cover-facts">
+      <div class="fact"><div class="label">Role</div><div class="value">Designer + Developer</div></div>
+      <div class="fact"><div class="label">Timeline</div><div class="value">1 week</div></div>
+      <div class="fact"><div class="label">Tools</div><div class="value">Next.js · TS · Tailwind</div></div>
+      <div class="fact"><div class="label">Scope</div><div class="value">Repo · issues · issue detail · mobile</div></div>
+    </div>
+  </div>
+  <div class="notion-pager">
+    <span>GitHub — UI/UX Redesign</span>
+    <span>Cover<span class="accent-dot"></span>01 / 09</span>
+  </div>
+</section>
+
+
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main">
+
+<!-- 01 — Executive Summary -->
+<div class="chapter-header">
+  <div class="chapter-tag">01 — Executive Summary</div>
+  <div class="chapter-title">What this is, in 60 seconds</div>
+  <div class="chapter-divider"></div>
+</div>
+<div class="body-text">
+  This is a UI/UX redesign of <strong>GitHub</strong> — the developer
+  platform for repos, issues, PRs, and CI — built using Apple's iOS 26
+  design language. Every surface is a thin glass panel with light
+  frosted blur, a GitHub-green adaptive tint, and a conic-gradient
+  specular rim at the edge. The wallpaper behind the repo view shows
+  through every sidebar, issue list, and slide-over, tinted by the
+  glass. <em>Real</em> optical depth, not fake glassmorphism.
+</div>
+<div class="body-text">
+  The goal: take GitHub's existing developer UX — repos sidebar, search
+  topbar, RepoView with Code/Issues/PRs/Actions tabs, IssueDetail
+  slide-over, mobile nav — and reskin it in the language Apple uses
+  across iOS 26 and visionOS 26. The result is a developer platform
+  that feels simultaneously <em>precise</em> (GitHub's hallmark) and
+  <em>weightless</em> (Apple's hallmark). Code is supposed to feel
+  light — this redesign makes that physical.
+</div>
+<div class="note">
+  <span class="label">Key constraint</span>
+  No heavy 30–40px blur, no 60% white panels, no fake glassmorphism.
+  Real glass means a 3px blur, a 10% brand tint (GitHub green), an
+  inset rim, a conic-gradient specular highlight, and a green-tinted
+  drop shadow that carries the brand color into the air.
+</div>
+
+<!-- 02 — Problem & Goals -->
+<div class="chapter-header">
+  <div class="chapter-tag">02 — Problem &amp; Goals</div>
+  <div class="chapter-title">Why redesign GitHub</div>
+  <div class="chapter-divider"></div>
+</div>
+<div class="body-text">
+  GitHub's current web app reads as a dense, opaque document surface.
+  The sidebar, topbar, and tabs use solid white panels with subtle
+  gray borders. Issue rows are flat. The whole experience feels like
+  a 2015 dashboard — productive, sure, but visually heavy. That
+  heaviness is the wrong emotion for a developer tool that should
+  feel fast and modern.
+</div>
+<div class="subhead">The problem, in three lines</div>
+<ul class="bullets">
+  <li><b>Opaque chrome.</b> The sidebar, topbar, and repo header are
+      solid white. They cover the wallpaper instead of letting light
+      pass through. Browsing a repo feels like being in a basement.</li>
+  <li><b>Flat lists.</b> Issue rows and file rows use only a thin border
+      or hover background to differentiate. There is no optical
+      hierarchy — the only depth signal is a 1px line.</li>
+  <li><b>Static surfaces.</b> No press feedback, no touch illumination,
+      no specular rim. The interface ignores the device's gesture
+      model entirely.</li>
+</ul>
+<div class="subhead">Goals</div>
+<div class="grid-3">
+  <div class="stat"><div class="stat-num">3px</div><div class="stat-label">Light blur</div></div>
+  <div class="stat"><div class="stat-num">10%</div><div class="stat-label">Green tint</div></div>
+  <div class="stat"><div class="stat-num">5</div><div class="stat-label">Components</div></div>
+</div>
+<ul class="bullets">
+  <li><b>Bring light through every panel</b> — sidebar, topbar, repo
+      header, issue rows, and the slide-over all use the same glass
+      utility class.</li>
+  <li><b>Make depth optical, not bordered</b> — drop shadows tinted with
+      deep-green charcoal float every panel above the wallpaper.</li>
+  <li><b>Make every surface interactive</b> — press scale (1.025),
+      springy bounce, and pointer-following touch illumination on every
+      tappable row, tab, and issue.</li>
+  <li><b>Preserve GitHub's structure</b> — repos, tabs, file browser,
+      labels, issue detail all stay. Glass is a skin, not a fork.</li>
+</ul>
+
+<!-- 03 — Design System -->
+<div class="chapter-header">
+  <div class="chapter-tag">03 — Design System</div>
+  <div class="chapter-title">The real glass spec, ported to web</div>
+  <div class="chapter-divider"></div>
+</div>
+<div class="body-text">
+  The iOS 26 / visionOS 26 design language is not glassmorphism. The
+  defining traits are <em>lensing</em> (background pixels near the
+  rim bend, not just blur), a <em>specular rim</em> lit from one
+  direction, <em>light</em> blur (regular only 2–3px), and
+  <em>adaptive brand tint</em> at ~10%. The web port keeps the visual
+  signature and drops the optical lensing (which needs SVG
+  <code>feDisplacementMap</code> on desktop Chromium only).
+</div>
+
+<div class="subhead">Glass utility class — the entire spec</div>
+<div class="code-block"><span class="cmt">/* GitHub glass: green brand tint, light blur, conic rim */</span>
+<span class="kw">.glass</span> {
+  <span class="kw">position</span>: relative;
+  <span class="kw">background</span>: rgba(<span class="num">45</span>, <span class="num">164</span>, <span class="num">78</span>, <span class="num">0.10</span>);   <span class="cmt">/* 10% GitHub green */</span>
+  <span class="kw">backdrop-filter</span>: blur(<span class="num">3px</span>) saturate(<span class="num">1.7</span>) brightness(<span class="num">1.04</span>);
+  <span class="kw">border-radius</span>: <span class="num">18px</span>;
+  <span class="kw">box-shadow</span>:
+    inset <span class="num">0</span> <span class="num">0</span> <span class="num">0</span> <span class="num">1px</span> rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.12</span>),
+    inset <span class="num">0</span> <span class="num">1px</span> <span class="num">1px</span> rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.32</span>),
+    inset <span class="num">0</span> -<span class="num">1px</span> <span class="num">1px</span> rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.14</span>),
+    <span class="num">0</span> <span class="num">12px</span> <span class="num">36px</span> rgba(<span class="num">22</span>,<span class="num">50</span>,<span class="num">32</span>,<span class="num">.24</span>),  <span class="cmt">/* green-tinted drop */</span>
+    <span class="num">0</span> <span class="num">2px</span> <span class="num">8px</span>  rgba(<span class="num">22</span>,<span class="num">50</span>,<span class="num">32</span>,<span class="num">.12</span>);  <span class="cmt">/* contact shadow */</span>
+}
+<span class="cmt">/* Conic-gradient specular rim — masked to a 1.2px ring */</span>
+<span class="kw">.glass::before</span> {
+  <span class="kw">content</span>: <span class="str">""</span>; <span class="kw">position</span>: absolute; inset: <span class="num">0</span>;
+  <span class="kw">border-radius</span>: inherit; padding: <span class="num">1.2px</span>;
+  <span class="kw">background</span>: conic-gradient(from <span class="num">215deg</span>,
+    rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.95</span>),
+    rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.05</span>) <span class="num">22%</span>,
+    rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.05</span>) <span class="num">45%</span>,
+    rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.70</span>) <span class="num">60%</span>,
+    rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.05</span>) <span class="num">82%</span>,
+    rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.95</span>));
+  -webkit-mask: linear-gradient(#000 0 0) content-box,
+                linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+        mask: linear-gradient(#000 0 0) content-box exclude,
+              linear-gradient(#000 0 0);
+}
+<span class="cmt">/* Touch illumination follows the pointer */</span>
+<span class="kw">.glass::after</span> {
+  <span class="kw">content</span>: <span class="str">""</span>; <span class="kw">position</span>: absolute; inset: <span class="num">0</span>;
+  <span class="kw">border-radius</span>: inherit; pointer-events: none;
+  <span class="kw">opacity</span>: <span class="num">0</span>; <span class="kw">transition</span>: opacity <span class="num">.35s</span>;
+  <span class="kw">background</span>: radial-gradient(<span class="num">170px</span> circle at <span class="num">50%</span> <span class="num">50%</span>,
+    rgba(<span class="num">255</span>,<span class="num">255</span>,<span class="num">255</span>,<span class="num">.34</span>), transparent <span class="num">70%</span>);
+}
+<span class="kw">.glass.press</span>      { <span class="kw">transform</span>: scale(<span class="num">1.025</span>); }
+<span class="kw">.glass.press::after</span> { <span class="kw">opacity</span>: <span class="num">1</span>; }</div>
+
+<div class="subhead">Spec table — every value</div>
+<div class="spec-wrap">
+<table class="spec">
+<tr><th>Part</th><th>Value</th></tr>
+<tr><td>Panel radius</td><td><code>18px</code> (mobile pill: <code>28px</code>)</td></tr>
+<tr><td>Background tint</td><td><code>rgba(45, 164, 78, 0.10)</code> — GitHub green at 10%</td></tr>
+<tr><td>Backdrop blur</td><td><code>blur(3px) saturate(1.7) brightness(1.04)</code></td></tr>
+<tr><td>Inset rim</td><td><code>inset 0 0 0 1px rgba(255,255,255,.12)</code></td></tr>
+<tr><td>Top sheen</td><td><code>inset 0 1px 1px rgba(255,255,255,.32)</code></td></tr>
+<tr><td>Specular rim</td><td>conic-gradient <code>from 215deg</code>, 4 stops, white <code>0.95 → 0.05 → 0.70 → 0.95</code></td></tr>
+<tr><td>Drop shadow</td><td><code>0 12px 36px rgba(22,50,32,.24)</code> green-tinted</td></tr>
+<tr><td>Contact shadow</td><td><code>0 2px 8px rgba(22,50,32,.12)</code></td></tr>
+<tr><td>Press</td><td><code>scale(1.025)</code>, <code>cubic-bezier(.34,1.5,.64,1)</code> 0.4s</td></tr>
+<tr><td>Touch glow</td><td>radial-gradient <code>170px</code>, white 0.34 → transparent</td></tr>
+</table>
+</div>
+
+<div class="note">
+  <span class="label">Brand tint rule</span>
+  The 10% tint carries GitHub green (<strong>#2DA44E</strong>) into
+  the glass. The slide-over IssueDetail pumps the tint to 16% so the
+  panel visibly lifts above the repo view. Never tint the body of a
+  panel with white at 60% — that reads as foggy, not glassy.
+</div>
+
+<!-- 04 — Component Inventory -->
+<div class="chapter-header">
+  <div class="chapter-tag">04 — Component Inventory</div>
+  <div class="chapter-title">Five glass components, one utility class</div>
+  <div class="chapter-divider"></div>
+</div>
+<div class="body-text">
+  Every GitHub surface uses the same <strong>.glass</strong> utility
+  above. The variant is the <em>tint</em>: the sidebar uses the green
+  tint at 10%, the IssueDetail slide-over uses 16%, repo tabs are
+  flat-glass (no fill, just rim). No component redefines the spec —
+  they all compose it.
+</div>
+<div class="grid-2">
+  <div class="glass demo-card">
+    <div class="demo-k">01 · Sidebar</div>
+    <div class="demo-t">Repos list</div>
+    <div class="demo-x">Collapsible list of pinned and recent repos,
+      with search and a New repo CTA. Each repo row is a press-scale
+      glass item with touch illumination on pointer-down.</div>
+  </div>
+  <div class="glass demo-card">
+    <div class="demo-k">02 · Topbar</div>
+    <div class="demo-t">Search + create</div>
+    <div class="demo-x">Global search input, notifications bell, and
+      a green Create button. The bar itself is glass — light blur,
+      green tint, conic rim at the bottom edge.</div>
+  </div>
+  <div class="glass demo-card">
+    <div class="demo-k">03 · RepoView</div>
+    <div class="demo-t">Tabbed content</div>
+    <div class="demo-x">Tabs: Code · Issues · PRs · Actions. Below
+      tabs: file browser, issue list with labels, or PR list. Each
+      tab content panel is glass. Labels are glass-tint chips.</div>
+  </div>
+  <div class="glass demo-card">
+    <div class="demo-k">04 · IssueDetail</div>
+    <div class="demo-t">Slide-over panel</div>
+    <div class="demo-x">Right-side slide-over with title, body, comments
+      thread, labels, and assignees. Glass-tint 16% — visibly lifts
+      above the repo view. The most prominent glass surface on desktop.</div>
+  </div>
+  <div class="glass demo-card" style="grid-column: span 2;">
+    <div class="demo-k">05 · MobileNav</div>
+    <div class="demo-t">Bottom dock</div>
+    <div class="demo-x">Pill-shaped glass dock at the bottom of the
+      mobile viewport. 28px radius, green tint, full conic rim. Five
+      tabs: Code, Issues, PRs, Actions, Profile. The dock is the most
+      prominent glass surface on mobile.</div>
+  </div>
+</div>
+
+</div><!-- /.main -->
+
+<!-- ═══════════ SCREENSHOTS ═══════════ -->
+<div class="main">
+
+<div class="chapter-header">
+  <div class="chapter-tag">05 — Screenshots</div>
+  <div class="chapter-title">The redesign, in four screens</div>
+  <div class="chapter-divider"></div>
+</div>
+<div class="body-text">
+  Four screenshots from the live build: the repo view with tabs,
+  the issue list, the issue detail slide-over, and the mobile nav.
+  Every panel uses the spec above. Notice how the wallpaper's
+  green-tinted mesh shows through the sidebar, the issue list, and
+  the slide-over — tinted, not obscured.
+</div>
+
+<div class="figure">
+  <img class="figure-img" src="fig-repo.png" alt="GitHub repo view — sidebar, topbar with search, repo header with tabs and file browser in glass" />
+  <div class="figure-cap">Fig 1 · Repo view — sidebar (repos), topbar (search + create), Code tab with file browser</div>
+</div>
+
+<div class="figure">
+  <img class="figure-img" src="fig-issues.png" alt="GitHub issues list — open issues with labels rendered as glass chips on green-tinted wallpaper" />
+  <div class="figure-cap">Fig 2 · Issues list — open issues with label chips, glass-tint hover on rows</div>
+</div>
+
+<div class="figure">
+  <img class="figure-img" src="fig-issue-detail.png" alt="GitHub issue detail slide-over — right-side panel with body, comments, and labels in 16% green-tinted glass" />
+  <div class="figure-cap">Fig 3 · IssueDetail slide-over — 16% green-tinted glass panel lifting above the repo view</div>
+</div>
+
+<div class="figure">
+  <img class="figure-img" src="fig-mobile.png" alt="GitHub mobile nav — bottom pill-shaped glass dock with five tabs and full conic rim" />
+  <div class="figure-cap">Fig 4 · Mobile nav — bottom dock (28px radius, green tint) with full conic-gradient specular rim</div>
+</div>
+
+</div>
+
+<!-- ═══════════ RESUME BULLETS ═══════════ -->
+<div class="main">
+
+<div class="chapter-header">
+  <div class="chapter-tag">06 — Resume Bullets</div>
+  <div class="chapter-title">Five STAR-pattern bullets for your resume</div>
+  <div class="chapter-divider"></div>
+</div>
+<div class="body-text">
+  Pick three of these five. Lead with the metric, follow with the
+  action, end with the result. Every bullet maps directly to a
+  screenshot above.
+</div>
+
+<div class="resume-bullet">
+  <div class="tag">Frontend · STAR</div>
+  Redesigned <b>GitHub's developer platform</b> using Apple's
+  <i>iOS 26 design language</i> — one glass utility class with a 3px
+  <i>backdrop-filter</i> blur, <i>saturate(1.7)</i>, 10%
+  GitHub-green (<i>#2DA44E</i>) brand tint, a <i>conic-gradient</i>
+  specular rim masked to a 1.2px ring, and green-tinted drop shadows
+  — applied to all 5 components.
+</div>
+<div class="resume-bullet">
+  <div class="tag">Optical · Depth</div>
+  Replaced GitHub's flat border-and-fill hierarchy with
+  <b>optical depth</b> — deep-green-tinted drop shadows at
+  <i>0 12px 36px rgba(22,50,32,.24)</i> plus a tight contact shadow
+  lift every sidebar, repo header, and issue row above the wallpaper,
+  no borders needed.
+</div>
+<div class="resume-bullet">
+  <div class="tag">Interaction · Touch</div>
+  Engineered <b>press-scale + touch-illumination</b> across all
+  tappable glass — <i>scale(1.025)</i> on a
+  <i>cubic-bezier(.34,1.5,.64,1)</i> spring with a 170px pointer-following
+  radial glow on <i>::after</i>, mapping GitHub's repo, issue, and
+  PR row interactions to Apple HIG press feedback.
+</div>
+<div class="resume-bullet">
+  <div class="tag">Slide-over · Pattern</div>
+  Shipped a <b>right-side IssueDetail slide-over</b> in <i>glass-tint
+  16%</i> — visibly lifts above the repo view via green-tinted drop
+  shadow, with title, body, comments thread, labels as glass chips,
+  and assignees — backed by a Zustand store keeping it 60fps with
+  backdrop-filter.
+</div>
+<div class="resume-bullet">
+  <div class="tag">Build · Stack</div>
+  Built end-to-end in <b>Next.js 16</b> with TypeScript, Tailwind CSS 4,
+  and a <i>Zustand store</i> for repo + issue state — kept 60fps with
+  <i>backdrop-filter</i> by scoping blur to 3px (not 30px), avoiding
+  the GPU cost that breaks heavy glassmorphism on long issue lists.
+</div>
+
+</div>
+
+<!-- ═══════════ PORTFOLIO GUIDE ═══════════ -->
+<div class="main">
+
+<div class="chapter-header">
+  <div class="chapter-tag">07 — Portfolio Posting Guide</div>
+  <div class="chapter-title">From finished code to recruiter-visible</div>
+  <div class="chapter-divider"></div>
+</div>
+<div class="body-text">
+  Five steps to take this redesign from a finished repo to a
+  recruiter-visible portfolio piece, plus a LinkedIn template you
+  can paste. The don'ts at the end are the difference between
+  "I built a clone" and "I shipped a redesign".
+</div>
+
+<div class="subhead">Five steps</div>
+<div class="grid-2">
+  <div class="glass demo-card">
+    <div class="demo-k">Step 01</div>
+    <div class="demo-t">Host the live app</div>
+    <div class="demo-x">Push to GitHub, import to Vercel (free), ship
+      to <code>your-name-github-glass.vercel.app</code>. No sign-in
+      wall. Recruiters browse in 5 seconds.</div>
+  </div>
+  <div class="glass demo-card">
+    <div class="demo-k">Step 02</div>
+    <div class="demo-t">Host the case study PDF</div>
+    <div class="demo-x">Drop <code>case-study.pdf</code> in
+      <code>public/</code>. Link from the portfolio page. Cross-post
+      to Notion (searchable) + Behance (design-recruiter discovery).</div>
+  </div>
+  <div class="glass demo-card">
+    <div class="demo-k">Step 03</div>
+    <div class="demo-t">Build the portfolio page</div>
+    <div class="demo-x">One screen: full-bleed repo screenshot →
+      one-line summary → 3 stats → issue list + slide-over
+      side-by-side → two CTAs (Live app · Case study). Above the fold only.</div>
+  </div>
+  <div class="glass demo-card">
+    <div class="demo-k">Step 04</div>
+    <div class="demo-t">Write the LinkedIn post</div>
+    <div class="demo-x">Use the template below. Lead with the live link,
+      end with the case study link. Hashtags: <code>#design #frontend
+      #nextjs #ios26 #github #ux #developers</code>.</div>
+  </div>
+  <div class="glass demo-card" style="grid-column: span 2;">
+    <div class="demo-k">Step 05</div>
+    <div class="demo-t">Write the GitHub README</div>
+    <div class="demo-x">Mirror the cover: one-paragraph summary, one
+      screenshot, "Try it" section with live link, "Tech stack" section.
+      Pin the repo to your profile. The README is what a recruiter sees
+      when they click your GitHub link from LinkedIn — the platform
+      being showcased makes this meta.</div>
+  </div>
+</div>
+
+<div class="subhead">LinkedIn post template</div>
+<div class="linkedin">
+  I just shipped a <b>UI/UX redesign of GitHub</b> using Apple's
+  <b>iOS 26 design language</b>. Built end-to-end in Next.js 16,
+  TypeScript, Tailwind, and Zustand.<br><br>
+  Real glass, not fake glassmorphism — every sidebar, repo header,
+  issue list, and slide-over uses a 3px backdrop-filter blur with
+  saturate(1.7), a 10% GitHub-green (<b>#2DA44E</b>) brand tint, a
+  conic-gradient specular rim masked to a 1.2px ring, and green-tinted
+  drop shadows.<br><br>
+  <span class="arrow">→</span> 5 components from a single <em>.glass</em> class<br>
+  <span class="arrow">→</span> RepoView with Code / Issues / PRs / Actions tabs<br>
+  <span class="arrow">→</span> IssueDetail slide-over in glass-tint 16%<br>
+  <span class="arrow">→</span> Press-scale (1.025) + pointer-following touch glow<br>
+  <span class="arrow">→</span> Mobile nav: 28px pill dock with full conic rim<br><br>
+  Live app: <em>your-name-github-glass.vercel.app</em><br>
+  Case study PDF: <em>your-name-github-glass.vercel.app/case-study.pdf</em>
+</div>
+
+<div class="subhead">Don't do these</div>
+<ul class="donts">
+  <li><b>No "GitHub clone"</b> — say "redesign". Clone reads as
+      "I copied". Redesign reads as "I learned from it".</li>
+  <li><b>No fake glass</b> — a 30–40px blur with 60% white reads as
+      foggy, not glassy. Real glass is 3px blur, 10% brand tint,
+      conic rim, tinted shadow. Non-negotiable.</li>
+  <li><b>No flat background</b> — glass needs a vibrant wallpaper to
+      refract. Add a 5-stop green-tinted radial gradient mesh to the body.</li>
+  <li><b>Don't skip the conic rim</b> — the inset 1.2px conic-gradient
+      ring is the signature. Without it you have glassmorphism, not
+      iOS 26 design language.</li>
+  <li><b>No sign-in wall</b> — recruiters won't sign in. App must be
+      browsable in 5 seconds.</li>
+</ul>
+
+</div>
+
+<!-- ═══════════ ENDING ═══════════ -->
+<div class="ending">
+  <div class="glass glass-tint ending-glass">
+    <div class="ending-eyebrow">End of case study</div>
+    <div class="ending-title">Code feels weightless.</div>
+    <div class="ending-body">
+      GitHub's structure — the repos sidebar, the search topbar, the
+      tabbed RepoView, the issue detail slide-over — is preserved
+      entirely. What changes is the material: every panel is now
+      light-frosted glass with a GitHub-green tint, a specular rim,
+      and a green-tinted drop shadow. The wallpaper shows through.
+      Light comes in. A developer platform feels, for the first time,
+      weightless.
+    </div>
+  </div>
+  <div class="ending-foot">
+    <span><span class="cover-dot"></span>GitHub · UI/UX Redesign v1.0</span>
+    <span>End of case study</span>
+  </div>
+</div>
+
+</body>
+</html>
