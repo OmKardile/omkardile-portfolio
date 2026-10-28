@@ -57,3 +57,4 @@ server.log
 tool-results/
 # Skills directory
 /skills/.zscripts/dev.pid
+download/
