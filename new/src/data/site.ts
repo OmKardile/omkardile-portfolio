@@ -490,7 +490,7 @@ export const uiux = {
       app: 'linear',
       title: 'Linear — Liquid Glass redesign',
       summary: 'A focused issue-tracking workspace with list and board views, keyboard shortcuts and a command palette.',
-      pages: '20-page case study',
+      pages: '14-page case study',
     },
     {
       app: 'spotify',
@@ -502,13 +502,13 @@ export const uiux = {
       app: 'linkedin',
       title: 'LinkedIn — Liquid Glass redesign',
       summary: 'A professional network concept spanning the feed, messaging, jobs, notifications and profile views.',
-      pages: '19-page case study',
+      pages: '14-page case study',
     },
     {
       app: 'stripe',
       title: 'Stripe — Liquid Glass redesign',
       summary: 'A payments workspace for balances, transactions, customer records and a revenue overview.',
-      pages: '19-page case study',
+      pages: '13-page case study',
     },
     {
       app: 'airbnb',
@@ -520,7 +520,7 @@ export const uiux = {
       app: 'slack',
       title: 'Slack — Liquid Glass redesign',
       summary: 'A team-chat workspace with channel navigation, message reactions, composition and threaded replies.',
-      pages: '18-page case study',
+      pages: '13-page case study',
     },
   ],
   shipped: [

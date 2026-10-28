@@ -65,9 +65,9 @@ export function Header() {
           />
         </Link>
         <nav className="header-nav" aria-label="Primary">
-          {/* Mobile: the burger leads the row (pushed left via margin-right:
-              auto). Desktop it is hidden and the two groups below render flat
-              via display:contents. */}
+          {/* Mobile: the burger joins the right-hand cluster (order puts it
+              outermost). Desktop it is hidden and the two groups below
+              render flat via display:contents. */}
           <button
             type="button"
             className="nav-burger"

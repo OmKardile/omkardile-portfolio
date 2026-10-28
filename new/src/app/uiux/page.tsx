@@ -4,7 +4,8 @@ import { site, uiux, relay, taar } from '@/data/site';
 import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: `UI/UX Portfolio | ${site.name}`,
+  /* The root template already appends "| Omkar Kardile" — don't double it. */
+  title: 'UI/UX Portfolio',
   description: uiux.description,
   alternates: { canonical: '/uiux' },
   openGraph: {
@@ -65,13 +66,16 @@ export default function UiuxPage() {
 
       {/* Process */}
       <section className="section container" aria-labelledby="process-title">
-        <div className="section-head" data-reveal>
+        {/* suppressHydrationWarning: ScrollReveal (layout) may add `revealed`
+            to this server HTML before this boundary hydrates — intentional
+            external class mutation, not a real mismatch. */}
+        <div className="section-head" data-reveal suppressHydrationWarning>
           <p className="mono section-index section-index-accent">01 / How I work</p>
           <h2 id="process-title" className="section-title">
             Three rules, every project.
           </h2>
         </div>
-        <div className="process-grid" data-reveal-group>
+        <div className="process-grid" data-reveal-group suppressHydrationWarning>
           {uiux.process.map((step) => (
             <div className="process-card" key={step.n}>
               <p className="mono process-n">{step.n}</p>
@@ -84,7 +88,7 @@ export default function UiuxPage() {
 
       {/* Featured case studies */}
       <section className="section container" id="design-work" aria-labelledby="design-title">
-        <div className="section-head" data-reveal>
+        <div className="section-head" data-reveal suppressHydrationWarning>
           <p className="mono section-index section-index-accent">02 / Featured case studies</p>
           <h2 id="design-title" className="section-title">
             Two studies, end to end.
@@ -444,7 +448,7 @@ export default function UiuxPage() {
         </article>
 
         {/* In-review case studies */}
-        <ul className="cs-grid" data-reveal-group>
+        <ul className="cs-grid" data-reveal-group suppressHydrationWarning>
           {uiux.caseStudies.map((cs) => (
             <li className="cs-card" key={cs.index}>
               <div className="card-top">
@@ -471,7 +475,7 @@ export default function UiuxPage() {
 
       {/* Liquid Glass studies — expandable index rows */}
       <section className="section container" id="liquid-glass" aria-labelledby="liquid-glass-title">
-        <div className="section-head" data-reveal>
+        <div className="section-head" data-reveal suppressHydrationWarning>
           <p className="mono section-index section-index-accent">03 / Liquid Glass studies</p>
           <h2 id="liquid-glass-title" className="section-title">
             Six apps, redesigned interactively.
@@ -481,7 +485,7 @@ export default function UiuxPage() {
             people, one glass surface at a time.
           </p>
         </div>
-        <ul className="lg-list" data-reveal-group>
+        <ul className="lg-list" data-reveal-group suppressHydrationWarning>
           {uiux.liquidGlass.map((lg, i) => {
             const [appName, kind] = lg.title.split(' — ');
             return (
@@ -521,13 +525,13 @@ export default function UiuxPage() {
 
       {/* Also shipped */}
       <section className="section container" aria-labelledby="shipped-title">
-        <div className="section-head" data-reveal>
+        <div className="section-head" data-reveal suppressHydrationWarning>
           <p className="mono section-index section-index-accent">04 / Also shipped</p>
           <h2 id="shipped-title" className="section-title">
             Designs that made it to code.
           </h2>
         </div>
-        <ul className="xp-list" data-reveal-group>
+        <ul className="xp-list" data-reveal-group suppressHydrationWarning>
           {uiux.shipped.map((s) => (
             <li className="xp-row" key={s.title}>
               <div className="xp-main">
@@ -545,13 +549,13 @@ export default function UiuxPage() {
 
       {/* About */}
       <section className="section container" aria-labelledby="about-uiux-title">
-        <div className="section-head" data-reveal>
+        <div className="section-head" data-reveal suppressHydrationWarning>
           <p className="mono section-index section-index-accent">05 / About</p>
           <h2 id="about-uiux-title" className="section-title">
             Designer who codes.
           </h2>
         </div>
-        <div className="about-uiux" data-reveal>
+        <div className="about-uiux" data-reveal suppressHydrationWarning>
           <p className="about-quote">{uiux.quote}</p>
           <ul className="fact-list">
             {uiux.aboutFacts.map((f) => (
@@ -563,13 +567,13 @@ export default function UiuxPage() {
 
       {/* Contact */}
       <section className="section contact container" aria-labelledby="contact-uiux-title">
-        <div className="section-head" data-reveal>
+        <div className="section-head" data-reveal suppressHydrationWarning>
           <p className="mono section-index section-index-accent">06 / Contact</p>
           <h2 id="contact-uiux-title" className="section-title">
             Let’s work together.
           </h2>
         </div>
-        <div className="contact-grid" data-reveal>
+        <div className="contact-grid" data-reveal suppressHydrationWarning>
           <div>
             <p className="contact-copy">
               Have a project? I’m available for UI/UX design and frontend roles. Email is the fastest way to start a

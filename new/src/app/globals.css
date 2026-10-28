@@ -5,6 +5,7 @@
   --fg: #18181b;
   --muted: #5c5c66;
   --line: #e4e4e9;
+  --line-strong: #c9c9d1; /* phone nav bar edge: visible without shouting */
   --soft: #f6f6f8;
   --green: #15803d;
   --accent: #ea580c; /* UI/UX portfolio accent (orange) + its navbar pill */
@@ -28,6 +29,7 @@ html.dark {
   --fg: #ededf0;
   --muted: #9a9aa3;
   --line: #26262c;
+  --line-strong: #34343d;
   --soft: #1a1a1f;
   --green: #3fb950;
   --accent: #fb923c;
@@ -474,22 +476,33 @@ html.dark .header-signature {
   }
 }
 
-/* Compact single-row header on small screens: burger on the left, switch
-   pill and theme toggle on the right. Name, section links and Resume move
-   into the drop sheet. The bar is one ~58px row again, so anchors go back
-   to the desktop scroll-padding. */
+/* Compact single-row header on small screens: signature brand holds the
+   left edge; switch pill, theme toggle and burger cluster on the right
+   (burger outermost, app-bar style). Section links and Resume move into
+   the drop sheet. The bar is one ~58px row again, so anchors go back to
+   the desktop scroll-padding. */
 @media (max-width: 40rem) {
   html {
     scroll-padding-top: 4.5rem;
   }
 
-  .header-name {
-    display: none;
-  }
-
   .header-inner {
     flex-wrap: nowrap;
     padding-block: 0.4rem;
+  }
+
+  /* A little border for the nav on phones: --line is too faint over the
+     blurred bar, so the bottom edge steps up one notch. */
+  .site-header {
+    border-bottom-color: var(--line-strong);
+  }
+
+  .header-name {
+    min-width: 0;
+  }
+
+  .header-signature {
+    height: 1.7rem;
   }
 
   /* The flat-group trick is desktop-only: section links move to the sheet,
@@ -516,9 +529,15 @@ html.dark .header-signature {
     justify-content: flex-end;
   }
 
+  /* Burger joins the right-hand cluster and sits outermost; the controls
+     group stays ahead of it in visual order. */
   .nav-burger {
     display: inline-flex;
-    margin-right: auto;
+    order: 2;
+  }
+
+  .nav-actions {
+    order: 1;
   }
 
   .nav-sheet {
@@ -535,6 +554,30 @@ html.dark .header-signature {
 
   .theme-toggle {
     margin-block: 0;
+  }
+}
+
+/* Narrow phones (320-class): trim the signature, the gaps and the pill so
+   the bar keeps one row even with the longer "Dev Portfolio" label. */
+@media (max-width: 22.5rem) {
+  .container {
+    padding-inline: 1rem;
+  }
+
+  .header-signature {
+    height: 1.3rem;
+  }
+
+  .header-nav,
+  .nav-actions {
+    gap: 0.45rem;
+  }
+
+  .header-uiux,
+  .header-dev,
+  .header-creative {
+    font-size: 0.78rem;
+    padding: 0.28rem 0.6rem !important;
   }
 }
 
