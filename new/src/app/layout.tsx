@@ -43,7 +43,14 @@ const jsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className={`${display.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${display.variable} ${mono.variable}`}
+      /* Tells Next to suppress the CSS smooth scroll during its own route
+         transitions (the engine + no-JS fallback below still glide anchors). */
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         {/* Runs before first paint: stored choice wins, else system preference. No flash. */}
         <script
@@ -55,7 +62,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         />
       </head>
       <body>
-        <a className="skip-link" href="#main">
+        {/* data-native-scroll: the skip link jumps instantly even while the
+            smooth-scroll engine is running — keyboard users want zero delay. */}
+        <a className="skip-link" href="#main" data-native-scroll>
           Skip to content
         </a>
         <Header />
