@@ -4,7 +4,7 @@ import { CardSummary } from '@/components/CardSummary';
 
 function SectionHead({ id, index, title, note }: { id: string; index: string; title: string; note?: string }) {
   return (
-    <div className="section-head">
+    <div className="section-head" data-reveal>
       <p className="section-index mono">{index}</p>
       <h2 id={id} className="section-title">
         {title}
@@ -83,7 +83,7 @@ export default function Home() {
           title="Built, shipped, and in progress."
           note="Live products, client work and course projects — from a retail ERP to a café operations platform. Links point only to verified destinations."
         />
-        <ul className="work-grid">
+        <ul className="work-grid" data-reveal-group>
           {projects.map((p) => {
             const linked = !!p.links && p.links.length > 0;
             return (
@@ -110,7 +110,7 @@ export default function Home() {
       {/* Skills */}
       <section className="section container" id="skills" aria-labelledby="skills-title">
         <SectionHead id="skills-title" index="02 / Skills" title="Both ends of the work." />
-        <div className="skills-grid">
+        <div className="skills-grid" data-reveal-group>
           {[capabilities.design, capabilities.build].map((cap) => (
             <div className="skill-group" key={cap.label}>
               <h3 className="skill-label">{cap.label}</h3>
@@ -130,7 +130,7 @@ export default function Home() {
       {/* Experience */}
       <section className="section container" id="experience" aria-labelledby="experience-title">
         <SectionHead id="experience-title" index="03 / Experience" title="Background." />
-        <ul className="xp-list">
+        <ul className="xp-list" data-reveal-group>
           {experience.map((e) => (
             <li className="xp-row" key={e.title}>
               <div className="xp-main">
@@ -149,7 +149,7 @@ export default function Home() {
       {/* Contact */}
       <section className="section contact container" id="contact" aria-labelledby="contact-title">
         <SectionHead id="contact-title" index="04 / Contact" title="Let’s make something useful." />
-        <div className="contact-grid">
+        <div className="contact-grid" data-reveal>
           <div>
             <p className="contact-copy">
               I’m open to UI/UX design and frontend development roles and collaborations. Email is the fastest way to

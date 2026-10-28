@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { Header } from '@/components/Header';
+import { ScrollReveal } from '@/components/ScrollReveal';
 import { site } from '@/data/site';
 import { display, mono } from './fonts';
 import './globals.css';
@@ -47,7 +48,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark')}catch(e){}",
+              "try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark')}catch(e){}" +
+              "document.documentElement.classList.add('js-reveal');",
           }}
         />
       </head>
@@ -56,6 +58,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           Skip to content
         </a>
         <Header />
+        <ScrollReveal />
         <main id="main" tabIndex={-1}>
           {children}
         </main>

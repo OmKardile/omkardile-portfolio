@@ -16,6 +16,7 @@
   --press-scale: 0.97;
   --dur-micro: 120ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out: fast start, long settle */
   --lift-shadow: rgba(24, 24, 27, 0.12);
   color-scheme: light;
   --mono: var(--font-mono-ui), 'Fragment Mono', monospace;
@@ -602,8 +603,8 @@ html.dark .theme-toggle .icon-moon {
   font-size: 0.95rem;
   font-weight: 550;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease,
-    transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+  transition: background-color 0.3s ease, border-color 0.3s ease,
+    transform 0.45s var(--ease-apple), box-shadow 0.45s var(--ease-apple);
 }
 
 .btn-solid {
@@ -635,7 +636,7 @@ html.dark .theme-toggle .icon-moon {
 
 .btn-arrow {
   display: inline-block;
-  transition: transform 0.2s var(--ease-out);
+  transition: transform 0.35s var(--ease-apple);
 }
 
 .btn:hover .btn-arrow-down { transform: translateY(2px); }
@@ -647,7 +648,7 @@ html.dark .theme-toggle .icon-moon {
 .header-resume span[aria-hidden='true'],
 .lg-action span[aria-hidden='true'] {
   display: inline-block;
-  transition: transform 0.2s var(--ease-out);
+  transition: transform 0.35s var(--ease-apple);
 }
 
 .work-card-linked:hover .card-link span[aria-hidden='true'],
@@ -2123,5 +2124,115 @@ html.dark .theme-toggle .icon-moon {
     animation: none;
     border-color: var(--muted);
     border-top-color: var(--muted);
+  }
+}
+
+/* ================= Apple-style motion ================= */
+
+/* Height interpolation lets block-size animate to/from `auto` (Chromium 129+;
+   other engines ignore it and keep the instant toggle). */
+html {
+  interpolate-size: allow-keywords;
+}
+
+/* Smooth expand/collapse for the native accordions (case-study chapters,
+   Liquid Glass rows). Engines without ::details-content drop these rules and
+   keep the default instant open — progressive enhancement. */
+details::details-content {
+  block-size: 0;
+  overflow-y: clip;
+  transition: block-size 0.5s var(--ease-apple), content-visibility 0.5s allow-discrete;
+}
+
+details[open]::details-content {
+  block-size: auto;
+}
+
+/* Theme switch cross-fades instead of snapping. */
+body {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.site-header {
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+/* Gentle hover lift on cards (same float language as buttons). */
+.work-card,
+.process-card,
+.cs-card {
+  transition: transform 0.45s var(--ease-apple), box-shadow 0.45s var(--ease-apple),
+    border-color 0.3s ease;
+}
+
+.work-card:hover,
+.process-card:hover,
+.cs-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px var(--lift-shadow);
+}
+
+/* Scroll reveal: [data-reveal] fades/rises once on first viewport entry;
+   [data-reveal-group] staggers its children. Hidden state only exists under
+   html.js-reveal (set pre-paint by the inline script), so no-JS visitors and
+   reduced-motion users always get fully visible content. */
+html.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease-apple), transform 0.7s var(--ease-apple);
+}
+
+html.js-reveal [data-reveal].revealed {
+  opacity: 1;
+  transform: none;
+}
+
+html.js-reveal [data-reveal-group] > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease-apple), transform 0.7s var(--ease-apple);
+}
+
+html.js-reveal [data-reveal-group] > *:nth-child(2) { transition-delay: 0.07s; }
+html.js-reveal [data-reveal-group] > *:nth-child(3) { transition-delay: 0.14s; }
+html.js-reveal [data-reveal-group] > *:nth-child(4) { transition-delay: 0.21s; }
+html.js-reveal [data-reveal-group] > *:nth-child(5) { transition-delay: 0.28s; }
+html.js-reveal [data-reveal-group] > *:nth-child(6) { transition-delay: 0.35s; }
+html.js-reveal [data-reveal-group] > *:nth-child(n + 7) { transition-delay: 0.42s; }
+
+html.js-reveal [data-reveal-group].revealed > * {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    interpolate-size: auto;
+  }
+
+  details::details-content {
+    transition: none;
+  }
+
+  body,
+  .site-header,
+  .work-card,
+  .process-card,
+  .cs-card {
+    transition: none;
+  }
+
+  .work-card:hover,
+  .process-card:hover,
+  .cs-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  html.js-reveal [data-reveal],
+  html.js-reveal [data-reveal-group] > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
