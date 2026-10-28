@@ -58,3 +58,19 @@ tool-results/
 # Skills directory
 /skills/.zscripts/dev.pid
 download/
+
+# sandbox infra + AI-authored docs (local only, never published)
+/.zscripts
+/Caddyfile
+/skills
+/scripts
+/download
+/bun.lock
+/CHANGELOG.md
+/DESIGN.md
+/business-documentation.md
+/compact.md
+/decisions.md
+/help.md
+/technical-documentation.md
+/worklog.md
