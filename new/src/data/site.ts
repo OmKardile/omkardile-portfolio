@@ -466,6 +466,26 @@ export const uiux = {
   caseStudies: [
     {
       index: '03',
+      title: 'Lethe — notes that forget on purpose',
+      status: 'In review',
+      headline: 'A notes app where every note has a life — untouched notes dim daily until a last look keeps or releases them',
+      problem:
+        'The 2025–26 wave of AI memory tools promises total recall: pendants that record conversations, tools that capture screens, assistants with ever-longer memories. Lethe is the counter-position — forgetting as the feature. Untouched notes lose life daily, a nightly Last light review keeps or releases what is fading, and released notes leave a one-line residue. Nothing disappears without a last look.',
+      role: 'Trend Research · Concept · IA · Visual System · Hi-fi Screens · React Prototype',
+      tools: ['Figma', 'React', 'User Research'],
+    },
+    {
+      index: '04',
+      title: 'Stoop — spontaneous meetups, safely',
+      status: 'In review',
+      headline: 'Low-commitment hangouts with people nearby, with trust signals on the decision screen instead of approval gates',
+      problem:
+        'Spontaneous meetups die in group-chat friction or feel unsafe with strangers. Stoop resolves spontaneity vs. safety by design: public venue, mutual friends and host track record sit directly on the decision screen, and a visible streak keeps commitment honest — cancelling with 15 minutes or less counts as a no-show.',
+      role: 'Trend Research · Persona · IA · Visual System · Hi-fi Screens · React Prototype',
+      tools: ['Figma', 'React', 'User Research'],
+    },
+    {
+      index: '05',
       title: 'Food Delivery App — 0 to 1',
       status: 'In progress',
       headline: 'Designing for Pune’s tiffin culture — local food, digital-first',
@@ -475,7 +495,7 @@ export const uiux = {
       tools: ['Figma', 'Framer', 'User Research'],
     },
     {
-      index: '04',
+      index: '06',
       title: 'Checkout UX Redesign + Design System',
       status: 'In progress',
       headline: 'Building the component library I wish every junior designer had',
