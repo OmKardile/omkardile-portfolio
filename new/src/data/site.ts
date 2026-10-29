@@ -85,9 +85,9 @@ export const projects: Project[] = [
     year: '2026',
     status: 'live',
     summary:
-      'A live storefront for a Surat-based surveillance and networking hardware business: categorized product catalog, exclusive CCTV kit bundles, Razorpay checkout with COD, GST invoicing with serial-tracked warranty, OTP customer accounts with order history and one-tap reorders, WhatsApp ordering and order tracking.',
+      'Shipped to client: a storefront for a Surat-based surveillance and networking hardware business — categorized product catalog, exclusive CCTV kit bundles, Razorpay checkout with COD, GST invoicing with serial-tracked warranty, OTP customer accounts with order history and one-tap reorders, WhatsApp ordering and order tracking. Demo is live.',
     stack: 'E-commerce platform · Razorpay payments · GST invoicing',
-    links: [{ href: 'https://patelnetworks-5ne3.onrender.com/', label: 'Open live site' }],
+    links: [{ href: 'https://patelnetworks-5ne3.onrender.com/', label: 'Open live demo' }],
     cover: { alt: 'Signal pattern for the PatelNetworks client e-commerce platform', seed: 12.4 },
   },
   {
