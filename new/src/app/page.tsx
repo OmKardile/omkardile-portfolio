@@ -45,17 +45,20 @@ function StatusTag({ status }: { status: 'live' | 'building' }) {
   );
 }
 
-function CardLinks({ links }: { links?: { href: string; label: string }[] }) {
+function CardLinks({ links }: { links?: { href: string; label: string; note?: string }[] }) {
   if (!links || links.length === 0) {
     return <p className="card-link card-link-muted">Link to come</p>;
   }
   return (
     <>
       {links.map((l) => (
-        <a key={l.href} className="card-link" href={l.href} target="_blank" rel="noopener noreferrer">
-          {l.label} <span className="btn-arrow btn-arrow-out" aria-hidden="true">↗</span>
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
+        <span key={l.href} className="card-link-item">
+          <a className="card-link" href={l.href} target="_blank" rel="noopener noreferrer">
+            {l.label} <span className="btn-arrow btn-arrow-out" aria-hidden="true">↗</span>
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+          {l.note ? <span className="card-link-note">{l.note}</span> : null}
+        </span>
       ))}
     </>
   );
@@ -98,7 +101,7 @@ export default function Home() {
           id="work-title"
           index="01 / Selected work"
           title="Built, shipped, and in progress."
-          note="Live products, client work and course projects — from a retail ERP to a café operations platform. Links point only to verified destinations."
+          note="Live products and client work — from a retail ERP to a café operations platform. Links point only to verified destinations."
         />
         <ul className="work-grid" data-reveal-group suppressHydrationWarning>
           {projects.map((p) => {

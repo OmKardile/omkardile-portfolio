@@ -10,8 +10,9 @@ import { ProjectRow } from '@/components/uiux/ProjectRow';
 import { WireframeArtSvg } from '@/components/uiux/WireframeArt';
 
 /* /uiux — design portfolio index. The loud version: a stacked clash-type
-   hero (Anton caps over an outlined Syne line over Fraunces italic), a
-   rotating availability badge, a rotated scroll-skewed marquee strip, three
+   hero (Anton caps over an outlined Syne line over Fraunces italic), an
+   open-to-work stamp sticker (hard accent shadow, velocity lean, hover
+   straighten), a rotated scroll-skewed marquee strip, three
    asymmetric work rows with ghost numerals and cursor-following wireframe
    peeks, a stepped how-I-work diagonal, and a word-staggered about quote.
    Typography is still the design — no imagery. Motion: UiuxMotion. */
@@ -57,22 +58,12 @@ export default function UiuxPage() {
       <section className="ux-hero ux-container" aria-label="Introduction">
         <div className="ux-hero-kicker" data-reveal suppressHydrationWarning>
           <p className="ux-kicker">Portfolio — 2026</p>
-          <span className="ux-hero-badge" aria-hidden="true">
-            <svg viewBox="0 0 100 100" className="ux-badge-ring">
-              <defs>
-                <path
-                  id="ux-badge-circ"
-                  d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"
-                  fill="none"
-                />
-              </defs>
-              <text className="ux-badge-text">
-                <textPath href="#ux-badge-circ" textLength="238" lengthAdjust="spacingAndGlyphs">
-                  OPEN TO WORK · PUNE · UI/UX · FRONTEND ·
-                </textPath>
-              </text>
-            </svg>
-            <Asterisk className="ux-badge-mark" size={22} strokeWidth={2.5} aria-hidden="true" />
+          <span className="ux-hero-stamp" aria-hidden="true">
+            <span className="ux-stamp-row">
+              <span className="ux-stamp-dot" />
+              OPEN TO WORK
+            </span>
+            <span className="ux-stamp-sub">Pune · UI/UX · Frontend</span>
           </span>
         </div>
 

@@ -666,5 +666,4 @@ export const uiuxPrinciples = [
 export const alsoShipped = [
   { title: 'SSShopee ERP', stack: 'Next.js · TypeScript · Prisma', href: 'https://shubhamsupershopee-admin.vercel.app/' },
   { title: 'AI Recipe Generator', stack: 'Next.js · Google Gemini', href: 'https://recipe-generator-omkardile.vercel.app/' },
-  { title: 'Car Service Admin Panel', stack: 'React · Hybrid App', href: 'https://cdacadminpanel.vercel.app/login' },
 ];

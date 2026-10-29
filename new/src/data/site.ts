@@ -1,7 +1,8 @@
 // Content rules: every project fact (status, stack, link) is verified against
 // the live deployment or the project's public repository before it goes in
 // here. In-progress projects have no links. Multi-app projects use `links`
-// (one labeled anchor per application) instead of a single `href`.
+// (one labeled anchor per application, each with an optional caveat `note`)
+// instead of a single `href`.
 
 export type Project = {
   slug: string;
@@ -12,8 +13,9 @@ export type Project = {
   status: 'live' | 'building';
   summary: string;
   stack: string;
-  /** One labeled link per destination (live app, storefront, GitHub, release). */
-  links?: { href: string; label: string }[];
+  /** One labeled link per destination (live app, storefront, GitHub, release);
+      an optional `note` renders under a link for caveats like auth-locked apps. */
+  links?: { href: string; label: string; note?: string }[];
   cover: { alt: string; seed: number };
 };
 
@@ -55,7 +57,11 @@ export const projects: Project[] = [
       'One retail business, two applications: a Next.js ERP for the owner — POS with barcode scanning and GST receipts, inventory with restock, stock-take and expiry tracking, purchases, income and expenses, udhar (credit) ledgers, analytics and reports — plus a customer storefront with its own database, cookie cart and COD/UPI checkout. Products sync from the ERP to the shop.',
     stack: 'Next.js 16 · TypeScript · Prisma 6 · Supabase PostgreSQL · Tailwind CSS 4',
     links: [
-      { href: 'https://shubhamsupershopee-admin.vercel.app/', label: 'Open management app' },
+      {
+        href: 'https://shubhamsupershopee-admin.vercel.app/',
+        label: 'Open management app',
+        note: 'Locked down under authentication — the store runs on it in real time.',
+      },
       { href: 'https://sss-ecomm.vercel.app/', label: 'Open customer storefront' },
       { href: 'https://github.com/OmKardile/sss-erp-hybrid', label: 'GitHub (ERP)' },
     ],
@@ -168,21 +174,8 @@ export const projects: Project[] = [
     cover: { alt: 'Signal pattern for the AI Recipe Generator', seed: 35.9 },
   },
   {
-    slug: 'car-service-station',
-    index: '09',
-    title: 'Online Car Service Station',
-    kind: 'Academic project · PG-DMC major',
-    year: '2025–26',
-    status: 'live',
-    summary:
-      'Major project for the PG-DMC course (SunBeam Infotech, C-DAC ACTS): a hybrid car-service application for booking and tracking service jobs, paired with a React admin panel for managing operations.',
-    stack: 'React.js · Hybrid mobile app · Admin panel',
-    links: [{ href: 'https://cdacadminpanel.vercel.app/login', label: 'Open admin panel' }],
-    cover: { alt: 'Signal pattern for the Online Car Service Station project', seed: 39.4 },
-  },
-  {
     slug: 'food-ordering',
-    index: '10',
+    index: '09',
     title: 'Full-Stack Food Ordering App',
     kind: 'Product · In development',
     year: '2026',
@@ -194,7 +187,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'realtime-chat',
-    index: '11',
+    index: '10',
     title: 'Real-Time Chat App',
     kind: 'App · In development',
     year: '2026',

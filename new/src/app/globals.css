@@ -964,6 +964,20 @@ html.dark .theme-toggle .icon-moon {
   padding-block: 0.25rem;
 }
 
+/* A link plus its optional caveat note travel as one inline unit. */
+.card-link-item {
+  display: inline-block;
+}
+
+.card-link-note {
+  display: block;
+  max-width: 36ch;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--muted);
+  margin-top: 0.05rem;
+}
+
 .work-card-linked:hover .card-link {
   text-decoration-thickness: 2px;
 }

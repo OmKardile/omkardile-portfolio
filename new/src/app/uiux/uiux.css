@@ -270,39 +270,110 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
   margin: 0.6rem 0 0;
 }
 
-/* Rotating availability badge — circular text on an SVG path, slow spin. */
-.ux-hero-badge {
-  position: relative;
-  width: clamp(84px, 9vw, 112px);
-  aspect-ratio: 1;
+/* Open-to-work stamp — a rotated print sticker with a hard accent shadow.
+   Stamps in when the hero reveals (ScrollReveal adds .revealed to the kicker),
+   leans with scroll velocity via --vskew, straightens and presses down on
+   hover. Replaces the old rotating circular badge. Pure CSS, no JS. */
+.ux-hero-stamp {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
   flex: none;
+  padding: 0.62rem 0.95rem 0.66rem;
+  border: 2px solid var(--fg);
+  background: var(--bg);
   color: var(--fg);
+  box-shadow: 5px 5px 0 var(--accent);
+  transform: rotate(-4deg) skewY(var(--vskew, 0deg));
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease;
 }
 
-.ux-badge-ring {
-  width: 100%;
-  height: 100%;
-  animation: ux-spin 16s linear infinite;
+.ux-hero-stamp:hover {
+  transform: translate(2px, 2px) rotate(0deg) skewY(var(--vskew, 0deg));
+  box-shadow: 2px 2px 0 var(--accent);
 }
 
-.ux-badge-text {
+.ux-stamp-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   font-family: var(--mono2);
-  font-size: 9.2px;
+  font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.14em;
-  fill: currentColor;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.ux-badge-mark {
+.ux-stamp-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+  position: relative;
+}
+
+.ux-stamp-dot::after {
+  content: '';
   position: absolute;
-  inset: 0;
-  margin: auto;
-  color: var(--pa);
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  animation: ux-ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-@keyframes ux-spin {
-  to {
-    transform: rotate(1turn);
+@keyframes ux-ping {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.9;
+  }
+  70%,
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+.ux-stamp-sub {
+  font-family: var(--mono2);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Stamp-in entrance: gated on .js-reveal so no-JS visitors just see the
+   finished sticker. The hidden pre-state applies until the kicker reveals. */
+.js-reveal .ux-hero-kicker:not(.revealed) .ux-hero-stamp {
+  opacity: 0;
+  transform: rotate(-11deg) skewY(var(--vskew, 0deg)) scale(1.75);
+}
+
+.js-reveal .ux-hero-kicker.revealed .ux-hero-stamp {
+  opacity: 1;
+  transition:
+    opacity 0.35s ease 0.1s,
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s,
+    box-shadow 0.3s ease 0.1s;
+}
+
+@media (max-width: 560px) {
+  .ux-hero-stamp {
+    padding: 0.5rem 0.7rem 0.55rem;
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  .ux-stamp-row {
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+  }
+  .ux-stamp-sub {
+    font-size: 0.5rem;
+    letter-spacing: 0.16em;
   }
 }
 
