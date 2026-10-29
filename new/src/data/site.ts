@@ -93,7 +93,10 @@ export const projects: Project[] = [
     summary:
       'Shipped to client: a storefront for a Surat-based surveillance and networking hardware business — categorized product catalog, exclusive CCTV kit bundles, Razorpay checkout with COD, GST invoicing with serial-tracked warranty, OTP customer accounts with order history and one-tap reorders, WhatsApp ordering and order tracking. Demo is live.',
     stack: 'E-commerce platform · Razorpay payments · GST invoicing',
-    links: [{ href: 'https://patelnetworks-5ne3.onrender.com/', label: 'Open live demo' }],
+    links: [
+      { href: 'https://patelnetworks-5ne3.onrender.com/', label: 'Open live demo' },
+      { href: 'https://patelnetworks-5ne3.onrender.com/admin', label: 'Open admin dashboard' },
+    ],
     cover: { alt: 'Signal pattern for the PatelNetworks client e-commerce platform', seed: 12.4 },
   },
   {
@@ -138,7 +141,10 @@ export const projects: Project[] = [
     summary:
       'A lightweight Android network monitor: a persistent live-speed notification with separate download and upload rates, daily Wi-Fi/mobile usage totals, calendar-backed history and per-app traffic breakdowns — plus usage-threshold alerts, signal strength in dBm and a quick Cloudflare speed test.',
     stack: 'Kotlin · Android (foreground service · NetworkStatsManager)',
-    links: [{ href: 'https://github.com/OmKardile/bandwidth-bandit', label: 'GitHub' }],
+    links: [
+      { href: 'https://github.com/OmKardile/bandwidth-bandit', label: 'GitHub' },
+      { href: 'https://github.com/OmKardile/bandwidth-bandit/releases/tag/v1.0.0', label: 'Release v1.0.0' },
+    ],
     cover: { alt: 'Signal pattern for the Bandwidth Bandit Android network monitor', seed: 27.5 },
   },
   {

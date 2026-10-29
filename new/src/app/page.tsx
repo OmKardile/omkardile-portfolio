@@ -100,31 +100,55 @@ export default function Home() {
         <SectionHead
           id="work-title"
           index="01 / Selected work"
-          title="Built, shipped, and in progress."
+          title="Built and shipped."
           note="Live products and client work — from a retail ERP to a café operations platform. Links point only to verified destinations."
         />
         <ul className="work-grid" data-reveal-group suppressHydrationWarning>
-          {projects.map((p) => {
-            const linked = !!p.links && p.links.length > 0;
-            return (
-              <li key={p.slug} className={linked ? 'work-card work-card-linked' : 'work-card'}>
-                {/* Plain card (no whole-card anchor): the …more toggle inside
-                    the summary must not sit inside an <a>, and every linked
-                    card already carries labeled links at its foot. */}
-                <div>
-                  <div className="card-top">
-                    <span className="mono card-index">{p.index}</span>
-                    <StatusTag status={p.status} />
+          {projects
+            .filter((p) => p.status === 'live')
+            .map((p) => {
+              const linked = !!p.links && p.links.length > 0;
+              return (
+                <li key={p.slug} className={linked ? 'work-card work-card-linked' : 'work-card'}>
+                  {/* Plain card (no whole-card anchor): the …more toggle inside
+                      the summary must not sit inside an <a>, and every linked
+                      card already carries labeled links at its foot. */}
+                  <div>
+                    <div className="card-top">
+                      <span className="mono card-index">{p.index}</span>
+                      <StatusTag status={p.status} />
+                    </div>
+                    <h3 className="card-title">{p.title}</h3>
+                    <CardSummary text={p.summary} />
+                    <p className="mono card-stack">{p.stack}</p>
+                    <CardLinks links={p.links} />
                   </div>
-                  <h3 className="card-title">{p.title}</h3>
-                  <CardSummary text={p.summary} />
-                  <p className="mono card-stack">{p.stack}</p>
-                  <CardLinks links={p.links} />
-                </div>
-              </li>
-            );
-          })}
+                </li>
+              );
+            })}
         </ul>
+
+        {/* In development — quiet bench rows under the grid. The shipped work
+            above is the headline; these sit lower, smaller, badge-free. */}
+        <div className="work-wip">
+          <p className="mono work-wip-label">In development</p>
+          <ul className="work-wip-list" data-reveal-group suppressHydrationWarning>
+            {projects
+              .filter((p) => p.status === 'building')
+              .map((p) => (
+                <li className="work-wip-row" key={p.slug}>
+                  <span className="mono work-wip-idx" aria-hidden="true">
+                    {p.index}
+                  </span>
+                  <div className="work-wip-main">
+                    <h3 className="work-wip-title">{p.title}</h3>
+                    <p className="work-wip-text">{p.summary}</p>
+                  </div>
+                  <p className="mono work-wip-stack">{p.stack}</p>
+                </li>
+              ))}
+          </ul>
+        </div>
       </section>
 
       {/* Skills */}

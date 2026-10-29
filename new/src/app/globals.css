@@ -882,6 +882,75 @@ html.dark .theme-toggle .icon-moon {
   height: 100%;
 }
 
+/* In development — quiet bench rows under the work grid. Deliberately
+   smaller than the shipped cards above: no card chrome, no status badge,
+   no cover — just a hairline list so they don't compete with live work. */
+.work-wip {
+  margin-top: 3.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.work-wip-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.3rem;
+}
+
+.work-wip-list {
+  list-style: none;
+}
+
+.work-wip-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, auto);
+  gap: 0.3rem 1.3rem;
+  align-items: baseline;
+  padding-block: 1.05rem;
+  border-top: 1px solid var(--line);
+}
+
+.work-wip-idx {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.work-wip-title {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.work-wip-text {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 64ch;
+  margin: 0.3rem 0 0;
+}
+
+.work-wip-stack {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: right;
+  max-width: 24ch;
+}
+
+@media (max-width: 46rem) {
+  .work-wip-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .work-wip-stack {
+    grid-column: 2;
+    text-align: left;
+    max-width: none;
+  }
+}
+
 .work-card > a,
 .work-card > div {
   display: flex;
