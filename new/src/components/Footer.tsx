@@ -1,4 +1,5 @@
 import { site } from '@/data/site';
+import { MotionToggle } from '@/components/MotionToggle';
 
 export function Footer() {
   return (
@@ -6,6 +7,7 @@ export function Footer() {
       <div className="container footer-inner">
         <p>{site.name} © 2026 · Pune, India</p>
         <div className="footer-links">
+          <MotionToggle />
           <a href="#top">Back to top ↑</a>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { Header } from '@/components/Header';
+import { DetailsAnimate } from '@/components/DetailsAnimate';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { site } from '@/data/site';
@@ -57,6 +58,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           dangerouslySetInnerHTML={{
             __html:
               "try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark')}catch(e){}" +
+              // Effective motion preference BEFORE paint: explicit footer toggle
+      // choice wins; otherwise the OS setting. motion-off is the single
+      // authority every animated subsystem reads (CSS kills, Lenis, WAAPI).
+              "try{var m=localStorage.getItem('motion-pref');var r=m==='off'||(m!=='on'&&matchMedia('(prefers-reduced-motion: reduce)').matches);if(r)document.documentElement.classList.add('motion-off')}catch(e){}" +
               "document.documentElement.classList.add('js-reveal');",
           }}
         />
@@ -69,6 +74,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         </a>
         <Header />
         <SmoothScroll />
+        <DetailsAnimate />
         <ScrollReveal />
         <main id="main" tabIndex={-1}>
           {children}

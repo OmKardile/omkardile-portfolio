@@ -734,15 +734,18 @@ html.dark .theme-toggle .icon-moon {
   transition: transform 100ms ease-out;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .btn:active,
-  .header-resume:active,
-  .header-uiux:active,
-  .header-dev:active,
-  .header-creative:active,
-  .theme-toggle:active {
-    transform: none;
-  }
+/* Reduced-motion kill switch — the inline script adds `motion-off` to <html>
+   when the EFFECTIVE preference is reduced: OS setting, or the footer motion
+   toggle's explicit override. Class-based (not a media query) so the toggle
+   can override the OS at runtime — an OS with "Animation effects: Off" no
+   longer permanently locks the owner out of their own site's motion. */
+html.motion-off .btn:active,
+html.motion-off .header-resume:active,
+html.motion-off .header-uiux:active,
+html.motion-off .header-dev:active,
+html.motion-off .header-creative:active,
+html.motion-off .theme-toggle:active {
+  transform: none;
 }
 
 /* ---------- Sections ---------- */
@@ -1100,6 +1103,13 @@ html.dark .theme-toggle .icon-moon {
   font-size: 0.88rem;
 }
 
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
 .footer-links a {
   color: var(--muted);
   text-decoration: none;
@@ -1109,6 +1119,29 @@ html.dark .theme-toggle .icon-moon {
   color: var(--fg);
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+/* Motion preference toggle — styled like the footer links but as a button,
+   so keyboard focus and the pressed state stay honest. */
+.motion-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.motion-toggle:hover {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.motion-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /* ---------- UI/UX portfolio page (/uiux) ---------- */
@@ -1307,10 +1340,8 @@ html.dark .theme-toggle .icon-moon {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ch-chev {
-    transition: none;
-  }
+html.motion-off .ch-chev {
+  transition: none;
 }
 
 /* Liquid Glass study rows */
@@ -1376,10 +1407,8 @@ html.dark .theme-toggle .icon-moon {
   transform: scale(var(--press-scale));
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .lg-action:active {
-    transform: none;
-  }
+html.motion-off .lg-action:active {
+  transform: none;
 }
 
 .shipped-link {
@@ -2045,14 +2074,12 @@ html.dark .theme-toggle .icon-moon {
   transform: scale(0.985);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .taar *,
-  .taar *::before,
-  .taar *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-delay: 0s !important;
-  }
+html.motion-off .taar *,
+html.motion-off .taar *::before,
+html.motion-off .taar *::after {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
+  animation-delay: 0s !important;
 }
 
 /* ---------- Route loading states (loading.tsx + useLinkStatus) ---------- */
@@ -2157,60 +2184,46 @@ html.dark .theme-toggle .icon-moon {
 }
 
 /* Reduce Motion: all added flourishes collapse to state changes. */
-@media (prefers-reduced-motion: reduce) {
-  .btn,
-  .btn-arrow,
-  .card-link span[aria-hidden='true'],
-  .header-resume span[aria-hidden='true'],
-  .lg-action span[aria-hidden='true'],
-  .theme-toggle svg,
-  .nav-sheet,
-  .burger-box span {
-    transition: none;
-  }
+html.motion-off .btn,
+html.motion-off .btn-arrow,
+html.motion-off .card-link span[aria-hidden='true'],
+html.motion-off .header-resume span[aria-hidden='true'],
+html.motion-off .lg-action span[aria-hidden='true'],
+html.motion-off .theme-toggle svg,
+html.motion-off .nav-sheet,
+html.motion-off .burger-box span {
+  transition: none;
+}
 
-  .btn:hover {
-    transform: none;
-    box-shadow: none;
-  }
+html.motion-off .btn:hover {
+  transform: none;
+  box-shadow: none;
+}
 
-  .nav-sheet.open,
-  .nav-sheet.open li {
-    animation: none;
-  }
+html.motion-off .nav-sheet.open,
+html.motion-off .nav-sheet.open li {
+  animation: none;
+}
 
-  .route-bar span {
-    animation-duration: 2.5s;
-  }
+html.motion-off .route-bar span {
+  animation-duration: 2.5s;
+}
 
-  .route-spin,
-  .pill-spin {
-    animation: none;
-    border-color: var(--muted);
-    border-top-color: var(--muted);
-  }
+html.motion-off .route-spin,
+html.motion-off .pill-spin {
+  animation: none;
+  border-color: var(--muted);
+  border-top-color: var(--muted);
 }
 
 /* ================= Apple-style motion ================= */
 
-/* Height interpolation lets block-size animate to/from `auto` (Chromium 129+;
-   other engines ignore it and keep the instant toggle). */
-html {
-  interpolate-size: allow-keywords;
-}
-
 /* Smooth expand/collapse for the native accordions (case-study chapters,
-   Liquid Glass rows). Engines without ::details-content drop these rules and
-   keep the default instant open — progressive enhancement. */
-details::details-content {
-  block-size: 0;
-  overflow-y: clip;
-  transition: block-size 0.5s var(--ease-apple), content-visibility 0.5s allow-discrete;
-}
-
-details[open]::details-content {
-  block-size: auto;
-}
+   Liquid Glass rows) is handled by the DetailsAnimate client component —
+   a WAAPI height animation on the content body. That works in every engine
+   (the old ::details-content + interpolate-size route was Chromium-only, so
+   Firefox/Safari users got an instant snap) and it can honor the motion
+   preference at toggle time. */
 
 /* Theme switch cross-fades instead of snapping. body/.site-header transitions
    are the fallback; on Chromium/Safari the View Transitions rule below
@@ -2285,43 +2298,35 @@ html.js-reveal [data-reveal-group].revealed > *:nth-child(5) { animation-delay: 
 html.js-reveal [data-reveal-group].revealed > *:nth-child(6) { animation-delay: 0.35s; }
 html.js-reveal [data-reveal-group].revealed > *:nth-child(n + 7) { animation-delay: 0.42s; }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    interpolate-size: auto;
-  }
+/* Reduced-motion kill switch — see the `motion-off` note near the button
+   styles. Everything the engine animates gets a calm OFF state here. */
+html.motion-off {
+  scroll-behavior: auto;
+}
 
-  details::details-content {
-    transition: none;
-  }
+html.motion-off body,
+html.motion-off .site-header,
+html.motion-off .work-card,
+html.motion-off .process-card,
+html.motion-off .cs-card {
+  transition: none;
+}
 
-  body,
-  .site-header,
-  .work-card,
-  .process-card,
-  .cs-card {
-    transition: none;
-  }
+html.motion-off .work-card:hover,
+html.motion-off .process-card:hover,
+html.motion-off .cs-card:hover {
+  transform: none;
+  box-shadow: none;
+}
 
-  .work-card:hover,
-  .process-card:hover,
-  .cs-card:hover {
-    transform: none;
-    box-shadow: none;
-  }
+html.motion-off::view-transition-old(root),
+html.motion-off::view-transition-new(root) {
+  animation: none;
+}
 
-  html {
-    scroll-behavior: auto;
-  }
-
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
-
-  html.js-reveal [data-reveal],
-  html.js-reveal [data-reveal-group] > * {
-    opacity: 1;
-    transform: none;
-    animation: none;
-  }
+html.motion-off.js-reveal [data-reveal],
+html.motion-off.js-reveal [data-reveal-group] > * {
+  opacity: 1;
+  transform: none;
+  animation: none;
 }

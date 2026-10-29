@@ -19,13 +19,14 @@ export function ThemeToggle() {
     };
     // Chromium/Safari 18+: cross-fade the WHOLE document via View Transitions
     // (CSS sizes the sweep at 0.35s ease-apple). Engines without it fall back
-    // to the body/.site-header color transitions; reduced-motion gets instant.
+    // to the body/.site-header color transitions. Reduced motion (OS setting
+    // or the footer toggle's override) gets instant.
     const doc = document as Document & {
       startViewTransition?: (update: () => void) => unknown;
     };
     if (
       typeof doc.startViewTransition === 'function' &&
-      !matchMedia('(prefers-reduced-motion: reduce)').matches
+      !document.documentElement.classList.contains('motion-off')
     ) {
       doc.startViewTransition(apply);
     } else {

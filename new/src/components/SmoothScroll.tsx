@@ -23,9 +23,14 @@ import { useEffect, useRef } from 'react';
    - data-native-scroll opts out: the a11y skip link keeps its instant jump.
    - After the glide, keyboard focus moves to the target like a native jump.
 
+   Reduced motion: the effective preference lives in the html.motion-off
+   class (OS setting OR the footer motion toggle's explicit choice — see
+   MotionToggle). With the class present Lenis never starts, and anchor
+   clicks fall through to the native instant jump. Toggling the preference
+   fires a 'motion-pref' event and Lenis starts/stops live, no reload.
+
    - Touch devices keep native scrolling (syncTouch off by default): phones
      already have momentum, hijacking it feels worse.
-   - prefers-reduced-motion users get the untouched native scroll.
    - On SPA route changes Next resets scroll instantly; we re-sync Lenis so
      the lerp doesn't fight the reset.
    - The html.lenis rules in globals.css neutralize CSS scroll-behavior while
@@ -40,19 +45,48 @@ export function SmoothScroll() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const lenis = new Lenis({ duration: DURATION, easing: EASE });
-    lenisRef.current = lenis;
-
     let raf = 0;
-    const loop = (time: number) => {
-      lenis.raf(time);
+
+    const startLoop = (lenis: Lenis) => {
+      const loop = (time: number) => {
+        lenis.raf(time);
+        raf = requestAnimationFrame(loop);
+      };
       raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
 
-    // Move keyboard focus to the glided-to target, like a native anchor jump.
+    const start = () => {
+      if (lenisRef.current) return;
+      if (document.documentElement.classList.contains('motion-off')) return;
+      const lenis = new Lenis({ duration: DURATION, easing: EASE });
+      lenisRef.current = lenis;
+      startLoop(lenis);
+    };
+
+    const stop = () => {
+      const lenis = lenisRef.current;
+      if (!lenis) return;
+      cancelAnimationFrame(raf);
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+
+    // Footer toggle changed the preference: swap the engine live.
+    const onPref = () => {
+      if (document.documentElement.classList.contains('motion-off')) stop();
+      else start();
+    };
+
+    start();
+    window.addEventListener('motion-pref', onPref);
+
+    return () => {
+      window.removeEventListener('motion-pref', onPref);
+      stop();
+    };
+  }, []);
+
+  useEffect(() => {
     const focusTarget = (hash: string) => {
       const el = document.querySelector<HTMLElement>(hash);
       if (el) {
@@ -75,6 +109,9 @@ export function SmoothScroll() {
         url.search === window.location.search;
       if (!url.hash) return;
 
+      const lenis = lenisRef.current;
+      if (!lenis) return; // reduced mode: native instant jump is correct
+
       e.preventDefault();
       if (samePage) {
         const target = url.hash === '#' ? 0 : url.hash;
@@ -94,7 +131,10 @@ export function SmoothScroll() {
     // Back/forward across hash entries: land without fighting restoration.
     const onPopState = () => {
       const hash = window.location.hash;
-      if (hash && hash !== '#') lenis.scrollTo(hash, { immediate: true, force: true });
+      lenisRef.current?.scrollTo(hash && hash !== '#' ? hash : 0, {
+        immediate: true,
+        force: true,
+      });
     };
 
     document.addEventListener('click', onClick, true);
@@ -103,9 +143,6 @@ export function SmoothScroll() {
     return () => {
       document.removeEventListener('click', onClick, true);
       window.removeEventListener('popstate', onPopState);
-      cancelAnimationFrame(raf);
-      lenis.destroy();
-      lenisRef.current = null;
     };
     // router is stable across renders; the listeners are set up once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
