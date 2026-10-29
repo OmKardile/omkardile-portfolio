@@ -22,6 +22,9 @@
 .ux-shell {
   --serif: var(--font-ux-serif, 'Fraunces'), Georgia, serif;
   --sans: var(--font-ux-sans, 'Hanken Grotesk'), system-ui, sans-serif;
+  --display: var(--font-ux-anton, 'Anton'), 'Arial Narrow', Impact, sans-serif;
+  --syne: var(--font-ux-syne, 'Syne'), system-ui, sans-serif;
+  --mono2: var(--font-ux-mono, 'Space Mono'), ui-monospace, 'SFMono-Regular', monospace;
 
   /* Per-project accent: rows and case pages set --pa-light/--pa-dark inline.
      The resolution lives on those same elements (below) — a custom property
@@ -36,6 +39,9 @@
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 60vh;
+  /* the rotated hero strip bleeds past the container — clip it without
+     creating a scroll container (sticky section labels keep working) */
+  overflow-x: clip;
 }
 
 .ux-row,
@@ -142,9 +148,9 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 .ux-nav-name {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 1.05rem;
+  font-family: var(--syne);
+  font-weight: 700;
+  font-size: 1.02rem;
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
@@ -189,10 +195,10 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 .ux-label {
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-family: var(--mono2);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
   margin: 0;
@@ -230,38 +236,202 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 .ux-btn:hover {
-  border-color: var(--pa);
-  color: var(--pa);
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
 }
 
 .ux-btn-ghost {
   border-color: var(--line-strong, var(--line));
 }
 
-/* ---- index: hero --------------------------------------------------------- */
+/* ---- index: hero — the clash-type stack ---------------------------------- */
 
 .ux-hero {
   /* padding-block only — the .ux-container class owns the inline padding */
-  padding-block: clamp(4rem, 12vh, 7.5rem) clamp(3rem, 8vh, 5rem);
+  position: relative;
+  padding-block: clamp(3rem, 9vh, 5.5rem) clamp(3rem, 8vh, 5rem);
 }
 
+.ux-hero-kicker {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: clamp(1.6rem, 4vh, 2.8rem);
+}
+
+.ux-kicker {
+  font-family: var(--mono2);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0.6rem 0 0;
+}
+
+/* Rotating availability badge — circular text on an SVG path, slow spin. */
+.ux-hero-badge {
+  position: relative;
+  width: clamp(84px, 9vw, 112px);
+  aspect-ratio: 1;
+  flex: none;
+  color: var(--fg);
+}
+
+.ux-badge-ring {
+  width: 100%;
+  height: 100%;
+  animation: ux-spin 16s linear infinite;
+}
+
+.ux-badge-text {
+  font-family: var(--mono2);
+  font-size: 9.2px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  fill: currentColor;
+}
+
+.ux-badge-mark {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  color: var(--pa);
+}
+
+@keyframes ux-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* The name: Anton caps over an outlined Syne line. Scroll-velocity skew
+   leans the whole block (UiuxMotion feeds --vskew on the shell). */
 .ux-hero-name {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(3.2rem, 11vw, 7.5rem);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  margin: 0 0 1.6rem;
+  font-weight: 400;
+  line-height: 0.86;
+  margin: 0;
+  transform: skewY(var(--vskew, 0deg));
+}
+
+.ux-hero-line {
+  display: block;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.ux-hero-line-fill {
+  font-family: var(--display);
+  font-size: clamp(4.4rem, 17vw, 13rem);
+  letter-spacing: 0.015em;
+  margin-left: -0.035em;
+}
+
+.ux-hero-line-outline {
+  font-family: var(--syne);
+  font-weight: 800;
+  font-size: clamp(2.7rem, 10.2vw, 8rem);
+  letter-spacing: 0.02em;
+  margin: 0.06em 0 0 clamp(0rem, 6vw, 5rem);
+  color: transparent;
+  -webkit-text-stroke: 2.5px var(--fg);
+  transition: color 0.35s ease;
+  cursor: default;
+}
+
+.ux-hero-line-outline:hover {
+  color: var(--fg);
+}
+
+/* Per-char masks (spans injected by UiuxMotion). Hidden state exists only
+   after the split, so no-JS visitors see plain text. */
+.ux-ch {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.ux-ch-i {
+  display: inline-block;
+  transform: translateY(118%) rotate(6deg);
+}
+
+.chars-in .ux-ch-i {
+  transform: translateY(0) rotate(0);
+  transition: transform 0.7s var(--ease-apple);
+  transition-delay: calc(var(--ci, 0) * 34ms);
+}
+
+.ux-hero-line-outline.chars-in .ux-ch-i {
+  transition-delay: calc(var(--ci, 0) * 34ms + 200ms);
+}
+
+/* Rotated ink strip — slices across the hero, leans with scroll velocity. */
+.ux-hero-strip {
+  margin-inline: calc(50% - 50vw);
+  background: var(--fg);
+  color: var(--bg);
+  padding: 0.55rem 0;
+  overflow: hidden;
+  transform: rotate(-2deg) skewY(var(--vskew, 0deg));
+  margin-block: clamp(1.6rem, 4vh, 2.6rem) clamp(2rem, 5vh, 3rem);
+}
+
+.ux-hero-strip-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: ux-strip-scroll 15s linear infinite;
+}
+
+.ux-hero-strip-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-right: 1.5rem;
+  font-family: var(--mono2);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.24em;
+  white-space: nowrap;
+}
+
+.ux-hero-strip-item svg {
+  opacity: 0.55;
+  flex: none;
+}
+
+@keyframes ux-strip-scroll {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .ux-hero-role {
-  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
-  margin: 0 0 0.5rem;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.35rem, 3vw, 2.1rem);
+  line-height: 1.3;
+  margin: 0 0 1rem;
+  max-width: 30ch;
+}
+
+.ux-hero-role em {
+  font-style: italic;
+  color: var(--pa);
 }
 
 .ux-hero-meta {
+  font-family: var(--mono2);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--muted);
-  margin: 0 0 2rem;
+  margin: 0 0 1.6rem;
 }
 
 .ux-hero-available {
@@ -281,6 +451,19 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
   border-radius: 50%;
   background: var(--pa, var(--fg));
   flex: none;
+  animation: ux-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes ux-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
 }
 
 /* ---- index: selected work rows ------------------------------------------- */
@@ -307,15 +490,17 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 /* Asymmetric rows: 01 spans wide; 02 and 03 offset into the remaining
-   column. Entire row is one link. */
+   column. Entire row is one link. The numeral is a huge outlined ghost that
+   drifts on scroll and fills with the project accent on hover; a wireframe
+   peek card trails the cursor over the row (fine pointers only). */
 .ux-row {
-  display: flex;
-  gap: clamp(1.2rem, 4vw, 3rem);
-  align-items: flex-start;
+  position: relative;
+  display: block;
   color: var(--fg);
   text-decoration: none;
   border-top: 1px solid var(--line);
-  padding-top: 1.4rem;
+  padding-top: 1.6rem;
+  padding-bottom: 0.4rem;
   max-width: 62rem;
 }
 
@@ -325,22 +510,30 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 .ux-row-number {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(2.6rem, 6vw, 4.5rem);
-  line-height: 1;
-  color: var(--pa); /* big numeral wears the project accent */
-  transition: color 0.25s ease;
-  flex: none;
-  min-width: 2ch;
+  position: absolute;
+  top: -0.12em;
+  right: 0;
+  z-index: 0;
+  font-family: var(--display);
+  font-size: clamp(6.5rem, 17vw, 14rem);
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--pa);
+  opacity: 0.45;
+  pointer-events: none;
+  transform: translateY(calc(var(--drift, 0) * 38px));
+  transition: color 0.3s ease, opacity 0.3s ease;
 }
 
 .ux-row:hover .ux-row-number {
-  color: var(--fg);
+  color: var(--pa);
+  opacity: 1;
 }
 
 .ux-row-body {
   display: block;
+  position: relative;
+  z-index: 1;
 }
 
 .ux-row-top {
@@ -352,17 +545,59 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 .ux-row-title {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
-  letter-spacing: -0.01em;
-  line-height: 1.1;
+  font-family: var(--syne);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  transition: transform 0.35s var(--ease-apple);
+}
+
+.ux-row:hover .ux-row-title {
+  transform: translateX(0.75rem);
+}
+
+/* Cursor-following wireframe peek — UiuxMotion feeds --mx/--my on the row;
+   the card hangs above the pointer with a fixed tilt. */
+.ux-row-peek {
+  position: absolute;
+  left: var(--mx, 60%);
+  top: var(--my, 40%);
+  z-index: 2;
+  width: 132px;
+  padding: 0.55rem;
+  border: 1px solid var(--fg);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -114%) rotate(-5deg) scale(0.85);
+  transition: opacity 0.22s ease, transform 0.32s var(--ease-apple);
+}
+
+.ux-row:hover .ux-row-peek {
+  opacity: 1;
+  transform: translate(-50%, -114%) rotate(-5deg) scale(1);
+}
+
+.ux-row-peek svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (hover: none) {
+  .ux-row-peek {
+    display: none;
+  }
 }
 
 .ux-row-tagline {
   display: block;
   font-size: 1.02rem;
   margin-bottom: 0.6rem;
+  max-width: 44ch;
 }
 
 .ux-row-problem {
@@ -383,8 +618,9 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 .ux-row-tools {
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
+  font-family: var(--mono2);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -429,7 +665,7 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
   color: var(--fg);
 }
 
-/* ---- index: how I work ---------------------------------------------------- */
+/* ---- index: how I work — stepped diagonal ---------------------------------- */
 
 .ux-how {
   border-top: 1px solid var(--line);
@@ -437,15 +673,40 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 .ux-how-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 5vh, 3rem);
   margin-top: 1.4rem;
 }
 
+/* The diagonal: each step indents further right, numerals grow outlined. */
 .ux-how-item {
-  border-top: 1px solid var(--line);
-  padding-top: 1rem;
+  position: relative;
+  max-width: 34rem;
+  padding-top: 0.4rem;
+}
+
+.ux-how-item:nth-child(2) {
+  margin-left: clamp(0rem, 12vw, 10rem);
+}
+
+.ux-how-item:nth-child(3) {
+  margin-left: clamp(0rem, 24vw, 20rem);
+}
+
+.ux-how-big {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(4.5rem, 9vw, 7.5rem);
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--fg);
+  transform: translateY(calc(var(--drift, 0) * 26px));
+  margin-bottom: 0.4rem;
+}
+
+.ux-how-item:nth-child(2) .ux-how-big {
+  -webkit-text-stroke-color: var(--pa, var(--fg));
 }
 
 .ux-how-n {
@@ -455,9 +716,9 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 .ux-how-title {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 1.3rem;
+  font-family: var(--syne);
+  font-weight: 700;
+  font-size: 1.45rem;
   margin: 0 0 0.3rem;
 }
 
@@ -465,6 +726,37 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
   color: var(--muted);
   font-size: 0.95rem;
   margin: 0;
+}
+
+/* Alternating slide-in for the diagonal steps (beats the group's default
+   fade-up at higher specificity; stagger delay per step). */
+html.js-reveal .ux-shell .ux-how-grid.revealed .ux-how-item:nth-child(1) {
+  animation: ux-in-left 0.7s var(--ease-apple) backwards;
+  animation-delay: 0s;
+}
+
+html.js-reveal .ux-shell .ux-how-grid.revealed .ux-how-item:nth-child(2) {
+  animation: ux-in-right 0.7s var(--ease-apple) backwards;
+  animation-delay: 0.09s;
+}
+
+html.js-reveal .ux-shell .ux-how-grid.revealed .ux-how-item:nth-child(3) {
+  animation: ux-in-left 0.7s var(--ease-apple) backwards;
+  animation-delay: 0.18s;
+}
+
+@keyframes ux-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-44px) rotate(-1.2deg);
+  }
+}
+
+@keyframes ux-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(44px) rotate(1.2deg);
+  }
 }
 
 /* ---- index: also shipped --------------------------------------------------- */
@@ -517,7 +809,18 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 
 .ux-shipped-stack {
   color: var(--muted);
-  font-size: 0.85rem;
+  font-family: var(--mono2);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ux-shipped-link > span[aria-hidden='true'] {
+  transition: transform 0.25s var(--ease-apple);
+}
+
+.ux-shipped-link:hover > span[aria-hidden='true'] {
+  transform: translate(3px, -3px);
 }
 
 /* ---- index: about + contact ------------------------------------------------ */
@@ -538,9 +841,33 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
   font-family: var(--serif);
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
-  line-height: 1.35;
+  font-size: clamp(1.55rem, 3.1vw, 2.5rem);
+  line-height: 1.28;
   margin: 0 0 1.2rem;
+}
+
+/* Word-staggered quote — spans rendered by the page; the hidden state only
+   exists under js-reveal, and the .revealed parent (ScrollReveal) starts the
+   cascade via --wi. */
+.ux-qw {
+  display: inline-block;
+}
+
+html.js-reveal .ux-shell [data-reveal]:not(.revealed) .ux-qw {
+  opacity: 0;
+}
+
+html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
+  opacity: 1;
+  animation: ux-qword 0.5s var(--ease-apple) backwards;
+  animation-delay: calc(var(--wi, 0) * 26ms);
+}
+
+@keyframes ux-qword {
+  from {
+    opacity: 0;
+    transform: translateY(0.55em) rotate(2deg);
+  }
 }
 
 .ux-about-facts {
@@ -629,25 +956,29 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 }
 
 .ux-case-number {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(4rem, 12vw, 8rem);
-  line-height: 1;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(5rem, 14vw, 10rem);
+  line-height: 0.85;
   color: var(--pa);
   margin: 1.2rem 0 0;
 }
 
 .ux-case-title {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(2.8rem, 8vw, 5.5rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  margin: 0.5rem 0 1rem;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(3.2rem, 10vw, 7.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin: 0.4rem 0 1rem;
 }
 
 .ux-case-tagline {
-  font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
   color: var(--fg);
   max-width: 46ch;
   margin: 0 0 2rem;
@@ -698,14 +1029,15 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
 
 .ux-section-n {
   color: var(--pa);
+  font-family: var(--mono2);
   font-size: 0.8rem;
 }
 
 .ux-section-title {
-  font-family: var(--sans);
-  font-weight: 600;
-  font-size: 0.85rem;
-  letter-spacing: 0.14em;
+  font-family: var(--syne);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   margin: 0;
   color: var(--fg);
@@ -1322,5 +1654,52 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { ani
     width: 100%;
     text-align: center;
     padding-block: 0.2rem;
+  }
+}
+
+/* ---- loud-mode responsive -------------------------------------------------- */
+
+@media (max-width: 48rem) {
+  .ux-hero-line-outline {
+    -webkit-text-stroke-width: 1.6px;
+  }
+
+  .ux-hero-strip {
+    transform: rotate(-1.25deg) skewY(var(--vskew, 0deg));
+  }
+
+  .ux-hero-role {
+    max-width: none;
+  }
+
+  /* the diagonal collapses on small screens */
+  .ux-how-item:nth-child(2),
+  .ux-how-item:nth-child(3) {
+    margin-left: 0;
+  }
+
+  .ux-row-number {
+    font-size: clamp(4.5rem, 22vw, 7rem);
+    top: -0.08em;
+  }
+
+  .ux-row--offset {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 40rem) {
+  .ux-hero-badge {
+    width: 74px;
+  }
+
+  .ux-hero-strip-item {
+    font-size: 0.74rem;
+    gap: 1.1rem;
+    padding-right: 1.1rem;
+  }
+
+  .ux-row-peek {
+    display: none;
   }
 }

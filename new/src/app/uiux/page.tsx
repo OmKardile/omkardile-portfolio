@@ -1,15 +1,20 @@
+import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Mail, Linkedin } from 'lucide-react';
+import { Asterisk, Mail, Linkedin } from 'lucide-react';
 import { site, uiux } from '@/data/site';
 import { uiuxProjects, uiuxPrinciples, alsoShipped } from '@/data/uiuxProjects';
+import type { UiuxProject, WireframeArt } from '@/data/uiuxProjects';
 import { UiuxShell } from '@/components/uiux/UiuxShell';
 import { ProjectRow } from '@/components/uiux/ProjectRow';
+import { WireframeArtSvg } from '@/components/uiux/WireframeArt';
 
-/* /uiux — design portfolio index. Editorial layout per the portfolio spec:
-   slim nav (in the shell), oversized Fraunces hero, three asymmetric work
-   rows (Taar / Ghar / Sutra), how-I-work strip, also-shipped rows, about +
-   contact, credit footer. Typography is the design — no imagery. */
+/* /uiux — design portfolio index. The loud version: a stacked clash-type
+   hero (Anton caps over an outlined Syne line over Fraunces italic), a
+   rotating availability badge, a rotated scroll-skewed marquee strip, three
+   asymmetric work rows with ghost numerals and cursor-following wireframe
+   peeks, a stepped how-I-work diagonal, and a word-staggered about quote.
+   Typography is still the design — no imagery. Motion: UiuxMotion. */
 
 export const metadata: Metadata = {
   /* The root template already appends "| Omkar Kardile" — don't double it. */
@@ -27,21 +32,82 @@ export const metadata: Metadata = {
   },
 };
 
+/* First wireframe of a project — the cursor-following row peek on the index.
+   Decorative duplication of the case study's drawing, so it renders
+   aria-hidden inside the row. */
+function peekArt(project: UiuxProject): WireframeArt | null {
+  for (const section of project.sections) {
+    for (const block of section.blocks) {
+      if (block.type === 'wireframes') return block.items[0].art;
+    }
+  }
+  return null;
+}
+
+const MARQUEE_WORDS = ['DESIGN', 'CODE', 'SHIP', 'REPEAT'];
+
 export default function UiuxPage() {
   const [taar, ghar, sutra] = uiuxProjects;
   const linkedIn = site.socials.find((s) => s.label === 'LinkedIn')?.href;
+  const strip = [...MARQUEE_WORDS, ...MARQUEE_WORDS, ...MARQUEE_WORDS, ...MARQUEE_WORDS];
 
   return (
     <UiuxShell>
-      {/* Hero — typography is the design */}
-      <section className="ux-hero ux-container" aria-label="Introduction" data-reveal suppressHydrationWarning>
-        <h1 className="ux-hero-name">Omkar Kardile</h1>
-        <p className="ux-hero-role">UI/UX designer who builds what he designs</p>
-        <p className="ux-hero-meta">Pune, India</p>
-        <p className="ux-hero-available">{uiux.availability}</p>
+      {/* Hero — the clash-type stack */}
+      <section className="ux-hero ux-container" aria-label="Introduction">
+        <div className="ux-hero-kicker" data-reveal suppressHydrationWarning>
+          <p className="ux-kicker">Portfolio — 2026</p>
+          <span className="ux-hero-badge" aria-hidden="true">
+            <svg viewBox="0 0 100 100" className="ux-badge-ring">
+              <defs>
+                <path
+                  id="ux-badge-circ"
+                  d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"
+                  fill="none"
+                />
+              </defs>
+              <text className="ux-badge-text">
+                <textPath href="#ux-badge-circ" textLength="238" lengthAdjust="spacingAndGlyphs">
+                  OPEN TO WORK · PUNE · UI/UX · FRONTEND ·
+                </textPath>
+              </text>
+            </svg>
+            <Asterisk className="ux-badge-mark" size={22} strokeWidth={2.5} aria-hidden="true" />
+          </span>
+        </div>
+
+        <h1 className="ux-hero-name" aria-label="Omkar Kardile" data-skew>
+          <span className="ux-hero-line ux-hero-line-fill" data-chars aria-hidden="true">
+            OMKAR
+          </span>
+          <span className="ux-hero-line ux-hero-line-outline" data-chars aria-hidden="true">
+            KARDILE
+          </span>
+        </h1>
+
+        <div className="ux-hero-strip" aria-hidden="true" data-reveal suppressHydrationWarning>
+          <div className="ux-hero-strip-track">
+            {[...strip, ...strip].map((w, i) => (
+              <span className="ux-hero-strip-item" key={`${w}-${i}`}>
+                {w}
+                <Asterisk size={13} strokeWidth={3} aria-hidden="true" />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <p className="ux-hero-role" data-reveal suppressHydrationWarning>
+          UI/UX designer who <em>builds</em> what he designs
+        </p>
+        <p className="ux-hero-meta" data-reveal suppressHydrationWarning>
+          Pune, India
+        </p>
+        <p className="ux-hero-available" data-reveal suppressHydrationWarning>
+          {uiux.availability}
+        </p>
       </section>
 
-      {/* Selected work — three large editorial rows, 01 widest, 02/03 offset */}
+      {/* Selected work — ghost numerals, cursor peeks, offset rows */}
       <section className="ux-work" aria-labelledby="ux-work-title">
         <div className="ux-container">
           <div className="ux-work-head" data-reveal suppressHydrationWarning>
@@ -54,19 +120,19 @@ export default function UiuxPage() {
           </div>
           <ol className="ux-work-list">
             <li>
-              <ProjectRow project={taar} />
+              <ProjectRow project={taar} peekArt={peekArt(taar)} />
             </li>
             <li>
-              <ProjectRow project={ghar} offset />
+              <ProjectRow project={ghar} offset peekArt={peekArt(ghar)} />
             </li>
             <li>
-              <ProjectRow project={sutra} offset />
+              <ProjectRow project={sutra} offset peekArt={peekArt(sutra)} />
             </li>
           </ol>
         </div>
       </section>
 
-      {/* How I work — one strip, three principles, no icons */}
+      {/* How I work — a stepped diagonal, big outlined numerals */}
       <section className="ux-how" aria-labelledby="ux-how-title">
         <div className="ux-container">
           <h2 id="ux-how-title" className="ux-label" data-reveal suppressHydrationWarning>
@@ -75,9 +141,9 @@ export default function UiuxPage() {
           <div className="ux-how-grid" data-reveal-group suppressHydrationWarning>
             {uiuxPrinciples.map((p) => (
               <div className="ux-how-item" key={p.n}>
-                <p className="ux-how-n mono" aria-hidden="true">
+                <span className="ux-how-big" aria-hidden="true" data-drift>
                   {p.n}
-                </p>
+                </span>
                 <h3 className="ux-how-title">{p.title}</h3>
                 <p className="ux-how-text">{p.text}</p>
               </div>
@@ -86,7 +152,7 @@ export default function UiuxPage() {
         </div>
       </section>
 
-      {/* Also shipped — minimal text rows, live URLs from the repo */}
+      {/* Also shipped — mono rows, live URLs from the repo */}
       <section className="ux-shipped" aria-labelledby="ux-shipped-title">
         <div className="ux-container">
           <h2 id="ux-shipped-title" className="ux-label" data-reveal suppressHydrationWarning>
@@ -112,7 +178,7 @@ export default function UiuxPage() {
         </div>
       </section>
 
-      {/* About + contact */}
+      {/* About + contact — word-staggered quote, magnetic CTAs */}
       <section className="ux-about" aria-labelledby="ux-about-title">
         <div className="ux-container">
           <h2 id="ux-about-title" className="ux-label" data-reveal suppressHydrationWarning>
@@ -120,7 +186,18 @@ export default function UiuxPage() {
           </h2>
           <div className="ux-about-grid">
             <div data-reveal suppressHydrationWarning>
-              <p className="ux-about-quote">“{uiux.quote}”</p>
+              <p className="ux-about-quote">
+                <span className="sr-only">“{uiux.quote}”</span>
+                <span aria-hidden="true">
+                  “{uiux.quote.split(' ').map((w, i) => (
+                    <span className="ux-qw" style={{ '--wi': i } as CSSProperties} key={i}>
+                      {w}
+                    </span>
+                  )).reduce<React.ReactNode[]>((acc, el, i) => (
+                    i === 0 ? [el] : [...acc, ' ', el]
+                  ), [])}
+                </span>
+              </p>
               <ul className="ux-about-facts">
                 {uiux.aboutFacts.map((f) => (
                   <li key={f}>{f}</li>
@@ -133,11 +210,17 @@ export default function UiuxPage() {
                 conversation.
               </p>
               <div className="ux-contact-actions">
-                <a className="ux-btn" href={`mailto:${site.email}`}>
+                <a className="ux-btn" href={`mailto:${site.email}`} data-magnetic>
                   <Mail size={15} strokeWidth={2} aria-hidden="true" /> Email me
                 </a>
                 {linkedIn ? (
-                  <a className="ux-btn ux-btn-ghost" href={linkedIn} target="_blank" rel="noopener noreferrer">
+                  <a
+                    className="ux-btn ux-btn-ghost"
+                    href={linkedIn}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-magnetic
+                  >
                     <Linkedin size={15} strokeWidth={2} aria-hidden="true" /> LinkedIn
                     <span className="sr-only"> (opens in a new tab)</span>
                   </a>

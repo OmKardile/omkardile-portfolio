@@ -3,6 +3,16 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.0] — 2026-10-30
+
+### Changed
+
+- **`/uiux` goes loud** — new type system (five voices, all `next/font` self-hosted): Anton for the brutal condensed display (hero first line, ghost numerals, case-study titles/numbers), Syne for the quirky wide display (outlined "KARDILE" hero line, work titles, section titles, nav wordmark), Space Mono for typewriter chrome (kicker, labels, meta, marquee, stacks), Fraunces italic stays for emphasis/taglines, Hanken Grotesk stays for body. Case-study copy is untouched — presentation only.
+- **New `UiuxMotion` client component** (vanilla rAF/IO, no deps) with four subsystems: per-char hero reveal (`data-chars`, masked chars rising with rotate + stagger), scroll-velocity skew (`--vskew` on the shell, ±4° clamp, decays to 0), cursor-following wireframe peeks on work rows (`--mx/--my`, fine pointers only, shows each project's first case-study wireframe), and ghost-numeral scroll drift (`data-drift`, −1..1 viewport progress).
+- **Index layout overhaul**: stacked clash-type hero with a rotating circular "OPEN TO WORK" SVG badge and a full-bleed rotated ink marquee ("DESIGN ✳ CODE ✳ SHIP ✳ REPEAT") that leans with scroll velocity; work rows rebuilt around huge outlined ghost numerals that fill with the project accent on hover; "How I work" is now a stepped diagonal with outlined Anton numerals and alternating slide-in reveals; about quote is word-staggered at display size; contact buttons are magnetic and invert to ink on hover; shipped rows wear mono stacks with nudging arrows.
+- Case-study pages inherit the type system (Anton uppercase titles + accent numerals, Syne section titles, Space Mono labels, Fraunces italic taglines); body copy, section order and verbatim content unchanged.
+- Accessibility preserved throughout: h1 keeps `aria-label` around the split chars, decorative layers are `aria-hidden`, no horizontal scroll at any breakpoint (rotated strip clipped via `overflow-x: clip` without breaking sticky labels), peeks/stepping collapse correctly at 390px, focus rings and 44px targets intact.
+
 ## [1.2.0] — 2026-10-29
 
 ### Removed
