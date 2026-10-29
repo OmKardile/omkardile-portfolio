@@ -150,12 +150,12 @@ Sections whose evidence isn't collected yet stay honest: a `{ type: 'slot' }` bl
 
 Applied from the owner's Apple UX Design System reference document — **the discipline, not the skin**:
 
-- **Press feedback on touch-down**: `.btn`, nav pills and the theme toggle scale to `0.97` on `:active` (100ms ease-out), disabled under `prefers-reduced-motion`.
+- **Press feedback on touch-down**: `.btn`, nav pills and the theme toggle scale to `0.97` on `:active` (100ms ease-out).
 - **Motion tokens**: `--press-scale`, `--dur-micro` in `:root`.
 - **Reduce Transparency**: the sticky header (the site's only glass element) drops its blur and goes opaque.
 - **Increase Contrast**: separators and the header edge strengthen.
 - **Hit targets**: 44px minimum on all pills, toggle and buttons.
-- **Smooth scroll**: native `scroll-behavior: smooth` + `scroll-padding-top` so anchors land clear of the sticky header; fully disabled under `prefers-reduced-motion`. No scroll-hijack libraries.
+- **Smooth scroll**: native `scroll-behavior: smooth` + `scroll-padding-top` so anchors land clear of the sticky header. Motion — including the Lenis engine — is always enabled; there is no preference toggle and no reduced-motion kill switch (the footer motion button was removed in 1.2.0).
 - **Semantic colors + dark mode**: everything runs on CSS custom properties (`--bg/--fg/--muted/--line/--soft/--accent`), with `color-scheme` set per theme.
 - **Dual accents**: `/` wears dev blue (`--accent-dev`, light `#2563eb` / dark `#60a5fa`). Site chrome keeps the classic orange for the /uiux switch pill, but the /uiux portfolio pages themselves run the editorial paper theme (`html.uiux` scope: paper `#F6F3EE` / ink `#1B1D22` / mute `#6B685F` / line `#DDD7CC`, dark `#141518` / `#ECE8DF` / `#A09C92` / `#2B2D33`) with **per-project accents** — pages set `--pa-light`/`--pa-dark` inline and `uiux.css` resolves them to `--pa` (Taar/Sutra navy, Ghar terracotta). Both portfolios share the same accent *patterns*, so recoloring a whole portfolio stays a one-line change. Status dots stay green on purpose — they mean live, not brand.
 - Deliberately skipped: glass skins, spring gesture libraries, squircles — this site stays flat and fast on purpose.

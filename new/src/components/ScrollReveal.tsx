@@ -9,9 +9,9 @@ import { useEffect } from 'react';
 
    The hidden state is gated on the `js-reveal` class, which a tiny inline
    script in <head> adds before first paint — so content animates in cleanly
-   on load, while users without JS (and reduced-motion users, via CSS) always
-   see everything. Re-runs per pathname so SPA navigations re-arm the
-   observer for the new page's elements. */
+   on load, while users without JS always see everything. Re-runs per
+   pathname so SPA navigations re-arm the observer for the new page's
+   elements. Motion is always enabled (no reduced-motion gate). */
 export function ScrollReveal() {
   const pathname = usePathname();
 

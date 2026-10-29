@@ -16,8 +16,9 @@ import { useEffect } from 'react';
              0 → remove [open].
    - summary default is prevented so the UA jump never fights the animation;
      the [open] attribute still drives the chevron/color states via CSS.
-   - No-JS and html.motion-off visitors keep the native instant toggle:
-     the listener simply doesn't preventDefault there.
+   - No-JS visitors keep the native instant toggle: the listener simply
+     doesn't preventDefault there (there is no reduced-motion branch — motion
+     is always enabled).
    - Focus stays on the summary, so keyboard flow is unchanged. */
 
 const DURATION = 420;
@@ -29,10 +30,9 @@ function animatableBody(details: HTMLDetailsElement): HTMLElement | null {
 
 function toggleDetails(details: HTMLDetailsElement, summary: HTMLElement) {
   const body = animatableBody(details);
-  const reduced = document.documentElement.classList.contains('motion-off');
 
-  // Reduced motion or no animatable body: instant native toggle.
-  if (!body || reduced) {
+  // No animatable body: instant native toggle.
+  if (!body) {
     details.open = !details.open;
     return;
   }

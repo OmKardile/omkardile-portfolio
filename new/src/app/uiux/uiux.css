@@ -14,7 +14,7 @@
    right), hairline dividers instead of cards, no shadows, no glass, no
    gradients, no emoji. Hover = underline offset + accent numeral, nothing
    else. Motion = one-shot 12px fade-up via the site's IntersectionObserver
-   reveal system, staggered ≤60ms, fully off under motion-off.
+   reveal system, staggered ≤60ms, always on (no motion-off state).
    ======================================================================== */
 
 /* ---- shell + tokens ---------------------------------------------------- */
@@ -95,15 +95,6 @@ html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(2) { animati
 html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(3) { animation-delay: 0.12s; }
 html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(4) { animation-delay: 0.18s; }
 html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { animation-delay: 0.24s; }
-
-/* motion-off (manual toggle + prefers-reduced-motion) beats the scoped
-   animation — restate the kill at matching specificity. */
-html.motion-off.js-reveal .ux-shell [data-reveal],
-html.motion-off.js-reveal .ux-shell [data-reveal-group] > * {
-  opacity: 1;
-  transform: none;
-  animation: none;
-}
 
 /* ---- slim nav ----------------------------------------------------------- */
 

@@ -62,10 +62,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           dangerouslySetInnerHTML={{
             __html:
               "try{var t=localStorage.getItem('theme');var u=location.pathname.indexOf('/uiux')===0;if(u)document.documentElement.classList.add('uiux');var d=u?t==='dark':(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}" +
-              // Effective motion preference BEFORE paint: explicit footer toggle
-      // choice wins; otherwise the OS setting. motion-off is the single
-      // authority every animated subsystem reads (CSS kills, Lenis, WAAPI).
-              "try{var m=localStorage.getItem('motion-pref');var r=m==='off'||(m!=='on'&&matchMedia('(prefers-reduced-motion: reduce)').matches);if(r)document.documentElement.classList.add('motion-off')}catch(e){}" +
+              // Motion is always enabled — there is no preference toggle and no
+              // motion-off state anywhere in the site (the old html.motion-off
+              // kill switch was removed with the footer motion button).
               "document.documentElement.classList.add('js-reveal');",
           }}
         />

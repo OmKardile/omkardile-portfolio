@@ -89,14 +89,10 @@ html.uiux.dark {
 
 html {
   -webkit-text-size-adjust: 100%;
-  /* Anchors must clear the sticky header on jump. */
+  /* Anchors must clear the sticky header on jump. Smooth always — motion
+     runs unconditionally on this site (no reduced-motion kill switch). */
+  scroll-behavior: smooth;
   scroll-padding-top: 4.5rem;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
 }
 
 body {
@@ -261,10 +257,6 @@ html.lenis body {
   from {
     transform: scaleX(0);
   }
-}
-
-html.motion-off .wordmark::after {
-  animation: none;
 }
 
 .header-nav {
@@ -827,7 +819,7 @@ html.dark .theme-toggle .icon-moon {
 }
 
 /* Press feedback on touch-down (Apple fluid interaction: respond instantly,
-   no dead zones). Guarded for Reduce Motion. */
+   no dead zones). */
 .btn:active,
 .header-resume:active,
 .header-uiux:active,
@@ -836,20 +828,6 @@ html.dark .theme-toggle .icon-moon {
 .theme-toggle:active {
   transform: scale(var(--press-scale));
   transition: transform 100ms ease-out;
-}
-
-/* Reduced-motion kill switch — the inline script adds `motion-off` to <html>
-   when the EFFECTIVE preference is reduced: OS setting, or the footer motion
-   toggle's explicit override. Class-based (not a media query) so the toggle
-   can override the OS at runtime — an OS with "Animation effects: Off" no
-   longer permanently locks the owner out of their own site's motion. */
-html.motion-off .btn:active,
-html.motion-off .header-resume:active,
-html.motion-off .header-uiux:active,
-html.motion-off .header-dev:active,
-html.motion-off .header-creative:active,
-html.motion-off .theme-toggle:active {
-  transform: none;
 }
 
 /* ---------- Sections ---------- */
@@ -1236,29 +1214,6 @@ html.motion-off .theme-toggle:active {
   font-size: 0.95rem;
 }
 
-/* Motion preference toggle — styled like the footer links but as a button,
-   so keyboard focus and the pressed state stay honest. */
-.motion-toggle {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  color: var(--muted);
-  cursor: pointer;
-}
-
-.motion-toggle:hover {
-  color: var(--fg);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.motion-toggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
 /* ---------- UI/UX portfolio page (/uiux) ---------- */
 
 .hero-kicker-accent,
@@ -1387,10 +1342,6 @@ html.motion-off .theme-toggle:active {
   color: var(--accent);
 }
 
-html.motion-off .textlink {
-  transition: none;
-}
-
 /* ---------- /uiux closing contact block ---------- */
 
 .contact-xl {
@@ -1478,11 +1429,6 @@ html.motion-off .textlink {
 
 .xl-links a:hover {
   color: var(--accent);
-}
-
-html.motion-off .xl-mail,
-html.motion-off .xl-links a {
-  transition: none;
 }
 
 @media (max-width: 40rem) {
@@ -1694,10 +1640,6 @@ html.motion-off .xl-links a {
   }
 }
 
-html.motion-off .ch-chev {
-  transition: none;
-}
-
 /* Liquid Glass study rows */
 .lg-head {
   flex: 1;
@@ -1759,10 +1701,6 @@ html.motion-off .ch-chev {
 
 .lg-action:active {
   transform: scale(var(--press-scale));
-}
-
-html.motion-off .lg-action:active {
-  transform: none;
 }
 
 .about-uiux {
@@ -2417,14 +2355,6 @@ html.motion-off .lg-action:active {
   transform: scale(0.985);
 }
 
-html.motion-off .taar *,
-html.motion-off .taar *::before,
-html.motion-off .taar *::after {
-  transition-duration: 0.01ms !important;
-  animation-duration: 0.01ms !important;
-  animation-delay: 0s !important;
-}
-
 /* ---------- Route loading states (loading.tsx + useLinkStatus) ---------- */
 
 /* Indeterminate hairline bar pinned to the very top while a route streams in. */
@@ -2526,39 +2456,6 @@ html.motion-off .taar *::after {
   }
 }
 
-/* Reduce Motion: all added flourishes collapse to state changes. */
-html.motion-off .btn,
-html.motion-off .btn-arrow,
-html.motion-off .card-link span[aria-hidden='true'],
-html.motion-off .header-resume span[aria-hidden='true'],
-html.motion-off .lg-action span[aria-hidden='true'],
-html.motion-off .theme-toggle svg,
-html.motion-off .nav-sheet,
-html.motion-off .burger-box span {
-  transition: none;
-}
-
-html.motion-off .btn:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-html.motion-off .nav-sheet.open,
-html.motion-off .nav-sheet.open li {
-  animation: none;
-}
-
-html.motion-off .route-bar span {
-  animation-duration: 2.5s;
-}
-
-html.motion-off .route-spin,
-html.motion-off .pill-spin {
-  animation: none;
-  border-color: var(--muted);
-  border-top-color: var(--muted);
-}
-
 /* ================= Apple-style motion ================= */
 
 /* Smooth expand/collapse for the native accordions (case-study chapters,
@@ -2607,8 +2504,7 @@ body {
    ANIMATIONS, not transitions — the animation (and its stagger delay) ends
    with the reveal, so it never overrides the elements' own hover transitions
    afterwards. Hidden state only exists under html.js-reveal (set pre-paint by
-   the inline script), so no-JS visitors and reduced-motion users always get
-   fully visible content. */
+   the inline script), so no-JS visitors always get fully visible content. */
 @keyframes reveal-in {
   from {
     opacity: 0;
@@ -2641,43 +2537,10 @@ html.js-reveal [data-reveal-group].revealed > *:nth-child(5) { animation-delay: 
 html.js-reveal [data-reveal-group].revealed > *:nth-child(6) { animation-delay: 0.35s; }
 html.js-reveal [data-reveal-group].revealed > *:nth-child(n + 7) { animation-delay: 0.42s; }
 
-/* Reduced-motion kill switch — see the `motion-off` note near the button
-   styles. Everything the engine animates gets a calm OFF state here. */
-html.motion-off {
-  scroll-behavior: auto;
-}
-
-html.motion-off body,
-html.motion-off .site-header,
-html.motion-off .work-card,
-html.motion-off .process-card,
-html.motion-off .cs-card {
-  transition: none;
-}
-
-html.motion-off .work-card:hover,
-html.motion-off .process-card:hover,
-html.motion-off .cs-card:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-html.motion-off::view-transition-old(root),
-html.motion-off::view-transition-new(root) {
-  animation: none;
-}
-
-html.motion-off.js-reveal [data-reveal],
-html.motion-off.js-reveal [data-reveal-group] > * {
-  opacity: 1;
-  transform: none;
-  animation: none;
-}
-
 /* ================= Site-wide motion craft (MotionCraft) ================= */
 
-/* Four subsystems driven by the MotionCraft client component, all gated on
-   html.motion-off / prefers-reduced-motion, all compositor-only properties:
+/* Four subsystems driven by the MotionCraft client component, always on —
+   there is no motion-off state anywhere — all compositor-only properties:
    1. scroll progress hairline   2. split-text word reveals
    3. figure curtain + parallax  4. magnetic CTAs */
 
@@ -2699,8 +2562,8 @@ html.motion-off.js-reveal [data-reveal-group] > * {
 /* --- 2. split-text word reveal ---------------------------------------- */
 
 /* MotionCraft wraps words into overflow masks (.sw > .sw-i). The hidden
-   state only exists once the JS has split the element, so no-JS and
-   reduced-motion visitors always see plain, fully visible text. */
+   state only exists once the JS has split the element, so no-JS visitors
+   always see plain, fully visible text. */
 .sw {
   display: inline-block;
   overflow: hidden;
@@ -2741,14 +2604,6 @@ html.js-reveal .relay-fig[data-curtain].curtain-in {
   will-change: transform;
 }
 
-html.motion-off .relay-fig[data-curtain] {
-  clip-path: none;
-}
-
-html.motion-off .relay-fig[data-curtain] img {
-  transform: none;
-}
-
 /* --- 4. magnetic CTAs -------------------------------------------------- */
 
 /* MotionCraft feeds --mag-x/--mag-y on pointermove and toggles .mag-live.
@@ -2765,16 +2620,11 @@ html.motion-off .relay-fig[data-curtain] img {
     background-color 0.3s ease, border-color 0.3s ease;
 }
 
-html.motion-off [data-magnetic] {
-  transform: none;
-  transition: none;
-}
-
 /* --- kinetic ticker ----------------------------------------------------- */
 
 /* Full-bleed word marquee at the top of the site footer (home + /uiux).
    Two copies of the list render back to back and the track loops at exactly
-   -50%, so the seam is invisible. Hover pauses; motion-off freezes it. */
+   -50%, so the seam is invisible. Hover pauses it. */
 .ticker {
   overflow: hidden;
   border-block: 1px solid var(--line);
@@ -2825,10 +2675,6 @@ html.motion-off [data-magnetic] {
   to {
     transform: translateX(-50%);
   }
-}
-
-html.motion-off .ticker-track {
-  animation: none;
 }
 
 /* --- documented-concept status pill ------------------------------------ */

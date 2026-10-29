@@ -23,11 +23,9 @@ import { useEffect, useRef } from 'react';
    - data-native-scroll opts out: the a11y skip link keeps its instant jump.
    - After the glide, keyboard focus moves to the target like a native jump.
 
-   Reduced motion: the effective preference lives in the html.motion-off
-   class (OS setting OR the footer motion toggle's explicit choice — see
-   MotionToggle). With the class present Lenis never starts, and anchor
-   clicks fall through to the native instant jump. Toggling the preference
-   fires a 'motion-pref' event and Lenis starts/stops live, no reload.
+   Motion is always enabled: the engine starts on every load, for every
+   visitor. There is no preference toggle and no motion-off state — the old
+   footer button and its 'motion-pref' live-swap event were removed.
 
    - Touch devices keep native scrolling (syncTouch off by default): phones
      already have momentum, hijacking it feels worse.
@@ -57,7 +55,6 @@ export function SmoothScroll() {
 
     const start = () => {
       if (lenisRef.current) return;
-      if (document.documentElement.classList.contains('motion-off')) return;
       const lenis = new Lenis({ duration: DURATION, easing: EASE });
       lenisRef.current = lenis;
       startLoop(lenis);
@@ -71,17 +68,9 @@ export function SmoothScroll() {
       lenisRef.current = null;
     };
 
-    // Footer toggle changed the preference: swap the engine live.
-    const onPref = () => {
-      if (document.documentElement.classList.contains('motion-off')) stop();
-      else start();
-    };
-
     start();
-    window.addEventListener('motion-pref', onPref);
 
     return () => {
-      window.removeEventListener('motion-pref', onPref);
       stop();
     };
   }, []);
@@ -110,7 +99,7 @@ export function SmoothScroll() {
       if (!url.hash) return;
 
       const lenis = lenisRef.current;
-      if (!lenis) return; // reduced mode: native instant jump is correct
+      if (!lenis) return; // engine not running (shouldn't happen): native jump
 
       e.preventDefault();
       if (samePage) {

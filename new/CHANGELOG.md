@@ -3,6 +3,17 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] — 2026-10-29
+
+### Removed
+
+- **Footer motion button** — the `Motion: auto / on / off` three-state toggle is gone from the footer, along with its component (`MotionToggle.tsx`), its `.motion-toggle` styles, the `motion-pref` localStorage key and the `'motion-pref'` live-swap event.
+
+### Changed
+
+- **Motion is always enabled — no default gate at all.** The site previously read a stored preference (or the OS `prefers-reduced-motion` setting) into an `html.motion-off` class that every animated subsystem checked; that whole layer is removed. Lenis now starts on every load, split-text/curtain/magnetic/scroll-progress (MotionCraft) always bind, the WAAPI accordion and the theme-toggle View Transition have no reduced-motion branch, and CSS `scroll-behavior: smooth` is unconditional. All `html.motion-off` CSS kill rules (~30 across `globals.css` / `uiux.css`) were deleted with it.
+- Debug pass over the full motion stack after the removal — verified in the browser on `/`, `/uiux`, the three case studies, `/uiux/sutra/prototype` and `/creative`: no console errors, Lenis glide + anchor interception works, scroll progress hairline tracks 0→1, IntersectionObserver reveals fire on scroll, footer ticker animates, theme toggle cross-fades in both directions, mobile (390px) has no horizontal scroll, and the `DeviceFrame` embed path was E2E-tested with a temporary `prototypeUrl` (iframe title/sandbox/lazy-mount/aspect-ratio all correct) before reverting.
+
 ## [1.1.0] — 2026-10-29
 
 ### Added

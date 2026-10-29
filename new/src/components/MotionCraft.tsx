@@ -3,10 +3,10 @@
 import { useEffect, useRef } from 'react';
 
 /* MotionCraft — the site-wide motion layer. Vanilla rAF/IO/WAAPI only (no
-   dependencies), and every subsystem is gated on the same authority the rest
-   of the site reads: html.motion-off (the footer toggle) or
-   prefers-reduced-motion. All work is transform/opacity/clip-path on
-   compositor-friendly properties; nothing animates layout.
+   dependencies), and always enabled: motion runs for every visitor, with no
+   preference toggle and no motion-off state. All work is
+   transform/opacity/clip-path on compositor-friendly properties; nothing
+   animates layout.
 
    Subsystems:
    1. Scroll progress hairline — #scroll-progress scaleX 0→1 (layout-owned,
@@ -25,13 +25,6 @@ import { useEffect, useRef } from 'react';
    all page-element binding waits for the `motion:ready` event that
    <MotionReady /> (mounted as the last child of each page) dispatches once
    that page has hydrated. See MotionReady.tsx for the full story. */
-
-function motionOff() {
-  return (
-    document.documentElement.classList.contains('motion-off') ||
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
-}
 
 /* --- 2. split text ---------------------------------------------------- */
 
@@ -217,8 +210,6 @@ export function MotionCraft() {
   const pageCleanups = useRef<(() => void)[]>([]);
 
   useEffect(() => {
-    if (motionOff()) return;
-
     /* 1 — progress hairline: layout-owned element, binds once. */
     const bar = document.getElementById('scroll-progress');
     const offBar = bar ? bindProgress(bar) : null;
