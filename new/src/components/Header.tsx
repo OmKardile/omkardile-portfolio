@@ -23,7 +23,10 @@ function PillContent({ onUiux }: { onUiux: boolean }) {
   const { pending } = useLinkStatus();
   return (
     <>
-      {onUiux ? 'Dev Portfolio' : 'UI/UX'}
+      {/* ≤40rem CSS swaps the label to its short form ("Dev" / "UI/UX") so
+          the bar holds one row at every phone width; the Link's aria-label
+          keeps the full name for screen readers at all sizes. */}
+      <span className="pill-label">{onUiux ? 'Dev Portfolio' : 'UI/UX'}</span>
       {pending ? <span className="pill-spin" aria-hidden="true" /> : null}
     </>
   );
@@ -35,6 +38,7 @@ export function Header() {
   // Anchor targets must jump back to the home page from subpages.
   const anchor = (id: string) => (pathname === '/' ? `#${id}` : `/#${id}`);
   const onUiux = pathname === '/uiux';
+  const onHome = pathname === '/';
   const resumeHref = site.socials.find((s) => s.label === 'Resume')?.href;
 
   // NOTE: no pathname effect needed — every element that triggers a route
@@ -53,16 +57,16 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="site-header">
+    <header className={onHome ? 'site-header header-dev-accent' : 'site-header'}>
       <div className="container header-inner">
+        {/* Text wordmark with the animated accent underline (replaces the old
+            signature PNG). Wears each portfolio's accent: blue on home via
+            .header-dev-accent, orange everywhere else. */}
         <Link href="/" className="header-name">
-          <img
-            src="/signature.png"
-            alt={site.name}
-            className="header-signature"
-            width={642}
-            height={216}
-          />
+          <span className="wordmark">
+            {site.name}
+            <span className="wordmark-dot">.</span>
+          </span>
         </Link>
         <nav className="header-nav" aria-label="Primary">
           {/* Mobile: the burger joins the right-hand cluster (order puts it
@@ -108,6 +112,7 @@ export function Header() {
             <Link
               href={onUiux ? '/' : '/uiux'}
               className={onUiux ? 'header-dev' : 'header-uiux'}
+              aria-label={onUiux ? 'Developer portfolio' : 'UI/UX portfolio'}
               onClick={() => setMenuOpen(false)}
             >
               <PillContent onUiux={onUiux} />

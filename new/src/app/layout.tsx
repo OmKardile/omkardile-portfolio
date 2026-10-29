@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { DetailsAnimate } from '@/components/DetailsAnimate';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { SmoothScroll } from '@/components/SmoothScroll';
+import { UiuxTheme } from '@/components/UiuxTheme';
 import { site } from '@/data/site';
 import { display, mono } from './fonts';
 import './globals.css';
@@ -53,11 +54,13 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       suppressHydrationWarning
     >
       <head>
-        {/* Runs before first paint: stored choice wins, else system preference. No flash. */}
+        {/* Runs before first paint: stored choice wins, else system preference. No flash.
+            /uiux is special: its warm paper (cream) theme is the DEFAULT — dark only
+            when explicitly stored. `uiux` scopes the cream tokens in globals.css. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark')}catch(e){}" +
+              "try{var t=localStorage.getItem('theme');var u=location.pathname.indexOf('/uiux')===0;if(u)document.documentElement.classList.add('uiux');var d=u?t==='dark':(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}" +
               // Effective motion preference BEFORE paint: explicit footer toggle
       // choice wins; otherwise the OS setting. motion-off is the single
       // authority every animated subsystem reads (CSS kills, Lenis, WAAPI).
@@ -74,6 +77,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         </a>
         <Header />
         <SmoothScroll />
+        <UiuxTheme />
         <DetailsAnimate />
         <ScrollReveal />
         <main id="main" tabIndex={-1}>

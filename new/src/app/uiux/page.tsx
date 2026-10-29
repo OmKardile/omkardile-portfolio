@@ -39,28 +39,34 @@ function Chevron() {
 }
 
 export default function UiuxPage() {
-  const resumeHref = site.socials.find((s) => s.label === 'Resume')?.href;
-  const linkedinHref = site.socials.find((s) => s.label === 'LinkedIn')?.href;
-
   return (
     <>
-      {/* Hero */}
+      {/* Hero — warm-paper editorial: status row, giant tagline, intro + actions */}
       <section className="hero hero-uiux container" id="top" aria-label="Introduction">
-        <p className="hero-kicker mono hero-kicker-accent">{uiux.kicker}</p>
-        <h1 className="hero-name">
-          Omkar Kardile
-          <span className="hero-role">{uiux.role}</span>
+        <p className="uiux-status mono">
+          <span className="uiux-open">
+            <span className="uiux-open-dot" aria-hidden="true" />
+            Open to work
+          </span>
+          <span className="uiux-status-meta">{uiux.role}</span>
+          {/* Fuller location form for the status row (site.location is "Pune, India"). */}
+          <span className="uiux-status-meta">Pune, Maharashtra</span>
+        </p>
+        {/* Marked-up mirror of uiux.tagline — keep the two in sync. */}
+        <h1 className="uiux-headline">
+          I design interfaces that are <span className="hl-accent">honest</span>. Then I{' '}
+          <span className="hl-strong">build</span> <span className="hl-muted">them.</span>
         </h1>
-        <p className="hero-intro">{uiux.tagline}</p>
-        <div className="hero-actions">
-          <a className="btn btn-solid" href="#design-work">
-            View design work <span className="btn-arrow btn-arrow-down" aria-hidden="true">↓</span>
-          </a>
-          {resumeHref ? (
-            <a className="btn btn-outline" href={resumeHref} target="_blank" rel="noopener noreferrer">
-              Open resume <span className="btn-arrow btn-arrow-out" aria-hidden="true">↗</span>
+        <div className="uiux-foot">
+          <p className="uiux-intro">{uiux.intro}</p>
+          <div className="uiux-actions">
+            <a className="btn btn-ghost" href={`mailto:${site.email}`}>
+              Email me
             </a>
-          ) : null}
+            <a className="textlink" href="#design-work">
+              See the work
+            </a>
+          </div>
         </div>
       </section>
 
@@ -565,50 +571,43 @@ export default function UiuxPage() {
         </div>
       </section>
 
-      {/* Contact */}
-      <section className="section contact container" aria-labelledby="contact-uiux-title">
-        <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="mono section-index section-index-accent">06 / Contact</p>
-          <h2 id="contact-uiux-title" className="section-title">
-            Let’s work together.
+      {/* Contact — big closing block: index + rule, huge question, email CTA, links */}
+      <section className="section contact-xl container" id="contact" aria-labelledby="contact-uiux-title">
+        <div data-reveal suppressHydrationWarning>
+          <p className="xl-rule mono">
+            <span className="xl-n">06</span>
+            <span className="xl-lbl">Contact</span>
+          </p>
+          <h2 id="contact-uiux-title" className="xl-title">
+            {uiux.contactTitle}
           </h2>
         </div>
-        <div className="contact-grid" data-reveal suppressHydrationWarning>
-          <div>
-            <p className="contact-copy">
-              Have a project? I’m available for UI/UX design and frontend roles. Email is the fastest way to start a
-              conversation.
-            </p>
-            <div className="hero-actions">
-              <a className="btn btn-solid" href={`mailto:${site.email}`}>
-                Send an email <span className="btn-arrow btn-arrow-right" aria-hidden="true">→</span>
-              </a>
-              {linkedinHref ? (
-                <a className="btn btn-outline" href={linkedinHref} target="_blank" rel="noopener noreferrer">
-                  Connect on LinkedIn <span className="btn-arrow btn-arrow-out" aria-hidden="true">↗</span>
-                </a>
-              ) : null}
-            </div>
-          </div>
-          <ul className="contact-links">
-            <li>
-              <a href="/">Developer portfolio</a>
-            </li>
-            {site.socials.map((s) => (
+        <div className="xl-cta" data-reveal suppressHydrationWarning>
+          <a className="btn btn-ghost" href={`mailto:${site.email}`}>
+            Email me
+          </a>
+          <a className="xl-mail" href={`mailto:${site.email}`}>
+            {site.email}
+          </a>
+        </div>
+        <ul className="xl-links" data-reveal-group suppressHydrationWarning>
+          <li>
+            <a href="/">Developer portfolio</a>
+          </li>
+          {site.socials
+            .filter((s) => ['GitHub', 'LinkedIn', 'Resume'].includes(s.label))
+            .map((s) => (
               <li key={s.label}>
                 <a href={s.href} target="_blank" rel="noopener noreferrer">
-                  {s.label} <span aria-hidden="true">↗</span>
+                  {s.label}
+                  <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               </li>
             ))}
-            <li>
-              <a href={`mailto:${site.email}`}>{site.email}</a>
-            </li>
-          </ul>
-        </div>
+        </ul>
       </section>
 
-      <Footer />
+      <Footer note={uiux.availability} />
     </>
   );
 }

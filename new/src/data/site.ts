@@ -456,6 +456,13 @@ export const uiux = {
   kicker: 'UI/UX Portfolio · Pune · Open to remote',
   role: 'UI/UX Designer & Frontend Developer',
   tagline: 'I design interfaces that are honest. Then I build them.',
+  /* Hero paragraph under the big tagline headline. */
+  intro:
+    'I design and build thoughtful digital products that are simple, useful and human: pairing product and UI/UX design with the engineering to ship the result in code.',
+  /* Closing contact block + footer availability line. */
+  contactTitle: 'Have something that needs designing and building?',
+  availability:
+    'Open to UI/UX design and frontend development roles and collaborations. Email is the fastest way to start a conversation.',
   description:
     'UI/UX portfolio of Omkar Kardile: product and interface design case studies, Liquid Glass redesign studies and design systems.',
   process: [

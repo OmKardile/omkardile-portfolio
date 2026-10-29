@@ -41,6 +41,26 @@ html.dark {
   color-scheme: dark;
 }
 
+/* ---------- /uiux warm paper (cream) theme ---------- */
+
+/* The UI/UX portfolio DEFAULTS to light — warm paper, near-black ink, a
+   deeper editorial red-orange — even when the OS prefers dark. Dark stays
+   one toggle away (the header toggle persists the choice). The `uiux` class
+   is set pre-paint by the inline script in layout.tsx and kept in sync
+   across SPA routes by <UiuxTheme />; :not(.dark) lets the toggle win. */
+html.uiux:not(.dark) {
+  --bg: #edeae2;
+  --fg: #1b1917;
+  --muted: #6d6960;
+  --line: #d9d4c8;
+  --line-strong: #c6c0b1; /* phone nav bar edge over cream */
+  --soft: #e4e0d5;
+  --accent: #d8470b;
+  --btn-solid-hover: #3a362f;
+  --header-bg: rgba(237, 234, 226, 0.92);
+  --lift-shadow: rgba(27, 25, 23, 0.14);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -172,23 +192,59 @@ html.lenis body {
 .header-name {
   display: inline-flex;
   align-items: center;
-  line-height: 0;
+  line-height: 1;
   text-decoration: none;
   color: var(--fg);
   white-space: nowrap;
 }
 
-/* Signature logo (white script on transparency, 642x216): light theme
-   inverts it to black for the light bar; dark theme wears it white. */
-.header-signature {
-  display: block;
-  height: 2rem;
-  width: auto;
-  filter: invert(1);
+/* Home is the dev portfolio: the header's accent-marked bits (wordmark
+   underline) wear blue there; /uiux and other routes keep the orange. */
+.header-dev-accent {
+  --accent: var(--accent-dev);
 }
 
-html.dark .header-signature {
-  filter: none;
+/* Text wordmark with the animated accent underline (replaces the old
+   signature PNG). The underline draws itself in once on load; hovering
+   the name replays the draw from the right edge. */
+.wordmark {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 4px;
+  font-weight: 800;
+  font-size: 1.02rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--fg);
+}
+
+.wordmark::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+  animation: wordmark-draw 0.9s var(--ease-apple) 0.3s backwards;
+}
+
+.header-name:hover .wordmark::after,
+.header-name:focus-visible .wordmark::after {
+  transform-origin: right;
+  animation: wordmark-draw 0.5s var(--ease-apple);
+}
+
+@keyframes wordmark-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+html.motion-off .wordmark::after {
+  animation: none;
 }
 
 .header-nav {
@@ -522,8 +578,9 @@ html.dark .header-signature {
     min-width: 0;
   }
 
-  .header-signature {
-    height: 1.7rem;
+  .wordmark {
+    font-size: 0.95rem;
+    padding-bottom: 3px;
   }
 
   /* The flat-group trick is desktop-only: section links move to the sheet,
@@ -573,20 +630,41 @@ html.dark .header-signature {
     padding: 0.28rem 0.75rem !important;
   }
 
+  /* Short pill labels on phones ("Dev" / "UI/UX") — the text wordmark is
+     wider than the old signature image, so the bar needs the room back.
+     font-size:0 hides the text node; ::before re-adds the short form.
+     Screen readers keep the full name via the Link's aria-label. */
+  .header-uiux .pill-label,
+  .header-dev .pill-label,
+  .header-creative .pill-label {
+    font-size: 0;
+  }
+
+  .header-uiux .pill-label::before {
+    content: 'UI/UX';
+    font-size: 0.84rem;
+  }
+
+  .header-dev .pill-label::before {
+    content: 'Dev';
+    font-size: 0.84rem;
+  }
+
   .theme-toggle {
     margin-block: 0;
   }
 }
 
-/* Narrow phones (320-class): trim the signature, the gaps and the pill so
+/* Narrow phones (320-class): trim the wordmark, the gaps and the pill so
    the bar keeps one row even with the longer "Dev Portfolio" label. */
 @media (max-width: 22.5rem) {
   .container {
     padding-inline: 1rem;
   }
 
-  .header-signature {
-    height: 1.3rem;
+  .wordmark {
+    font-size: 0.84rem;
+    letter-spacing: 0.01em;
   }
 
   .header-nav,
@@ -599,6 +677,12 @@ html.dark .header-signature {
   .header-creative {
     font-size: 0.78rem;
     padding: 0.28rem 0.6rem !important;
+  }
+
+  .header-uiux .pill-label::before,
+  .header-dev .pill-label::before,
+  .header-creative .pill-label::before {
+    font-size: 0.78rem;
   }
 }
 
@@ -1121,6 +1205,17 @@ html.motion-off .theme-toggle:active {
   text-underline-offset: 4px;
 }
 
+/* Availability note — the /uiux footer's closing line above the standard row. */
+.footer-availability {
+  padding-block: 1.8rem 0.2rem;
+}
+
+.footer-availability p {
+  max-width: 30rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 /* Motion preference toggle — styled like the footer links but as a button,
    so keyboard focus and the pressed state stay honest. */
 .motion-toggle {
@@ -1149,6 +1244,245 @@ html.motion-off .theme-toggle:active {
 .hero-kicker-accent,
 .section-index-accent {
   color: var(--accent);
+}
+
+/* ---------- /uiux editorial hero ---------- */
+
+/* Status row: accent dot + availability, role and location in quiet mono. */
+.hero-uiux {
+  padding-block: 2.8rem 5.5rem;
+}
+
+.uiux-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.8rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.uiux-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.uiux-open-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.uiux-status-meta {
+  color: var(--muted);
+}
+
+/* The tagline at editorial scale, one word doing one job each:
+   accent ("honest"), extra weight ("build"), quiet gray ("them."). */
+.uiux-headline {
+  margin-top: 3.2rem;
+  max-width: 12em;
+  font-size: clamp(2.9rem, 9vw, 7.5rem);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.hl-accent {
+  color: var(--accent);
+}
+
+.hl-strong {
+  font-weight: 800;
+}
+
+.hl-muted {
+  color: var(--muted);
+  font-weight: 550;
+}
+
+/* Intro paragraph sits left, the actions bottom-right, like a press page. */
+.uiux-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem 3rem;
+  flex-wrap: wrap;
+  margin-top: 3.4rem;
+}
+
+.uiux-intro {
+  max-width: 34rem;
+  font-size: 1.08rem;
+}
+
+.uiux-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.1rem 1.6rem;
+}
+
+/* Square editorial ghost button — uppercase hairline rectangle that inverts
+   on hover instead of filling on load. /uiux hero + contact use it. */
+.btn-ghost {
+  border: 1px solid var(--fg);
+  border-radius: 2px;
+  color: var(--fg);
+  background: transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.btn-ghost:hover {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+
+/* Uppercase underlined mono text action ("See the work"). */
+.textlink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 7px;
+  text-decoration-thickness: 1.5px;
+  transition: color 0.2s ease;
+}
+
+.textlink:hover {
+  color: var(--accent);
+}
+
+html.motion-off .textlink {
+  transition: none;
+}
+
+/* ---------- /uiux closing contact block ---------- */
+
+.contact-xl {
+  padding-block: 4.5rem 6rem;
+}
+
+/* Index + label + hairline rule reaching to the right edge. */
+.xl-rule {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.xl-rule .xl-n {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.xl-rule .xl-lbl {
+  color: var(--muted);
+}
+
+.xl-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.xl-title {
+  margin-top: 2.2rem;
+  max-width: 17em;
+  font-size: clamp(2.4rem, 6.5vw, 5.4rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+
+.xl-cta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.4rem 2.2rem;
+  margin-top: 3rem;
+}
+
+.xl-mail {
+  font-family: var(--mono);
+  font-size: clamp(0.95rem, 2.2vw, 1.18rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  text-decoration-thickness: 1.5px;
+  transition: color 0.2s ease;
+}
+
+.xl-mail:hover {
+  color: var(--accent);
+}
+
+.xl-links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 2.2rem;
+  margin-top: 3.2rem;
+}
+
+.xl-links a {
+  display: inline-block;
+  padding-block: 0.25rem;
+  color: var(--fg);
+  font-size: 1.02rem;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  transition: color 0.2s ease;
+}
+
+.xl-links a:hover {
+  color: var(--accent);
+}
+
+html.motion-off .xl-mail,
+html.motion-off .xl-links a {
+  transition: none;
+}
+
+@media (max-width: 40rem) {
+  .hero-uiux {
+    padding-block: 2rem 3.5rem;
+  }
+
+  .uiux-headline {
+    margin-top: 2.2rem;
+  }
+
+  .uiux-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 2.4rem;
+  }
+
+  .contact-xl {
+    padding-block: 3.5rem 4.5rem;
+  }
 }
 
 .status-wip {
