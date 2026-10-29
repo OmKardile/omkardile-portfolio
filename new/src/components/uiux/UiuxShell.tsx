@@ -3,6 +3,7 @@ import { Anton, Fraunces, Hanken_Grotesk, Space_Mono, Syne } from 'next/font/goo
 import { UiuxNav } from '@/components/uiux/Nav';
 import { UiuxFooter } from '@/components/uiux/Footer';
 import { UiuxMotion } from '@/components/uiux/UiuxMotion';
+import { UiuxCursor } from '@/components/uiux/UiuxCursor';
 import '@/app/uiux/uiux.css';
 
 /* Type system for the UI/UX portfolio — self-hosted via next/font.
@@ -55,7 +56,9 @@ const spaceMono = Space_Mono({
    root layout already owns the main landmark (and the skip link's target) —
    this shell renders inside it, so no second main/id here.
    UiuxMotion is the route's motion layer: per-char hero reveals, scroll
-   velocity skew, cursor-following row peeks, ghost-numeral drift. */
+   velocity skew, cursor-following row peeks, ghost-numeral drift.
+   UiuxCursor replaces the native pointer inside the shell (fine pointers
+   only) with the route's dot + wireframe-ring cursor. */
 export function UiuxShell({ children }: { children: ReactNode }) {
   return (
     <div
@@ -65,6 +68,7 @@ export function UiuxShell({ children }: { children: ReactNode }) {
       <div className="ux-main">{children}</div>
       <UiuxFooter />
       <UiuxMotion />
+      <UiuxCursor />
     </div>
   );
 }

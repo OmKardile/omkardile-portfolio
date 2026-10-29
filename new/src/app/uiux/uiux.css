@@ -1774,3 +1774,117 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
     display: none;
   }
 }
+
+/* ---- custom pointer (UiuxCursor) -------------------------------------------
+   The route's own pointer: a 6px ink dot that tracks 1:1 and a 32px
+   wireframe square that lags behind with a velocity lean — the row-peek
+   card's hard-border look, shrunk to pointer size. Over links the ring
+   wraps the dot; over [data-cursor] targets (project rows say "View") the
+   cursor becomes a filled Space Mono label chip; press squeezes it.
+
+   The native cursor is hidden ONLY inside .ux-shell and ONLY when the
+   component has confirmed a fine pointer + motion allowance (it sets
+   html.ux-cursor-on). Touch and reduced-motion users keep the native
+   cursor everywhere. Global chrome outside the shell — the AskOmkar pill
+   and drawer — keeps its native pointer too; the custom cursor fades out
+   over it (.is-out, toggled by the component). */
+
+@media (hover: hover) and (pointer: fine) {
+  html.ux-cursor-on .ux-shell,
+  html.ux-cursor-on .ux-shell * {
+    cursor: none !important;
+  }
+}
+
+.ux-cursor {
+  position: fixed;
+  inset: 0 auto auto 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.ux-cursor.is-in {
+  opacity: 1;
+}
+
+.ux-cursor.is-out {
+  opacity: 0;
+}
+
+.ux-cursor-dot,
+.ux-cursor-ring,
+.ux-cursor-chip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.ux-cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--fg);
+  scale: 1;
+  transition: scale 0.2s var(--ease-apple, ease-out);
+}
+
+.ux-cursor-ring {
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 1px solid var(--fg);
+  border-radius: 4px;
+  opacity: 0.55;
+  scale: 1;
+  transition: scale 0.25s var(--ease-apple, ease-out), opacity 0.2s ease;
+}
+
+.ux-cursor-chip {
+  margin: -14px 0 0 -14px;
+  padding: 0.42rem 0.62rem;
+  border-radius: 4px;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--mono2);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  scale: 0.4;
+  transition: scale 0.28s var(--ease-apple, ease-out), opacity 0.18s ease;
+}
+
+/* link hover — the ring wraps the dot */
+.ux-cursor.is-link .ux-cursor-ring {
+  scale: 1.45;
+  opacity: 0.9;
+}
+
+.ux-cursor.is-link .ux-cursor-dot {
+  scale: 0.6;
+}
+
+/* label mode — the chip replaces dot and ring */
+.ux-cursor.is-label .ux-cursor-chip {
+  opacity: 1;
+  scale: 1;
+}
+
+.ux-cursor.is-label .ux-cursor-ring,
+.ux-cursor.is-label .ux-cursor-dot {
+  opacity: 0;
+}
+
+/* press — squeeze */
+.ux-cursor.is-down .ux-cursor-ring {
+  scale: 0.85;
+}
+
+.ux-cursor.is-down .ux-cursor-dot {
+  scale: 1.6;
+}

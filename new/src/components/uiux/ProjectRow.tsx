@@ -22,6 +22,7 @@ export function ProjectRow({
       href={`/uiux/${project.slug}`}
       className={`ux-row${offset ? ' ux-row--offset' : ''}`}
       style={{ '--pa-light': project.accent, '--pa-dark': project.accentDark } as React.CSSProperties}
+      data-cursor="View"
       data-reveal
       data-peek
       suppressHydrationWarning
