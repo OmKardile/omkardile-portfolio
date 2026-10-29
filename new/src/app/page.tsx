@@ -1,18 +1,34 @@
 import { site, projects, capabilities, experience } from '@/data/site';
 import { Footer } from '@/components/Footer';
 import { CardSummary } from '@/components/CardSummary';
+import { MotionReady } from '@/components/MotionReady';
 
 function SectionHead({ id, index, title, note }: { id: string; index: string; title: string; note?: string }) {
   return (
     <div className="section-head" data-reveal suppressHydrationWarning>
       <p className="section-index mono">{index}</p>
-      <h2 id={id} className="section-title">
+      <h2 id={id} className="section-title" data-split>
         {title}
       </h2>
       {note ? <p className="section-note">{note}</p> : null}
     </div>
   );
 }
+
+/* Kinetic ticker words — the build vocabulary, full-bleed under the hero.
+   Decorative (aria-hidden): the same facts are readable in the sections below. */
+const TICKER = [
+  'React',
+  'TypeScript',
+  'Next.js',
+  'Node.js',
+  'Prisma',
+  'PostgreSQL',
+  'Tailwind',
+  'UI/UX design',
+  'Design systems',
+  'Figma',
+];
 
 function StatusTag({ status }: { status: 'live' | 'building' }) {
   return status === 'live' ? (
@@ -55,7 +71,7 @@ export default function Home() {
       {/* Hero */}
       <section className="hero container" id="top" aria-label="Introduction">
         <p className="hero-kicker mono">Portfolio · Pune, India · Open to work</p>
-        <h1 className="hero-name">
+        <h1 className="hero-name" data-split>
           Omkar Kardile
           <span className="hero-role">Developer &amp; UI/UX Designer</span>
         </h1>
@@ -74,6 +90,18 @@ export default function Home() {
           ) : null}
         </div>
       </section>
+
+      {/* Full-bleed kinetic ticker between the hero and the work. */}
+      <div className="ticker" aria-hidden="true">
+        <div className="ticker-track">
+          {[...TICKER, ...TICKER].map((t, i) => (
+            <span className="ticker-item" key={`${t}-${i}`}>
+              {t}
+              <span className="ticker-dot" />
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* Work */}
       <section className="section container" id="work" aria-labelledby="work-title">
@@ -179,6 +207,8 @@ export default function Home() {
       </div>
 
       <Footer />
+      {/* Page-hydration sentinel: MotionCraft waits for this before touching page DOM. */}
+      <MotionReady />
     </>
   );
 }

@@ -23,7 +23,8 @@ const hanken = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: `Taar — Interactive Prototype | ${site.name}`,
+  /* The root template appends "| Omkar Kardile" — don't double it. */
+  title: 'Taar — Interactive Prototype',
   description:
     'Clickable prototype of Taar, a fashion e-commerce discovery redesign: one filter sheet with a live result count, honest sold-out sizes and quick add from the grid.',
   alternates: { canonical: '/uiux/taar/prototype' },

@@ -1,7 +1,23 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { site, uiux, relay, taar } from '@/data/site';
+import { site, uiux, relay, taar, sutra, lethe, stoop } from '@/data/site';
 import { Footer } from '@/components/Footer';
+import { MotionReady } from '@/components/MotionReady';
+
+/* Kinetic ticker words — the craft vocabulary, full-bleed under the hero.
+   Decorative (aria-hidden): the same facts are readable in the sections below. */
+const TICKER = [
+  'Research',
+  'IA & flows',
+  'Design systems',
+  'Prototyping',
+  'Accessibility',
+  'Figma',
+  'React',
+  'Usability testing',
+  'Design tokens',
+  'Visual craft',
+];
 
 export const metadata: Metadata = {
   /* The root template already appends "| Omkar Kardile" — don't double it. */
@@ -52,23 +68,36 @@ export default function UiuxPage() {
           {/* Fuller location form for the status row (site.location is "Pune, India"). */}
           <span className="uiux-status-meta">Pune, Maharashtra</span>
         </p>
-        {/* Marked-up mirror of uiux.tagline — keep the two in sync. */}
-        <h1 className="uiux-headline">
+        {/* Marked-up mirror of uiux.tagline — keep the two in sync.
+            data-split: MotionCraft rises the words through masks on entry. */}
+        <h1 className="uiux-headline" data-split>
           I design interfaces that are <span className="hl-accent">honest</span>. Then I{' '}
           <span className="hl-strong">build</span> <span className="hl-muted">them.</span>
         </h1>
         <div className="uiux-foot">
           <p className="uiux-intro">{uiux.intro}</p>
           <div className="uiux-actions">
-            <a className="btn btn-ghost" href={`mailto:${site.email}`}>
+            <a className="btn btn-ghost" href={`mailto:${site.email}`} data-magnetic>
               Email me
             </a>
-            <a className="textlink" href="#design-work">
+            <a className="textlink" href="#design-work" data-magnetic>
               See the work
             </a>
           </div>
         </div>
       </section>
+
+      {/* Full-bleed kinetic ticker between the hero and the work. */}
+      <div className="ticker" aria-hidden="true">
+        <div className="ticker-track">
+          {[...TICKER, ...TICKER].map((t, i) => (
+            <span className="ticker-item" key={`${t}-${i}`}>
+              {t}
+              <span className="ticker-dot" />
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* Process */}
       <section className="section container" aria-labelledby="process-title">
@@ -96,12 +125,13 @@ export default function UiuxPage() {
       <section className="section container" id="design-work" aria-labelledby="design-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
           <p className="mono section-index section-index-accent">02 / Featured case studies</p>
-          <h2 id="design-title" className="section-title">
-            Two studies, end to end.
+          <h2 id="design-title" className="section-title" data-split>
+            Five studies, documented.
           </h2>
           <p className="section-note">
-            Relay and Taar are complete and documented on this page, chapter by chapter — expand what you want to
-            read. The studies still in review share detailed files on request.
+            Relay, Taar and Sutra run as live prototypes right here on this site; Lethe and Stoop are documented
+            concepts. Every study expands chapter by chapter — read what you want. The food delivery study is still in
+            progress and shares files on request.
           </p>
         </div>
 
@@ -119,7 +149,7 @@ export default function UiuxPage() {
             {relay.kind} · {relay.date}
           </p>
 
-          <figure className="relay-fig">
+          <figure className="relay-fig" data-curtain>
             <img src={relay.cover} alt={relay.coverAlt} width={1600} height={1200} loading="lazy" />
           </figure>
 
@@ -339,7 +369,7 @@ export default function UiuxPage() {
             {taar.kind} · {taar.date}
           </p>
 
-          <figure className="relay-fig">
+          <figure className="relay-fig" data-curtain>
             <img src={taar.cover} alt={taar.coverAlt} width={900} height={780} loading="lazy" />
           </figure>
 
@@ -453,7 +483,398 @@ export default function UiuxPage() {
           </div>
         </article>
 
-        {/* In-review case studies */}
+        {/* Case study #3 — Sutra Checkout (coded prototype + design system) */}
+        <article className="relay" aria-label="Sutra Checkout case study">
+          <div className="card-top">
+            <span className="mono card-index">{sutra.index}</span>
+            <span className="status status-live">
+              <span className="status-dot" aria-hidden="true" />
+              {sutra.status}
+            </span>
+          </div>
+          <h3 className="relay-title">{sutra.name}</h3>
+          <p className="relay-tagline">{sutra.tagline}</p>
+          <p className="mono relay-meta">
+            {sutra.kind} · {sutra.date}
+          </p>
+
+          <p className="cs-role relay-role">
+            <span className="cs-role-label">My role:</span> {sutra.role}
+          </p>
+          <ul className="skill-list cs-tools">
+            {sutra.tools.map((t) => (
+              <li key={t} className="skill-chip">
+                {t}
+              </li>
+            ))}
+          </ul>
+
+          <div className="ch-list">
+            <details className="chapter" name="sutra-ch">
+              <summary>
+                <span className="mono ch-n">01</span>
+                <span className="ch-t">Overview &amp; the problem</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                {sutra.overview.map((p) => (
+                  <p key={p.slice(0, 24)}>{p}</p>
+                ))}
+                <p className="relay-problem">{sutra.problem}</p>
+              </div>
+            </details>
+
+            <details className="chapter" name="sutra-ch">
+              <summary>
+                <span className="mono ch-n">02</span>
+                <span className="ch-t">Forgiving forms</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{sutra.forgiving.text}</p>
+                <ul className="fact-list">
+                  {sutra.forgiving.items.map((i) => (
+                    <li key={i.slice(0, 24)}>{i}</li>
+                  ))}
+                </ul>
+              </div>
+            </details>
+
+            <details className="chapter" name="sutra-ch">
+              <summary>
+                <span className="mono ch-n">03</span>
+                <span className="ch-t">Fees before commitment</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{sutra.fees.text}</p>
+              </div>
+            </details>
+
+            <details className="chapter" name="sutra-ch">
+              <summary>
+                <span className="mono ch-n">04</span>
+                <span className="ch-t">One system, two products</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{sutra.system.text}</p>
+                <ul className="relay-swatches">
+                  {sutra.system.tokens.map((t) => (
+                    <li key={t.hex} className="relay-swatch">
+                      <span className="relay-swatch-dot" style={{ background: t.hex }} aria-hidden="true" />
+                      <span>
+                        {t.name} <small>{t.hex}</small>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <ul className="fact-list">
+                  {sutra.system.items.map((i) => (
+                    <li key={i.slice(0, 24)}>{i}</li>
+                  ))}
+                </ul>
+              </div>
+            </details>
+
+            <details className="chapter" name="sutra-ch">
+              <summary>
+                <span className="mono ch-n">05</span>
+                <span className="ch-t">Built accessible</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{sutra.a11y.lead}</p>
+                <ul className="fact-list">
+                  {sutra.a11y.items.map((a) => (
+                    <li key={a.slice(0, 24)}>{a}</li>
+                  ))}
+                </ul>
+              </div>
+            </details>
+
+            <details className="chapter" name="sutra-ch">
+              <summary>
+                <span className="mono ch-n">06</span>
+                <span className="ch-t">Honest limits</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <ul className="fact-list">
+                  {sutra.limits.map((l) => (
+                    <li key={l.slice(0, 24)}>{l}</li>
+                  ))}
+                </ul>
+                <p className="relay-note">
+                  Next up: {sutra.next.items[0].charAt(0).toLowerCase()}
+                  {sutra.next.items[0].slice(1)}
+                </p>
+              </div>
+            </details>
+
+            <details className="chapter" name="sutra-ch">
+              <summary>
+                <span className="mono ch-n">07</span>
+                <span className="ch-t">Live prototype</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{sutra.prototype.text}</p>
+                <ul className="fact-list">
+                  {sutra.prototype.bullets.map((b) => (
+                    <li key={b.slice(0, 24)}>{b}</li>
+                  ))}
+                </ul>
+                <div className="relay-cta-row">
+                  <Link className="btn btn-solid" href={sutra.prototype.href}>
+                    {sutra.prototype.cta} <span className="btn-arrow btn-arrow-right" aria-hidden="true">→</span>
+                  </Link>
+                  <p className="relay-cta-note">Runs right here on this site — checkout and design system included.</p>
+                </div>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        {/* Case study #4 — Lethe (documented concept) */}
+        <article className="relay" aria-label="Lethe case study">
+          <div className="card-top">
+            <span className="mono card-index">{lethe.index}</span>
+            <span className="status status-concept">
+              <span className="status-dot" aria-hidden="true" />
+              {lethe.status}
+            </span>
+          </div>
+          <h3 className="relay-title">{lethe.name}</h3>
+          <p className="relay-tagline">{lethe.tagline}</p>
+          <p className="mono relay-meta">
+            {lethe.kind} · {lethe.date}
+          </p>
+
+          <p className="cs-role relay-role">
+            <span className="cs-role-label">My role:</span> {lethe.role}
+          </p>
+          <ul className="skill-list cs-tools">
+            {lethe.tools.map((t) => (
+              <li key={t} className="skill-chip">
+                {t}
+              </li>
+            ))}
+          </ul>
+
+          <div className="ch-list">
+            <details className="chapter" name="lethe-ch">
+              <summary>
+                <span className="mono ch-n">01</span>
+                <span className="ch-t">Overview &amp; the position</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                {lethe.overview.map((p) => (
+                  <p key={p.slice(0, 24)}>{p}</p>
+                ))}
+              </div>
+            </details>
+
+            <details className="chapter" name="lethe-ch">
+              <summary>
+                <span className="mono ch-n">02</span>
+                <span className="ch-t">Why this, why now</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{lethe.whyNow}</p>
+              </div>
+            </details>
+
+            <details className="chapter" name="lethe-ch">
+              <summary>
+                <span className="mono ch-n">03</span>
+                <span className="ch-t">The core mechanic</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{lethe.mechanic.text}</p>
+                <ul className="fact-list">
+                  {lethe.mechanic.items.map((m) => (
+                    <li key={m.slice(0, 24)}>{m}</li>
+                  ))}
+                </ul>
+              </div>
+            </details>
+
+            <details className="chapter" name="lethe-ch">
+              <summary>
+                <span className="mono ch-n">04</span>
+                <span className="ch-t">Information architecture</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{lethe.ia.text}</p>
+              </div>
+            </details>
+
+            <details className="chapter" name="lethe-ch">
+              <summary>
+                <span className="mono ch-n">05</span>
+                <span className="ch-t">Visual system</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{lethe.visual.text}</p>
+                <ul className="relay-swatches">
+                  {lethe.visual.tokens.map((t) => (
+                    <li key={t.hex} className="relay-swatch">
+                      <span className="relay-swatch-dot" style={{ background: t.hex }} aria-hidden="true" />
+                      <span>
+                        {t.name} <small>{t.hex}</small>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="relay-note">{lethe.visual.note}</p>
+              </div>
+            </details>
+
+            <details className="chapter" name="lethe-ch">
+              <summary>
+                <span className="mono ch-n">06</span>
+                <span className="ch-t">What I’d validate next</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{lethe.validate.lead}</p>
+                <ul className="fact-list">
+                  {lethe.validate.items.map((q) => (
+                    <li key={q.slice(0, 24)}>{q}</li>
+                  ))}
+                </ul>
+                <p className="relay-note">{lethe.validate.close}</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        {/* Case study #5 — Stoop (documented concept) */}
+        <article className="relay" aria-label="Stoop case study">
+          <div className="card-top">
+            <span className="mono card-index">{stoop.index}</span>
+            <span className="status status-concept">
+              <span className="status-dot" aria-hidden="true" />
+              {stoop.status}
+            </span>
+          </div>
+          <h3 className="relay-title">{stoop.name}</h3>
+          <p className="relay-tagline">{stoop.tagline}</p>
+          <p className="mono relay-meta">
+            {stoop.kind} · {stoop.date}
+          </p>
+
+          <p className="cs-role relay-role">
+            <span className="cs-role-label">My role:</span> {stoop.role}
+          </p>
+          <ul className="skill-list cs-tools">
+            {stoop.tools.map((t) => (
+              <li key={t} className="skill-chip">
+                {t}
+              </li>
+            ))}
+          </ul>
+
+          <div className="ch-list">
+            <details className="chapter" name="stoop-ch">
+              <summary>
+                <span className="mono ch-n">01</span>
+                <span className="ch-t">Overview &amp; the problem</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                {stoop.overview.map((p) => (
+                  <p key={p.slice(0, 24)}>{p}</p>
+                ))}
+              </div>
+            </details>
+
+            <details className="chapter" name="stoop-ch">
+              <summary>
+                <span className="mono ch-n">02</span>
+                <span className="ch-t">Why this, why now</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{stoop.whyNow}</p>
+              </div>
+            </details>
+
+            <details className="chapter" name="stoop-ch">
+              <summary>
+                <span className="mono ch-n">03</span>
+                <span className="ch-t">Trust on the decision screen</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{stoop.trust.text}</p>
+                <ul className="fact-list">
+                  {stoop.trust.items.map((i) => (
+                    <li key={i.slice(0, 24)}>{i}</li>
+                  ))}
+                </ul>
+              </div>
+            </details>
+
+            <details className="chapter" name="stoop-ch">
+              <summary>
+                <span className="mono ch-n">04</span>
+                <span className="ch-t">The streak</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{stoop.streak.text}</p>
+              </div>
+            </details>
+
+            <details className="chapter" name="stoop-ch">
+              <summary>
+                <span className="mono ch-n">05</span>
+                <span className="ch-t">Visual system</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{stoop.visual.text}</p>
+                <ul className="relay-swatches">
+                  {stoop.visual.tokens.map((t) => (
+                    <li key={t.hex} className="relay-swatch">
+                      <span className="relay-swatch-dot" style={{ background: t.hex }} aria-hidden="true" />
+                      <span>
+                        {t.name} <small>{t.hex}</small>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="relay-note">{stoop.visual.note}</p>
+              </div>
+            </details>
+
+            <details className="chapter" name="stoop-ch">
+              <summary>
+                <span className="mono ch-n">06</span>
+                <span className="ch-t">What I’d validate next</span>
+                <Chevron />
+              </summary>
+              <div className="ch-body">
+                <p>{stoop.validate.lead}</p>
+                <ul className="fact-list">
+                  {stoop.validate.items.map((q) => (
+                    <li key={q.slice(0, 24)}>{q}</li>
+                  ))}
+                </ul>
+                <p className="relay-note">{stoop.validate.close}</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        {/* Still in progress — the only study that stays a card. */}
         <ul className="cs-grid" data-reveal-group suppressHydrationWarning>
           {uiux.caseStudies.map((cs) => (
             <li className="cs-card" key={cs.index}>
@@ -578,15 +999,15 @@ export default function UiuxPage() {
             <span className="xl-n">06</span>
             <span className="xl-lbl">Contact</span>
           </p>
-          <h2 id="contact-uiux-title" className="xl-title">
+          <h2 id="contact-uiux-title" className="xl-title" data-split>
             {uiux.contactTitle}
           </h2>
         </div>
         <div className="xl-cta" data-reveal suppressHydrationWarning>
-          <a className="btn btn-ghost" href={`mailto:${site.email}`}>
+          <a className="btn btn-ghost" href={`mailto:${site.email}`} data-magnetic>
             Email me
           </a>
-          <a className="xl-mail" href={`mailto:${site.email}`}>
+          <a className="xl-mail" href={`mailto:${site.email}`} data-magnetic>
             {site.email}
           </a>
         </div>
@@ -608,6 +1029,8 @@ export default function UiuxPage() {
       </section>
 
       <Footer note={uiux.availability} />
+      {/* Page-hydration sentinel: MotionCraft waits for this before touching page DOM. */}
+      <MotionReady />
     </>
   );
 }

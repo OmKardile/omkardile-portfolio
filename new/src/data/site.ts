@@ -450,6 +450,204 @@ export const taar = {
   },
 };
 
+// ---------- Sutra — UI/UX case study #3 (checkout + design system) ----------
+// Content source: upload/sutra-checkout.zip — a working React/Vite prototype
+// (v0.1.0), ported 1:1 to src/components/SutraPrototype.jsx and running at
+// /uiux/sutra/prototype. Per its README: mock PIN table, no real payment, no
+// usability numbers claimed anywhere.
+
+export const sutra = {
+  index: '03',
+  name: 'Sutra Checkout',
+  tagline: 'A forgiving mobile checkout, on a design system two stores share',
+  kind: 'Coded UX prototype · Design system',
+  date: 'v0.1.0',
+  status: 'Working prototype',
+  role: 'End-to-end: the checkout UX, the component library behind it, and the working front-end build',
+  tools: ['React 18', 'Vite', 'lucide-react'],
+  overview: [
+    'Sutra is a three-step mobile checkout — contact, delivery, payment — built for the Taar store, on top of a small design system extracted from two real products (Taar and Ghar). The redesign started from a familiar complaint: most e-commerce checkouts lose people with too many fields, no error recovery and no sense of progress. Every decision below is visible in the working prototype on this site.',
+    'It is also a design-system study. The components on the checkout screen aren’t one-off styles — they come from a token-driven library documented in a living System page, so the checkout and the system ship and age together.',
+  ],
+  problem:
+    'A checkout is the one screen where friction converts directly into abandonment — and the usual failure modes are all self-inflicted: surprise fees shown after commitment, errors yelled mid-keystroke, a dead end for every mistake. Sutra’s bet: if every step is forgiving, reversible and priced up front, the flow survives contact with real people.',
+  forgiving: {
+    text: 'Every form rule in the flow is built to be undone, not punished:',
+    items: [
+      'Validation runs on blur, not on every keystroke — you’re never corrected mid-word.',
+      'Errors say what to fix (“A UPI ID looks like name@bank”), not what went wrong.',
+      'Press Continue with problems and you get a count, not a wall of red.',
+      'Completed steps collapse into a summary with an Edit button — going back never loses what you entered.',
+      'The PIN lookup fills city and state for you, and the fields stay editable — autofill assists, it never overrides.',
+    ],
+  },
+  fees: {
+    text: 'Fees show up before commitment, attached to the choice that causes them: the delivery fee sits on the delivery option, the cash-on-delivery fee sits on the COD option, and the live total is one tap away in the order summary at every step. UPI is the default path with the ID validated inline, because in this market it is the fastest route — card is visibly disabled and dated, rather than hidden.',
+  },
+  system: {
+    text: 'The design system underneath has four rules, and the prototype enforces all of them:',
+    tokens: [
+      { name: 'Paper', hex: '#F6F3EE', use: 'Surface' },
+      { name: 'Ink', hex: '#1B1D22', use: 'Text' },
+      { name: 'Mute', hex: '#6B685F', use: 'Secondary text' },
+      { name: 'Line', hex: '#DDD7CC', use: 'Dividers' },
+      { name: 'Taar navy', hex: '#1F2A44', use: '--accent · product A' },
+      { name: 'Ghar terracotta', hex: '#A63D1F', use: '--accent · product B' },
+      { name: 'Danger', hex: '#B42318', use: 'Errors' },
+    ],
+    items: [
+      'Tokens first — no raw hex or px in product code, only var(--…) references.',
+      'Only --accent is themed: one attribute swap re-skins the whole app from Taar navy to Ghar terracotta, because the neutrals had drifted by a shade or two between the two products and are now shared on purpose.',
+      'Components are small and boring: each does one job and exposes every state — default, focus, error, disabled.',
+      'A living System page documents the tokens and every component state, with a changelog discipline for additions.',
+    ],
+  },
+  a11y: {
+    lead: 'Accessibility lives in the component, not the screen — which is what makes it hold up under reuse:',
+    items: [
+      'Every field carries a real label, aria-invalid on error and aria-describedby to its message.',
+      'Errors are announced with role="alert" — including the counted summary if you try to continue.',
+      '44px minimum tap targets everywhere, including the radio choices and the chips.',
+      'Visible focus rings on inputs, choices and buttons; reduced-motion is respected throughout.',
+    ],
+  },
+  limits: [
+    'The PIN table is a mock — five cities, not a postal API.',
+    'No real payment; the card option is disabled until v0.2.',
+    'Not yet tested with real users, so no completion or abandonment numbers are claimed.',
+  ],
+  next: {
+    lead: 'Where this study goes next:',
+    items: [
+      'A Figma library with variables for the tokens and components with variants.',
+      'The card form — number, expiry, CVV — as the third payment method.',
+      'A usability round with five people, focused on the error-recovery paths.',
+    ],
+  },
+  prototype: {
+    text: 'The real React build, running on this site:',
+    bullets: [
+      'Fill the three steps and watch completed ones collapse into editable summaries.',
+      'Blur a field half-filled to see the forgiving validation; press Continue early to get the count, not a wall of red.',
+      'Enter PIN 411001 — city and state fill in, and stay editable.',
+      'Switch the accent from Taar navy to Ghar terracotta and watch one token re-theme the entire app.',
+      'Open the System view — every token, component and state, live.',
+    ],
+    href: '/uiux/sutra/prototype',
+    cta: 'Open the live prototype',
+  },
+};
+
+// ---------- Lethe — UI/UX case study #4 (documented concept) ----------
+// Written case study for the concept summarized on the old /uiux card. No
+// live prototype exists yet, so no prototype or metrics are claimed.
+
+export const lethe = {
+  index: '04',
+  name: 'Lethe',
+  tagline: 'Notes that forget on purpose',
+  kind: 'Concept case study · Mobile app',
+  date: '2026',
+  status: 'Documented concept',
+  role: 'Concept end to end: trend research, positioning, core mechanics, IA, visual system, hi-fi direction',
+  tools: ['Trend research', 'Concept', 'IA', 'Visual system'],
+  overview: [
+    'Lethe is a notes app where every note has a life. Untouched notes dim a little every day; a nightly “Last light” review is the single moment where you keep or release what’s fading; and a released note leaves a one-line residue instead of vanishing. Nothing disappears without a last look.',
+    'The position is deliberately contrarian. While the current wave of tools races toward total recall — pendants that record conversations, assistants with ever-longer memories — Lethe treats forgetting as the feature: an interface where memory has a cost, so keeping something becomes an act of care rather than a default.',
+  ],
+  whyNow:
+    'The 2025–26 wave of AI memory tools promises perfect recall, and the backlash is already visible: people are growing uneasy with software that never forgets — recording pendants, silent screen capture, archives nobody audits. At the same time, digital hoarding has made most notes apps landfills: thousands of notes, none of them alive. Calm technology keeps trending as the counter-movement, and “forgetting well” is an unclaimed position in it — memory as curation, not accumulation.',
+  mechanic: {
+    text: 'Three mechanics carry the entire concept, and each one has a hard rule:',
+    items: [
+      'Decay — a note untouched loses life daily, expressed as a gentle dimming rather than a countdown. The interface itself ages; you can see neglect at a glance.',
+      'Last light — once a day, fading notes queue into a single review. Each gets a last look: keep it, or release it. It’s a ritual, not a chore — a minute, not a backlog.',
+      'Residue — a released note leaves one line behind: its title and the date it was let go. Searchable, but out of the way. Nothing disappears without having been seen once more.',
+    ],
+  },
+  ia: {
+    text: 'Three surfaces, deliberately shallow: the stack (every living note, ordered by the life left in them), Last light (the nightly review), and Residue (the archive of what was released). No folders, no tags, no notebooks — the life mechanic replaces all of it as the way notes organise themselves.',
+  },
+  visual: {
+    text: 'The palette is built around the idea of light leaving a room: a warm paper that dims rather than a cold dark mode, ink that softens with neglect, and one ember accent reserved for the Last light moment — the only place the interface is allowed to feel warm and urgent at once.',
+    tokens: [
+      { name: 'Ash', hex: '#ECE9E2', use: 'Background' },
+      { name: 'Dusk', hex: '#23242B', use: 'Text' },
+      { name: 'Smoke', hex: '#7C7B76', use: 'Secondary text' },
+      { name: 'Ember', hex: '#C4633F', use: 'Last light accent' },
+      { name: 'Residue', hex: '#A9A69D', use: 'Released notes' },
+    ],
+    note:
+      'Type is a quiet serif for note bodies — reading is the product — with a small caps mono for the life metadata. Dimming is expressed in opacity steps that are also design tokens, so “how alive is this” is a system property, not a per-screen decision.',
+  },
+  validate: {
+    lead: 'Open questions this concept would need a prototype and a real usability round to answer:',
+    items: [
+      'Does daily dimming read as calm honesty — or does it produce the low-grade anxiety of a dying plant?',
+      'Is Last light a ritual people keep, or the first notification they mute?',
+      'Does the residue line actually soothe the fear of loss, or does it just document it?',
+      'What happens to the mechanic at scale — a thousand notes dimming is a different product than thirty.',
+    ],
+    close:
+      'None of these have answers yet. The next step is a working prototype of the decay and Last light loop, tested for two weeks with people who already take notes daily.',
+  },
+};
+
+// ---------- Stoop — UI/UX case study #5 (documented concept) ----------
+// Written case study for the concept summarized on the old /uiux card. No
+// live prototype exists yet, so no prototype or metrics are claimed.
+
+export const stoop = {
+  index: '05',
+  name: 'Stoop',
+  tagline: 'Spontaneous meetups, safely',
+  kind: 'Concept case study · Mobile app',
+  date: '2026',
+  status: 'Documented concept',
+  role: 'Concept end to end: trend research, persona, trust model, IA, visual system, hi-fi direction',
+  tools: ['Trend research', 'Persona', 'IA', 'Visual system'],
+  overview: [
+    'Stoop is a local hangout app for low-commitment, same-day plans with people nearby — named for the stoop, the semi-public step where saying “I’m out front for a bit” needs no calendar invite. The design problem is the tension every spontaneity app dies on: making it effortless to say yes, while making it safe to meet at all.',
+    'The core decision: trust signals sit directly on the decision screen — the moment you choose to join — instead of being enforced as approval gates before you can even browse.',
+  ],
+  whyNow:
+    'Group chats are where spontaneity goes to die — five people, three “maybes”, and by the time it’s settled nobody’s going. The existing alternatives fail in opposite directions: event platforms are too formal and too public, while stranger-social apps optimize for scale and leave the safety work to the user. Meanwhile, third places keep shrinking and “ spontaneous, local, low-stakes” keeps showing up in trend reports as an unmet social need. The gap is specific: a product where safety is designed into the decision, not bolted on as friction.',
+  trust: {
+    text: 'Every join decision shows the same three signals, in the same place — so evaluating a plan never requires leaving the screen:',
+    items: [
+      'A public venue by default — cafés, parks, stoops, libraries. Private locations are flagged, not banned, and visually quieter.',
+      'Mutual friends in common, computed live — the strongest signal most people actually use offline.',
+      'The host’s track record: how many hangouts hosted, how many no-shows. Earned over time, impossible to fake quickly.',
+    ],
+  },
+  streak: {
+    text: 'Commitment is kept honest by a visible streak: joining and showing up builds it, and cancelling with fifteen minutes or less counts as a no-show that breaks it. The streak buys nothing except standing — hosts can see it before approving — which keeps it social pressure rather than a credit score. Flaking costs exactly what it costs offline: the next invitation is a little harder to get.',
+  },
+  visual: {
+    text: 'The look is porch, not platform: warm brick-and-porch paper, asphalt ink, and one signal green reserved for the join action — the only saturated element on any screen, so “yes” is always the easiest thing to find. Everything else stays quiet, because the content is people and plans, not the interface.',
+    tokens: [
+      { name: 'Porch', hex: '#F4F1EA', use: 'Background' },
+      { name: 'Asphalt', hex: '#22242A', use: 'Text' },
+      { name: 'Brownstone', hex: '#8A5A44', use: 'Secondary / venues' },
+      { name: 'Signal', hex: '#2E7D5B', use: 'Join accent' },
+      { name: 'Chalk', hex: '#D9D4C8', use: 'Dividers' },
+    ],
+    note:
+      'The type voice is rounder and warmer than a typical social app — this is a neighbourhood product, not a network. Map cards use the same paper tone so the city feels like part of the interface, not a widget embedded in it.',
+  },
+  validate: {
+    lead: 'What a prototype and a first real neighbourhood would need to answer:',
+    items: [
+      'Does the streak reduce flaking — or just reduce joining, once people fear breaking it?',
+      'Is “public venue by default” enough safety signal on its own, or does it need in-app check-ins too?',
+      'Does the fifteen-minute cancellation window match how plans actually shift in the real world?',
+      'Cold start: what’s the minimum density of people within walking distance before the feed feels alive?',
+    ],
+    close:
+      'The honest next step is a paper-thin pilot in one walkable neighbourhood — the product only exists at the scale of a few blocks, so that’s the scale it should be tested at.',
+  },
+};
+
 // ---------- UI/UX portfolio (/uiux) — design-side content, separate from the dev portfolio ----------
 
 export const uiux = {
@@ -470,29 +668,12 @@ export const uiux = {
     { n: '02', title: 'Design in systems', text: 'Components, not screens. Consistency at scale.' },
     { n: '03', title: 'Ship it', text: 'Figma files don’t ship. Code does.' },
   ],
+  /* The only study still a card rather than a full article: it's in progress.
+     Lethe, Stoop and the Sutra checkout graduated from this grid into full
+     case studies (see lethe / stoop / sutra above). */
   caseStudies: [
     {
-      index: '03',
-      title: 'Lethe — notes that forget on purpose',
-      status: 'In review',
-      headline: 'A notes app where every note has a life — untouched notes dim daily until a last look keeps or releases them',
-      problem:
-        'The 2025–26 wave of AI memory tools promises total recall: pendants that record conversations, tools that capture screens, assistants with ever-longer memories. Lethe is the counter-position — forgetting as the feature. Untouched notes lose life daily, a nightly Last light review keeps or releases what is fading, and released notes leave a one-line residue. Nothing disappears without a last look.',
-      role: 'Trend Research · Concept · IA · Visual System · Hi-fi Screens · React Prototype',
-      tools: ['Figma', 'React', 'User Research'],
-    },
-    {
-      index: '04',
-      title: 'Stoop — spontaneous meetups, safely',
-      status: 'In review',
-      headline: 'Low-commitment hangouts with people nearby, with trust signals on the decision screen instead of approval gates',
-      problem:
-        'Spontaneous meetups die in group-chat friction or feel unsafe with strangers. Stoop resolves spontaneity vs. safety by design: public venue, mutual friends and host track record sit directly on the decision screen, and a visible streak keeps commitment honest — cancelling with 15 minutes or less counts as a no-show.',
-      role: 'Trend Research · Persona · IA · Visual System · Hi-fi Screens · React Prototype',
-      tools: ['Figma', 'React', 'User Research'],
-    },
-    {
-      index: '05',
+      index: '06',
       title: 'Food Delivery App — 0 to 1',
       status: 'In progress',
       headline: 'Designing for Pune’s tiffin culture — local food, digital-first',
@@ -500,16 +681,6 @@ export const uiux = {
         'Tiffin services in Pune and Nashik have no digital discovery layer. Designing the full app experience from user research to interactive Framer prototype.',
       role: 'UX Research · User Flows · Figma Design · Framer Prototype',
       tools: ['Figma', 'Framer', 'User Research'],
-    },
-    {
-      index: '06',
-      title: 'Checkout UX Redesign + Design System',
-      status: 'In progress',
-      headline: 'Building the component library I wish every junior designer had',
-      problem:
-        'Most e-commerce checkouts are broken — too many fields, no error recovery, no progress indicator. Redesigning the flow and documenting every component as a reusable design system.',
-      role: 'UX Audit · Component Design · Design System · React Components',
-      tools: ['Figma', 'React', 'Tailwind CSS'],
     },
   ],
   liquidGlass: [

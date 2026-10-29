@@ -2664,3 +2664,658 @@ html.motion-off.js-reveal [data-reveal-group] > * {
   transform: none;
   animation: none;
 }
+
+/* ================= Site-wide motion craft (MotionCraft) ================= */
+
+/* Four subsystems driven by the MotionCraft client component, all gated on
+   html.motion-off / prefers-reduced-motion, all compositor-only properties:
+   1. scroll progress hairline   2. split-text word reveals
+   3. figure curtain + parallax  4. magnetic CTAs */
+
+/* --- 1. scroll progress hairline -------------------------------------- */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 80;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* --- 2. split-text word reveal ---------------------------------------- */
+
+/* MotionCraft wraps words into overflow masks (.sw > .sw-i). The hidden
+   state only exists once the JS has split the element, so no-JS and
+   reduced-motion visitors always see plain, fully visible text. */
+.sw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* keep descenders (g, y, p) inside the mask without changing layout */
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.sw-i {
+  display: inline-block;
+  transform: translateY(125%);
+}
+
+.split-in .sw-i {
+  transform: translateY(0);
+  transition: transform 0.85s var(--ease-apple);
+  transition-delay: calc(var(--swi, 0) * 38ms);
+}
+
+/* --- 3. figure curtain + parallax drift ------------------------------- */
+
+/* Covers start slightly inset (a "curtain" not yet pulled) and wipe open
+   when MotionCraft adds .curtain-in on first viewport entry; the image
+   beneath drifts on a scroll-linked parallax via --parallax-y, over a base
+   scale that keeps the rounded corners covered at full deflection. */
+html.js-reveal .relay-fig[data-curtain] {
+  clip-path: inset(4.5% 3.5% 4.5% 3.5% round 10px);
+  transition: clip-path 1.05s var(--ease-apple) 0.1s;
+}
+
+html.js-reveal .relay-fig[data-curtain].curtain-in {
+  clip-path: inset(0 0 0 0 round 10px);
+}
+
+.relay-fig[data-curtain] img {
+  transform: translateY(var(--parallax-y, 0px)) scale(1.06);
+  will-change: transform;
+}
+
+html.motion-off .relay-fig[data-curtain] {
+  clip-path: none;
+}
+
+html.motion-off .relay-fig[data-curtain] img {
+  transform: none;
+}
+
+/* --- 4. magnetic CTAs -------------------------------------------------- */
+
+/* MotionCraft feeds --mag-x/--mag-y on pointermove and toggles .mag-live.
+   Declared as custom properties (not inline transforms) so the elements'
+   own color transitions keep working alongside the lean. */
+[data-magnetic] {
+  transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease,
+    background-color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-magnetic].mag-live {
+  transition: transform 0.18s cubic-bezier(0.33, 1, 0.68, 1), color 0.2s ease,
+    background-color 0.3s ease, border-color 0.3s ease;
+}
+
+html.motion-off [data-magnetic] {
+  transform: none;
+  transition: none;
+}
+
+/* --- kinetic ticker ----------------------------------------------------- */
+
+/* Full-bleed marquee under the heroes (home + /uiux). Two copies of the
+   list render back to back and the track loops at exactly -50%, so the
+   seam is invisible. Hover pauses; motion-off freezes it in place. */
+.ticker {
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  padding-block: 0.8rem;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.ticker-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: ticker-scroll 32s linear infinite;
+}
+
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.7rem;
+  padding-right: 1.7rem;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.ticker-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+@keyframes ticker-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+html.motion-off .ticker-track {
+  animation: none;
+}
+
+/* --- documented-concept status pill ------------------------------------ */
+
+/* Calm variant for documented concept studies: steady dot, quiet color —
+   deliberately unlike the pulsing accent of "in progress" work. */
+.status-concept {
+  color: var(--muted);
+}
+
+/* ================= Sutra prototype stage (/uiux/sutra/prototype) ================= */
+
+/* The ported checkout + design system keeps its own identity (warm paper,
+   Fraunces + Hanken Grotesk) and is fully scoped under .sutra so nothing
+   leaks into the rest of the site — and nothing of the host site leaks in.
+   The original's tokens are renamed --su-* to avoid colliding with the
+   host's CSS variables. */
+.sutra-stage {
+  background: #e9e4db;
+}
+
+.sutra {
+  --su-paper: #f6f3ee;
+  --su-ink: #1b1d22;
+  --su-mute: #6b685f;
+  --su-line: #ddd7cc;
+  --su-accent: #1f2a44;
+  --su-danger: #b42318;
+  --su-serif: var(--font-sutra-serif, 'Fraunces'), Georgia, serif;
+  --su-sans: var(--font-sutra-sans, 'Hanken Grotesk'), system-ui, sans-serif;
+  --su-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --su-s1: 4px;
+  --su-s2: 8px;
+  --su-s3: 12px;
+  --su-s4: 16px;
+  --su-s5: 24px;
+  --su-s6: 32px;
+  --su-r-opt: 6px;
+  --su-r-btn: 8px;
+  --su-tap: 44px;
+  background: #e9e4db;
+  color: var(--su-ink);
+  font: 400 15px/1.45 var(--su-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* One token is themed: the accent. The component scopes the swap to its own
+   subtree (the original set document.documentElement.dataset.accent). */
+.sutra[data-su-accent='terracotta'] {
+  --su-accent: #a63d1f;
+}
+
+.sutra *,
+.sutra *::before,
+.sutra *::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.sutra button,
+.sutra select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.sutra :focus-visible {
+  outline: 2px solid var(--su-accent);
+  outline-offset: 2px;
+}
+
+/* --- Button (overrides the host .btn base inside the scope) --- */
+.sutra .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  height: 52px;
+  padding: 0 24px;
+  border-radius: var(--su-r-btn);
+  border: 0;
+  font: 500 15px/1.2 var(--su-sans);
+  letter-spacing: 0;
+  text-transform: none;
+  text-decoration: none;
+  transition: transform 0.2s var(--su-ease);
+}
+
+.sutra .btn-primary {
+  background: var(--su-accent);
+  color: #fff;
+}
+
+.sutra .btn-secondary {
+  border: 1px solid var(--su-line);
+  color: var(--su-ink);
+}
+
+.sutra .btn:disabled {
+  background: var(--su-line);
+  color: var(--su-mute);
+  cursor: not-allowed;
+  border-color: transparent;
+}
+
+.sutra .btn:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.sutra .btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.sutra .btn:active:not(:disabled) {
+  transform: scale(0.985);
+  transition: transform 100ms ease-out;
+}
+
+/* --- Field --- */
+.sutra .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: var(--su-s4);
+}
+
+.sutra .field label {
+  font-size: 13px;
+  color: var(--su-mute);
+}
+
+.sutra .field input {
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--su-line);
+  border-radius: var(--su-r-opt);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 16px;
+}
+
+.sutra .field input:focus-visible {
+  outline: 2px solid var(--su-accent);
+  outline-offset: 1px;
+  border-color: var(--su-accent);
+}
+
+.sutra .field input[aria-invalid='true'] {
+  border-color: var(--su-danger);
+}
+
+.sutra .msg {
+  font-size: 13px;
+  color: var(--su-mute);
+}
+
+.sutra .msg.err {
+  color: var(--su-danger);
+}
+
+/* --- Choice (radio row) --- */
+.sutra .choice {
+  display: flex;
+  gap: var(--su-s3);
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--su-line);
+  border-radius: var(--su-r-opt);
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.sutra .choice input {
+  accent-color: var(--su-accent);
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.sutra .choice:has(input:checked) {
+  border-color: var(--su-accent);
+  box-shadow: inset 0 0 0 1px var(--su-accent);
+}
+
+.sutra .choice:has(input:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sutra .choice:focus-within {
+  outline: 2px solid var(--su-accent);
+  outline-offset: 2px;
+}
+
+.sutra .choice .body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sutra .choice small {
+  color: var(--su-mute);
+}
+
+.sutra .choice .aside {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* --- Chip --- */
+.sutra .opt {
+  min-height: var(--su-tap);
+  min-width: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--su-line);
+  border-radius: var(--su-r-opt);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--su-s2);
+  font-size: 14px;
+}
+
+.sutra .opt[aria-pressed='true'] {
+  background: var(--su-ink);
+  color: var(--su-paper);
+  border-color: var(--su-ink);
+}
+
+/* --- Section (checkout step) --- */
+.sutra .sect {
+  padding: 20px 0;
+  border-top: 1px solid var(--su-line);
+}
+
+.sutra .sect header {
+  display: flex;
+  align-items: center;
+  gap: var(--su-s3);
+}
+
+.sutra .sect h2 {
+  font: 400 22px/1.2 var(--su-serif);
+  letter-spacing: -0.01em;
+  flex: 1;
+}
+
+.sutra .sect .num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--su-line);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: var(--su-mute);
+}
+
+.sutra .sect.open .num {
+  background: var(--su-ink);
+  border-color: var(--su-ink);
+  color: var(--su-paper);
+}
+
+.sutra .sect.done .num {
+  background: var(--su-accent);
+  border-color: var(--su-accent);
+  color: #fff;
+}
+
+.sutra .sect > p {
+  margin: 6px 0 0 38px;
+  color: var(--su-mute);
+}
+
+.sutra .link {
+  min-height: var(--su-tap);
+  padding: 0 4px;
+  color: var(--su-accent);
+  font-weight: 500;
+}
+
+/* --- Row --- */
+.sutra .row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--su-s4);
+  padding: 8px 0;
+}
+
+.sutra .row span:first-child {
+  color: var(--su-mute);
+}
+
+.sutra .row.strong {
+  border-top: 1px solid var(--su-line);
+  margin-top: var(--su-s2);
+  padding-top: var(--su-s3);
+  font-weight: 600;
+}
+
+.sutra .row.strong span:first-child {
+  color: var(--su-ink);
+}
+
+/* --- Page furniture --- */
+.sutra .app {
+  max-width: 480px;
+  min-height: 100vh;
+  margin: auto;
+  background: var(--su-paper);
+}
+
+@media (min-width: 520px) {
+  .sutra .app {
+    box-shadow: 0 0 0 1px var(--su-line);
+  }
+}
+
+.sutra .mute {
+  color: var(--su-mute);
+}
+
+.sutra .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(10px + env(safe-area-inset-top)) 12px 6px 20px;
+}
+
+.sutra .mark {
+  font: 600 26px var(--su-serif);
+  letter-spacing: -0.02em;
+}
+
+.sutra .tabs {
+  display: flex;
+}
+
+.sutra .tabs button {
+  min-height: 44px;
+  padding: 0 12px;
+  color: var(--su-mute);
+  border-bottom: 2px solid transparent;
+}
+
+.sutra .tabs button[aria-pressed='true'] {
+  color: var(--su-ink);
+  border-color: var(--su-ink);
+}
+
+.sutra .themes {
+  display: flex;
+  gap: 8px;
+  padding: 6px 20px 0;
+  overflow-x: auto;
+}
+
+.sutra .page {
+  padding: 20px 20px 24px;
+}
+
+.sutra .eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--su-mute);
+}
+
+.sutra .title {
+  font: 300 44px/1 var(--su-serif);
+  letter-spacing: -0.03em;
+  margin: 12px 0 14px;
+  font-variation-settings: 'opsz' 144;
+}
+
+.sutra .title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--su-accent);
+}
+
+.sutra .summary {
+  border: 1px solid var(--su-line);
+  border-radius: var(--su-r-opt);
+  padding: 0 14px;
+  margin: 14px 0 20px;
+}
+
+.sutra .summary summary {
+  display: flex;
+  justify-content: space-between;
+  min-height: 48px;
+  align-items: center;
+  cursor: pointer;
+  list-style: none;
+}
+
+.sutra .summary summary::-webkit-details-marker {
+  display: none;
+}
+
+.sutra .summary[open] {
+  padding-bottom: 8px;
+}
+
+.sutra .gap {
+  margin-top: var(--su-s5);
+}
+
+.sutra .done-page {
+  padding-top: 24px;
+}
+
+.sutra .done-page .mute {
+  margin-bottom: 12px;
+}
+
+.sutra .blk {
+  padding: 28px 0;
+  border-top: 1px solid var(--su-line);
+  margin-top: 28px;
+}
+
+.sutra .blk h2 {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--su-mute);
+  margin-bottom: 14px;
+}
+
+.sutra .swatches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 12px;
+}
+
+.sutra .swatches i {
+  display: block;
+  height: 56px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.3);
+  margin-bottom: 6px;
+}
+
+.sutra .swatches b {
+  font-weight: 500;
+  display: block;
+  font-size: 13px;
+}
+
+.sutra .swatches small {
+  color: var(--su-mute);
+}
+
+.sutra .space {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.sutra .space span {
+  background: var(--su-accent);
+  display: block;
+}
+
+.sutra .chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.sutra pre {
+  margin-top: 14px;
+  padding: 12px;
+  background: rgba(128, 128, 128, 0.1);
+  border-radius: var(--su-r-opt);
+  font-size: 12px;
+  overflow-x: auto;
+  font-family: var(--mono);
+}
+
+.sutra code {
+  font-size: 13px;
+  font-family: var(--mono);
+}
+
+.sutra .foot {
+  padding: 20px;
+  border-top: 1px solid var(--su-line);
+  font-size: 12px;
+  color: var(--su-mute);
+}
+
+.sutra .foot a {
+  color: inherit;
+  text-underline-offset: 3px;
+}

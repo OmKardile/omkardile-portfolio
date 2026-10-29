@@ -5,6 +5,7 @@ import { DetailsAnimate } from '@/components/DetailsAnimate';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { UiuxTheme } from '@/components/UiuxTheme';
+import { MotionCraft } from '@/components/MotionCraft';
 import { site } from '@/data/site';
 import { display, mono } from './fonts';
 import './globals.css';
@@ -70,6 +71,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         />
       </head>
       <body>
+        {/* Scroll progress hairline under the header edge; MotionCraft drives
+            scaleX. aria-hidden + pointer-events none — purely decorative. */}
+        <div id="scroll-progress" className="scroll-progress" aria-hidden="true" />
         {/* data-native-scroll: the skip link jumps instantly even while the
             smooth-scroll engine is running — keyboard users want zero delay. */}
         <a className="skip-link" href="#main" data-native-scroll>
@@ -80,6 +84,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <UiuxTheme />
         <DetailsAnimate />
         <ScrollReveal />
+        <MotionCraft />
         <main id="main" tabIndex={-1}>
           {children}
         </main>
