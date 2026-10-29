@@ -15,8 +15,9 @@ function SectionHead({ id, index, title, note }: { id: string; index: string; ti
   );
 }
 
-/* Kinetic ticker words — the build vocabulary, full-bleed under the hero.
-   Decorative (aria-hidden): the same facts are readable in the sections below. */
+/* Kinetic ticker words — the build vocabulary. Lives at the top of the footer
+   now (was under the hero); the Footer component renders it. Decorative
+   (aria-hidden): the same facts are readable in the Skills section. */
 const TICKER = [
   'React',
   'TypeScript',
@@ -90,18 +91,6 @@ export default function Home() {
           ) : null}
         </div>
       </section>
-
-      {/* Full-bleed kinetic ticker between the hero and the work. */}
-      <div className="ticker" aria-hidden="true">
-        <div className="ticker-track">
-          {[...TICKER, ...TICKER].map((t, i) => (
-            <span className="ticker-item" key={`${t}-${i}`}>
-              {t}
-              <span className="ticker-dot" />
-            </span>
-          ))}
-        </div>
-      </div>
 
       {/* Work */}
       <section className="section container" id="work" aria-labelledby="work-title">
@@ -204,9 +193,12 @@ export default function Home() {
           </ul>
         </div>
       </section>
+
+      {/* Footer sits inside .page-dev so the ticker's accent dots wear the
+          dev blue — same accent patterns as the rest of this page. */}
+      <Footer ticker={TICKER} />
       </div>
 
-      <Footer />
       {/* Page-hydration sentinel: MotionCraft waits for this before touching page DOM. */}
       <MotionReady />
     </>

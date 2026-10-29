@@ -4,8 +4,9 @@ import { site, uiux, relay, taar, sutra, lethe, stoop } from '@/data/site';
 import { Footer } from '@/components/Footer';
 import { MotionReady } from '@/components/MotionReady';
 
-/* Kinetic ticker words — the craft vocabulary, full-bleed under the hero.
-   Decorative (aria-hidden): the same facts are readable in the sections below. */
+/* Kinetic ticker words — the craft vocabulary. Lives at the top of the footer
+   now (was under the hero); the Footer component renders it. Decorative
+   (aria-hidden): the same facts stay readable in the process/tools above. */
 const TICKER = [
   'Research',
   'IA & flows',
@@ -86,18 +87,6 @@ export default function UiuxPage() {
           </div>
         </div>
       </section>
-
-      {/* Full-bleed kinetic ticker between the hero and the work. */}
-      <div className="ticker" aria-hidden="true">
-        <div className="ticker-track">
-          {[...TICKER, ...TICKER].map((t, i) => (
-            <span className="ticker-item" key={`${t}-${i}`}>
-              {t}
-              <span className="ticker-dot" />
-            </span>
-          ))}
-        </div>
-      </div>
 
       {/* Process */}
       <section className="section container" aria-labelledby="process-title">
@@ -950,34 +939,10 @@ export default function UiuxPage() {
         </ul>
       </section>
 
-      {/* Also shipped */}
-      <section className="section container" aria-labelledby="shipped-title">
-        <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="mono section-index section-index-accent">04 / Also shipped</p>
-          <h2 id="shipped-title" className="section-title">
-            Designs that made it to code.
-          </h2>
-        </div>
-        <ul className="xp-list" data-reveal-group suppressHydrationWarning>
-          {uiux.shipped.map((s) => (
-            <li className="xp-row" key={s.title}>
-              <div className="xp-main">
-                <h3 className="xp-title">
-                  <a className="shipped-link" href={s.href} target="_blank" rel="noopener noreferrer">
-                    {s.title} <span aria-hidden="true">↗</span>
-                  </a>
-                </h3>
-                <p className="xp-org">{s.stack}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
       {/* About */}
       <section className="section container" aria-labelledby="about-uiux-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="mono section-index section-index-accent">05 / About</p>
+          <p className="mono section-index section-index-accent">04 / About</p>
           <h2 id="about-uiux-title" className="section-title">
             Designer who codes.
           </h2>
@@ -996,7 +961,7 @@ export default function UiuxPage() {
       <section className="section contact-xl container" id="contact" aria-labelledby="contact-uiux-title">
         <div data-reveal suppressHydrationWarning>
           <p className="xl-rule mono">
-            <span className="xl-n">06</span>
+            <span className="xl-n">05</span>
             <span className="xl-lbl">Contact</span>
           </p>
           <h2 id="contact-uiux-title" className="xl-title" data-split>
@@ -1028,7 +993,7 @@ export default function UiuxPage() {
         </ul>
       </section>
 
-      <Footer note={uiux.availability} />
+      <Footer note={uiux.availability} ticker={TICKER} />
       {/* Page-hydration sentinel: MotionCraft waits for this before touching page DOM. */}
       <MotionReady />
     </>

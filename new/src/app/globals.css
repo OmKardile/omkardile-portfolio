@@ -1745,17 +1745,6 @@ html.motion-off .lg-action:active {
   transform: none;
 }
 
-.shipped-link {
-  color: inherit;
-  text-decoration: none;
-}
-
-.shipped-link:hover {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
 .about-uiux {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
@@ -2763,15 +2752,21 @@ html.motion-off [data-magnetic] {
 
 /* --- kinetic ticker ----------------------------------------------------- */
 
-/* Full-bleed marquee under the heroes (home + /uiux). Two copies of the
-   list render back to back and the track loops at exactly -50%, so the
-   seam is invisible. Hover pauses; motion-off freezes it in place. */
+/* Full-bleed word marquee at the top of the site footer (home + /uiux).
+   Two copies of the list render back to back and the track loops at exactly
+   -50%, so the seam is invisible. Hover pauses; motion-off freezes it. */
 .ticker {
   overflow: hidden;
   border-block: 1px solid var(--line);
   padding-block: 0.8rem;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+/* In the footer the strip's top border is redundant — the footer already
+   draws its own border-top; the ticker's bottom border closes the strip. */
+.footer-ticker {
+  border-top: 0;
 }
 
 .ticker-track {
