@@ -1,0 +1,396 @@
+/* AskOmkar — floating ask-me-anything widget.
+   Styling contract: only site tokens (var(--bg/fg/muted/line/soft/accent),
+   var(--mono/sans), var(--ease-out)) — so light, dark and the /uiux paper
+   theme all dress it correctly with zero per-theme overrides. */
+
+.ao-pill {
+  position: fixed;
+  right: 18px;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 16px;
+  background: var(--fg);
+  color: var(--bg);
+  border: 1.5px solid var(--fg);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  box-shadow: 4px 4px 0 var(--accent);
+  cursor: pointer;
+  transition: transform 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
+}
+.ao-pill:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 3px 3px 0 var(--accent);
+}
+.ao-pill:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--accent);
+}
+.ao-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  position: relative;
+}
+.ao-pill-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  animation: ao-ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes ao-ping {
+  0% { transform: scale(0.55); opacity: 0.9; }
+  70%, 100% { transform: scale(1.9); opacity: 0; }
+}
+
+/* ---------- panel ---------- */
+
+.ao-panel {
+  position: fixed;
+  right: 18px;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  z-index: 91;
+  width: min(396px, calc(100vw - 36px));
+  max-height: min(660px, calc(100dvh - 40px));
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1.5px solid var(--fg);
+  box-shadow: 8px 8px 0 var(--line-strong);
+  animation: ao-in 0.28s var(--ease-out);
+}
+@keyframes ao-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.ao-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1.5px solid var(--line);
+  flex: none;
+}
+.ao-avatar {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.ao-head-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.ao-head-text strong {
+  font-size: 14.5px;
+  letter-spacing: -0.01em;
+}
+.ao-head-text span {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+.ao-close {
+  margin-left: auto;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 1.5px solid var(--line);
+  color: var(--fg);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease-out), background 0.15s var(--ease-out);
+}
+.ao-close:hover {
+  border-color: var(--fg);
+  background: var(--soft);
+}
+
+/* ---------- log ---------- */
+
+.ao-log {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.ao-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ao-bubble {
+  background: var(--soft);
+  border: 1.5px solid var(--line);
+  padding: 10px 12px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.ao-bubble p {
+  margin: 0 0 8px;
+}
+.ao-bubble p:last-child {
+  margin-bottom: 0;
+}
+.ao-bubble ul {
+  margin: 0 0 8px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.ao-bubble ul:last-child {
+  margin-bottom: 0;
+}
+.ao-bubble a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 2px;
+}
+.ao-bubble a:hover {
+  color: var(--accent);
+}
+.ao-ext {
+  font-size: 0.85em;
+}
+.ao-msg-user {
+  align-items: flex-end;
+}
+.ao-msg-user .ao-bubble {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+  max-width: 85%;
+}
+.ao-note {
+  margin: 8px 0 0 !important;
+  font-family: var(--mono);
+  font-size: 10.5px !important;
+  color: var(--muted) !important;
+  letter-spacing: 0.02em;
+}
+
+/* proof / action links under an answer */
+.ao-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+.ao-link {
+  display: block;
+  border: 1.5px solid var(--fg);
+  background: var(--bg);
+  color: var(--fg) !important;
+  text-decoration: none !important;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  padding: 7px 10px;
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out);
+}
+.ao-link:hover {
+  background: var(--fg);
+  color: var(--bg) !important;
+}
+.ao-link-note {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  letter-spacing: 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.ao-link:hover .ao-link-note {
+  color: inherit;
+  opacity: 0.75;
+}
+
+/* suggested / related question chips */
+.ao-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ao-chip {
+  border: 1.5px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 6px 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s var(--ease-out), background 0.15s var(--ease-out);
+}
+.ao-chip:hover {
+  border-color: var(--fg);
+  background: var(--soft);
+}
+
+/* busy + degraded states */
+.ao-busy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.ao-warm-sub {
+  display: block;
+  margin-top: 3px;
+  font-size: 10px;
+  opacity: 0.8;
+}
+.ao-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+.ao-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: ao-blink 1.2s infinite ease-in-out;
+}
+.ao-dots span:nth-child(2) { animation-delay: 0.15s; }
+.ao-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes ao-blink {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+  40% { opacity: 1; transform: scale(1); }
+}
+.ao-degraded {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- CTA bar + form ---------- */
+
+.ao-cta {
+  display: flex;
+  border-top: 1.5px solid var(--line);
+  flex: none;
+}
+.ao-cta a {
+  flex: 1;
+  text-align: center;
+  padding: 9px 4px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  text-decoration: none;
+  border-right: 1.5px solid var(--line);
+  transition: background 0.15s var(--ease-out);
+}
+.ao-cta a:last-child {
+  border-right: 0;
+}
+.ao-cta a:hover {
+  background: var(--soft);
+}
+
+.ao-form {
+  display: flex;
+  border-top: 1.5px solid var(--line);
+  flex: none;
+}
+.ao-form input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  padding: 12px 12px;
+}
+.ao-form input::placeholder {
+  color: var(--muted);
+}
+.ao-form button {
+  width: 46px;
+  flex: none;
+  border: 0;
+  border-left: 1.5px solid var(--line);
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.15s var(--ease-out), background 0.15s var(--ease-out);
+}
+.ao-form button:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.ao-form button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ---------- mobile: bottom sheet ---------- */
+
+@media (max-width: 640px) {
+  .ao-panel {
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    width: auto;
+    max-height: min(72dvh, 560px);
+    box-shadow: 5px 5px 0 var(--line-strong);
+  }
+  .ao-pill {
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ao-pill,
+  .ao-panel {
+    animation: none;
+    transition: none;
+  }
+  .ao-pill-dot::after {
+    animation: none;
+    opacity: 0;
+  }
+}

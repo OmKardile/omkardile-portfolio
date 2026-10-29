@@ -6,6 +6,7 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { UiuxTheme } from '@/components/UiuxTheme';
 import { MotionCraft } from '@/components/MotionCraft';
+import { AskOmkar } from '@/components/AskOmkar';
 import { site } from '@/data/site';
 import { display, mono } from './fonts';
 import './globals.css';
@@ -87,6 +88,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <main id="main" tabIndex={-1}>
           {children}
         </main>
+        {/* AskOmkar — the floating portfolio bot. Present on every route; all
+            matching happens client-side (see src/components/AskOmkar.tsx). */}
+        <AskOmkar />
         <Analytics />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
       </body>
