@@ -735,4 +735,148 @@ export const hand: FaqEntry[] = [
     a: "**Next.js 16 (App Router) + React 19 + TypeScript**, plain CSS with design tokens, hand-rolled motion — no UI kit, no animation library doing the work. It builds to fully static routes.\n\nAnd yes — the bot you're talking to is part of the build: pre-written answers, in-browser embedding matching, zero server. Omkar documented every constraint in the repo.",
     links: [L.github],
   },
+
+  // ---------- Deep cuts: stories, decisions, war stories ----------
+  // Interview batch (Oct 2026) — the depth the site pages don't show. Every
+  // claim traces to a repo doc or live link; undocumented gaps stay honest
+  // on purpose rather than being filled with a success story.
+  {
+    id: 'story-ssshopee-origin',
+    q: [
+      'why did he build ssshopee',
+      'who uses ssshopee',
+      'shop erp origin',
+      'project for family shop',
+    ],
+    a: "SSShopee was built for a real user: Omkar's brother's retail shop. It's a paired system — an ERP for the counter and stock side, plus a separate customer storefront.\n\nThe ERP covers barcode/SKU POS, GST and receipts, inventory and expiry tracking, purchases, expenses, udhar, customer and supplier ledgers, and analytics. The storefront adds search, a cart, COD/UPI checkout and order tracking.",
+    links: [
+      { href: 'https://github.com/OmKardile/sss-erp-hybrid', label: 'Source repo' },
+      { href: 'https://sss-ecomm.vercel.app/', label: 'Storefront' },
+      { href: 'https://shubhamsupershopee-admin.vercel.app/', label: 'ERP admin' },
+    ],
+  },
+  {
+    id: 'decision-ssshopee-data-flow',
+    q: [
+      'how is ssshopee structured',
+      'why separate shop databases',
+      'how do orders sync',
+      'sss erp architecture',
+    ],
+    a: "SSShopee started as a React/Vite app on browser localStorage and was rebuilt as a Next.js 16 full-stack app on Prisma and Supabase PostgreSQL. The ERP and the storefront run on separate databases.\n\nProducts sync from the ERP to the storefront through a token-protected API, and storefront orders sync back into the ERP as income entries. So keeping two systems consistent is a real engineering problem here, not an afterthought.",
+    links: [
+      { href: 'https://github.com/OmKardile/sss-erp-hybrid', label: 'Source repo' },
+      { href: 'https://github.com/OmKardile/sss-erp-hybrid/blob/main/CHANGELOG.md', label: 'Change history' },
+    ],
+  },
+  {
+    id: 'challenge-ssshopee-product-sync',
+    q: [
+      'tell me a real bug he fixed',
+      'sss shop image sync bug',
+      'hard bug in ssshopee',
+      'how did he debug sync',
+    ],
+    a: "A real SSShopee bug: when an ERP product had no photo, the sync overwrote the storefront's existing image with null, so every \"Sync Now\" wiped good images.\n\nThe fix keeps the storefront image whenever the ERP record has no replacement. Small bug, useful lesson: a missing value in one system shouldn't erase valid data owned by another.",
+    links: [
+      { href: 'https://github.com/OmKardile/sss-erp-hybrid/blob/main/CHANGELOG.md', label: 'Fix record' },
+      { href: 'https://sss-ecomm.vercel.app/', label: 'Storefront' },
+    ],
+  },
+  {
+    id: 'story-patel-client-brief',
+    q: [
+      'how did he work with patel',
+      'patel networks client story',
+      'how did he win the client',
+      'patel project timeline',
+    ],
+    a: "PatelNetworks is a client e-commerce project for a Surat business selling surveillance and networking hardware. The shipped scope: product catalogue and CCTV kit bundles, Razorpay checkout alongside cash on delivery, GST invoicing with serial-tracked warranties, OTP-based accounts, and WhatsApp ordering.\n\nThe public materials cover the scope — how the client was won, the delivery timeline and the handover aren't published. Those stories are Omkar's to tell directly, and email is the fastest way to ask.",
+    links: [{ href: 'https://patelnetworks-5ne3.onrender.com/', label: 'Live demo' }],
+  },
+  {
+    id: 'decision-servepoint-qr-sessions',
+    q: [
+      'how is servepoint qr secured',
+      'can customers change table qr',
+      'servepoint qr security',
+      'how does table verification work',
+    ],
+    a: "ServePoint treats a table QR code as a permission, not just a URL. Scanning the physical sticker makes the server issue a signed HMAC-SHA256 session that expires after 10 minutes. Orders must carry that session; expired, spoofed or settled-table sessions are rejected.\n\nThe reason: with static QR links, a bookmarked table URL could be reopened at home and place an accidental order in the kitchen. The trade-off is that a diner who takes more than 10 minutes to decide has to scan the table again.",
+    links: [
+      { href: 'https://github.com/OmKardile/servepoint/blob/main/docs/decisions/0005-ephemeral-table-qr-session-security.md', label: 'Decision record' },
+      { href: 'https://servepoint-tsos.onrender.com/', label: 'Live app' },
+    ],
+  },
+  {
+    id: 'story-servepoint-operations',
+    q: [
+      'what does servepoint actually do',
+      'how does servepoint help cafes',
+      'servepoint kitchen workflow',
+      'what is a cafe operating system',
+    ],
+    a: "ServePoint brings several cafe workflows into one operating system. Its staff workspace covers ordering and GST checkout, a live kitchen queue, bill collection, end-of-day close-out, reports, stock and recipes, guest loyalty, table/floor management, menu management, staff messages, notifications, and support. It also has a SuperAdmin console and guest-facing QR menu, ordering, and order-tracking surfaces.\n\nThe important design distinction is that it models the whole operating loop — from order to kitchen to payment and inventory — not only the customer's menu screen. The repository documents the intended workflows and security model; it does not publish quantified operating results from a deployed cafe.",
+    links: [
+      { href: 'https://servepoint-tsos.onrender.com/', label: 'Live app' },
+      { href: 'https://github.com/OmKardile/servepoint', label: 'Source repo' },
+    ],
+  },
+  {
+    id: 'decision-servepoint-navigation',
+    q: [
+      'why does servepoint use one route',
+      'servepoint routing architecture',
+      'how are screens navigated',
+    ],
+    a: "ServePoint's staff workspace uses a single user-facing / route; its screens are app state rather than separate page routes. It still supports deep links into named screens, while public guest surfaces such as table QR, menu, and order tracking have dedicated paths.\n\nThe repository records this as an implementation constraint for the current app, not a claim that a single-route architecture is always superior. It keeps the staff shell consistent while allowing selected screens to be opened directly from bookmarks or staff shortcuts.",
+    links: [
+      { href: 'https://github.com/OmKardile/servepoint', label: 'Source repo' },
+      { href: 'https://github.com/OmKardile/servepoint/blob/main/docs/TABLE_SIDE_ORDERING_AND_QR_CLIENT_SPEC.md', label: 'Guest flows' },
+    ],
+  },
+  {
+    id: 'challenge-servepoint-cross-browser-printing',
+    q: [
+      'tell me another engineering bug',
+      'servepoint printing issue',
+      'how did he handle browser differences',
+      'cross browser print bug',
+    ],
+    a: "A ServePoint printing bug: receipts, end-of-day reports and QR sticker sheets printed through a hidden iframe that was removed after a blind 1.5-second timer. In Firefox, print() doesn't block, so the document could vanish mid-print and give blank or aborted jobs.\n\nThe fix is one shared print helper that cleans up on the browser's afterprint event, with a 60-second fallback and handling for a thrown print call. Lesson: lifecycle events beat arbitrary delays.",
+    links: [{ href: 'https://github.com/OmKardile/servepoint/blob/main/src/lib/printFrame.ts', label: 'Fix code' }],
+  },
+  {
+    id: 'decision-handoff-local-privacy',
+    q: [
+      'how does handoff protect privacy',
+      'does handoff upload contacts',
+      'why is handoff offline',
+      'where is handoff data stored',
+    ],
+    a: "HandOff is local-first: no accounts, no servers, no analytics, no cloud backup. The web app stores cards in IndexedDB and the Android build uses device preferences, behind one storage adapter. Contact details leave the phone only when the user shares or exports them.\n\nThe promise is enforced, not just written: a **check:privacy** script in the repo statically audits the app code for network calls.",
+    links: [{ href: 'https://github.com/OmKardile/handOff', label: 'Source repo' }],
+  },
+  {
+    id: 'decision-handoff-capacitor-tradeoff',
+    q: [
+      'why capacitor instead of react native',
+      'capacitor vs react native choice',
+      'how is handoff built for android',
+      'why not fully native',
+    ],
+    a: "HandOff is a Next.js web app wrapped with Capacitor for Android, so one codebase serves the web and the phone. Going fully native kept producing more bugs than it was worth, so Omkar reused the web stack and added native bits only where needed: storage, back button, file export, status bar and haptics.\n\nThe trade-off is web-first reuse instead of a fully native UI, so platform-specific behaviour still needs explicit work.",
+    links: [{ href: 'https://github.com/OmKardile/handOff', label: 'Source repo' }],
+  },
+  {
+    id: 'story-bandwidth-android-monitoring',
+    q: [
+      'how does bandwidth bandit work',
+      'why did he use kotlin android',
+      'how does it track app data',
+      'bandwidth bandit technical details',
+    ],
+    a: "Bandwidth Bandit is an Android network monitor built in Kotlin. A foreground service keeps live download/upload speed visible in a persistent notification; NetworkStatsManager powers daily Wi-Fi/mobile history and per-app traffic breakdowns. It also includes usage-threshold alerts, signal strength in dBm, and a lightweight Cloudflare-based speed test.\n\nThe implementation has to work with Android's permission model: accurate usage history requires Usage Access, signal reporting can use phone-state permission, and Android 13+ requires notification permission for the visible monitor. That platform integration is a core part of the project, not just a chart on top of network data.",
+    links: [{ href: 'https://github.com/OmKardile/bandwidth-bandit', label: 'Source repo' }],
+  },
 ];
