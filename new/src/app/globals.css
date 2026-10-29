@@ -41,24 +41,44 @@ html.dark {
   color-scheme: dark;
 }
 
-/* ---------- /uiux warm paper (cream) theme ---------- */
+/* ---------- /uiux editorial paper (light) theme ---------- */
 
-/* The UI/UX portfolio DEFAULTS to light — warm paper, near-black ink, a
-   deeper editorial red-orange — even when the OS prefers dark. Dark stays
-   one toggle away (the header toggle persists the choice). The `uiux` class
-   is set pre-paint by the inline script in layout.tsx and kept in sync
-   across SPA routes by <UiuxTheme />; :not(.dark) lets the toggle win. */
+/* The UI/UX portfolio DEFAULTS to light — editorial paper, near-black ink —
+   even when the OS prefers dark. Dark stays one toggle away (the nav toggle
+   persists the choice). The `uiux` class is set pre-paint by the inline
+   script in layout.tsx and kept in sync across SPA routes by <UiuxTheme />;
+   :not(.dark) lets the toggle win.
+
+   Values follow the case-study design system (the same tokens the coded
+   apps use): paper #F6F3EE, ink #1B1D22, mute #6B685F, line #DDD7CC.
+   Per-project accents (Taar/Ghar/Sutra) are NOT tokens here — pages set
+   --pa-light/--pa-dark inline and uiux.css resolves them to --pa. The
+   legacy --accent below stays only for the old prototype-stage chrome. */
 html.uiux:not(.dark) {
-  --bg: #edeae2;
-  --fg: #1b1917;
-  --muted: #6d6960;
-  --line: #d9d4c8;
-  --line-strong: #c6c0b1; /* phone nav bar edge over cream */
-  --soft: #e4e0d5;
-  --accent: #d8470b;
+  --bg: #f6f3ee;
+  --fg: #1b1d22;
+  --muted: #6b685f;
+  --line: #ddd7cc;
+  --line-strong: #c9c2b3; /* phone nav bar edge over paper */
+  --soft: #eae5da;
+  --accent: #d8470b; /* legacy prototype-stage chrome only */
   --btn-solid-hover: #3a362f;
-  --header-bg: rgba(237, 234, 226, 0.92);
-  --lift-shadow: rgba(27, 25, 23, 0.14);
+  --header-bg: rgba(246, 243, 238, 0.92);
+  --lift-shadow: rgba(27, 29, 34, 0.14);
+}
+
+/* Dark theme for the /uiux portfolio — graphite paper, warm ink, hairlines
+   that hold. Accent tokens lighten per project via --pa-dark (uiux.css). */
+html.uiux.dark {
+  --bg: #141518;
+  --fg: #ece8df;
+  --muted: #a09c92;
+  --line: #2b2d33;
+  --line-strong: #3a3d45;
+  --soft: #1d1f24;
+  --btn-solid-hover: #ece8df;
+  --header-bg: rgba(20, 21, 24, 0.92);
+  --lift-shadow: rgba(0, 0, 0, 0.55);
 }
 
 * {

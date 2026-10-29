@@ -5,8 +5,11 @@ Single Next.js 16 app hosting **three faces** of the same person, deployed as **
 | Route | What it is | Accent |
 |---|---|---|
 | `/` | Developer portfolio (projects, skills, experience) | Blue |
-| `/uiux` | UI/UX portfolio (case studies, Liquid Glass studies, PDFs) | Orange |
-| `/uiux/relay/prototype` | Relay case study #1 — live clickable React prototype | Relay palette (pine/gold) |
+| `/uiux` | UI/UX portfolio — editorial index (Taar / Ghar / Sutra, how I work, also shipped) | Per-project |
+| `/uiux/taar` | Case study 01 — fashion e-commerce redesign | Taar navy `#1F2A44` |
+| `/uiux/ghar` | Case study 02 — Pune tiffin app | Ghar terracotta `#A63D1F` |
+| `/uiux/sutra` | Case study 03 — checkout + design system | Taar navy `#1F2A44` |
+| `/uiux/relay/prototype` | Relay case study — live clickable React prototype (legacy stage) | Relay palette (pine/gold) |
 | `/creative` | Slot for the creative version — navbar pill **hidden** while it's in dev | — |
 
 Dark mode: toggle in the navbar, system preference by default, persisted in `localStorage`, no flash.
@@ -91,6 +94,8 @@ Pros: zero porting. Cons: two build pipelines, its JS/SEO is whatever the export
 
 All text, projects, skills, experience and socials live in **`src/data/site.ts`** (split into the dev `projects`/`capabilities`/`experience`, the design-side `uiux` export, and the full `relay` case study #1). Edit there, not in the pages.
 
+The UI/UX case studies (Taar, Ghar, Sutra) live separately in **`src/data/uiuxProjects.ts`** — see the next section.
+
 ### Development project cards (as of 2026-10-28)
 
 | # | Project | Status | Links on card |
@@ -113,6 +118,34 @@ A project card carries one or more labeled links via the `links` array (single-l
 
 Relay case study assets: `public/work/relay/` (cover, diagrams, screens) — sourced from the owner's original upload (integrated into the site; the upload was removed from the repo afterwards). The live prototype is the owner's `relay-prototype.jsx` vendored as `src/components/RelayPrototype.jsx` (only change: `"use client"` directive).
 
+## UI/UX case studies (`src/data/uiuxProjects.ts`)
+
+`/uiux` is a data-driven editorial portfolio: one index page plus three case-study pages sharing a single template (`src/components/uiux/CaseStudyLayout.tsx`). Copy rule: **every sentence is ported verbatim from the project's own sources** — the coded apps' README/CHANGELOG (upload zips) and the approved case-study copy in `src/data/site.ts`. No invented numbers, no quoted metrics, no research results that don't exist yet.
+
+### Add a project
+
+1. Append an entry to `uiuxProjects` in `src/data/uiuxProjects.ts`: `slug`, `number`, `title`, `tagline`, `status` (`In progress` / `Complete`), `accent` + `accentDark` (AA-lightened for dark mode), `problem` (two lines for the index row), `role[]`, `tools[]`, the three URL fields, `tryIt`, and `sections` — nine of them, in order: The problem · Research · Who it's for · Flow · Wireframes · Design decisions · Visual system · Usability test · Build & next.
+2. Create `src/app/uiux/<slug>/page.tsx` — copy one of the existing three; it only resolves the entry + per-route metadata (title, description, canonical, OG with a placeholder image path) and the prev/next neighbours.
+3. Add the route to `src/app/sitemap.ts`.
+
+Section content is a list of typed blocks the renderer already understands: `paragraph`, `list` (ordered/unordered), `hypotheses`, `table`, `personas`, `flow`, `wireframes` (inline SVG art — add a drawing to `WireframeArt.tsx`), `decisions` (title / rationale / trade-off), `swatches`, `typeSpecimen`, `rules`, `slot`.
+
+### Wire the prototype / Figma / repo URLs
+
+Deploy each app separately (Vite → Vercel, no config), then fill the placeholders at the top of its entry in `src/data/uiuxProjects.ts`:
+
+```ts
+prototypeUrl: '',  // Vercel URL of the deployed app — empty = the "Try it" section is hidden
+figmaUrl: '',      // Figma share link — empty = the "Design file" section is hidden
+repoUrl: '',       // GitHub — empty = the button is hidden
+```
+
+Empty means hidden — the site never renders "link pending". The "Try it" embed is a 390×844 `DeviceFrame` (aspect-ratio reserved, no layout shift, `sandbox`ed iframe that mounts only near the viewport on viewports ≥768px; phones get a poster + "Open prototype" button).
+
+### Unfinished evidence
+
+Sections whose evidence isn't collected yet stay honest: a `{ type: 'slot' }` block renders a dashed placeholder in development and disappears from the production build; a table with `filled: false` renders the dashed skeleton in development and one quiet "Research in progress" line in production. Keep the `In progress` status tag until the owner flips it.
+
 ## Design system notes (Apple UX web kit)
 
 Applied from the owner's Apple UX Design System reference document — **the discipline, not the skin**:
@@ -124,7 +157,7 @@ Applied from the owner's Apple UX Design System reference document — **the dis
 - **Hit targets**: 44px minimum on all pills, toggle and buttons.
 - **Smooth scroll**: native `scroll-behavior: smooth` + `scroll-padding-top` so anchors land clear of the sticky header; fully disabled under `prefers-reduced-motion`. No scroll-hijack libraries.
 - **Semantic colors + dark mode**: everything runs on CSS custom properties (`--bg/--fg/--muted/--line/--soft/--accent`), with `color-scheme` set per theme.
-- **Dual accents**: `/` wears dev blue (`--accent-dev`, light `#2563eb` / dark `#60a5fa`), `/uiux` wears orange (`--accent`). Both pages share the same accent patterns — the home page wraps its content in `.page-dev`, which flips `--accent` to the dev token, so recoloring a whole portfolio is a one-line change. Navbar switch pills wear their destination's accent (orange UI/UX pill on `/`, blue Dev Portfolio pill on `/uiux`). Status dots stay green on purpose — they mean live, not brand.
+- **Dual accents**: `/` wears dev blue (`--accent-dev`, light `#2563eb` / dark `#60a5fa`). Site chrome keeps the classic orange for the /uiux switch pill, but the /uiux portfolio pages themselves run the editorial paper theme (`html.uiux` scope: paper `#F6F3EE` / ink `#1B1D22` / mute `#6B685F` / line `#DDD7CC`, dark `#141518` / `#ECE8DF` / `#A09C92` / `#2B2D33`) with **per-project accents** — pages set `--pa-light`/`--pa-dark` inline and `uiux.css` resolves them to `--pa` (Taar/Sutra navy, Ghar terracotta). Both portfolios share the same accent *patterns*, so recoloring a whole portfolio stays a one-line change. Status dots stay green on purpose — they mean live, not brand.
 - Deliberately skipped: glass skins, spring gesture libraries, squircles — this site stays flat and fast on purpose.
 
 ## Structure
@@ -132,16 +165,24 @@ Applied from the owner's Apple UX Design System reference document — **the dis
 ```
 src/
   app/
-    page.tsx          # developer portfolio
-    uiux/page.tsx     # UI/UX portfolio (Relay featured case study #1 + in-progress studies)
-    uiux/relay/prototype/page.tsx  # Relay live prototype stage
-    creative/page.tsx # placeholder slot for the creative version
-    layout.tsx        # root: metadata, JSON-LD, no-flash theme script, analytics
+    page.tsx                    # developer portfolio
+    uiux/uiux.css               # editorial design system (scoped to .ux-shell)
+    uiux/page.tsx               # UI/UX portfolio index (hero, work rows, principles, also shipped)
+    uiux/taar|ghar|sutra/page.tsx  # case studies 01–03 (data-driven template)
+    uiux/relay|taar|sutra/prototype/  # legacy live prototype stages (site chrome)
+    creative/page.tsx           # placeholder slot for the creative version
+    layout.tsx                  # root: metadata, JSON-LD, no-flash theme script, analytics
     sitemap.ts, robots.ts, not-found.tsx, icon.svg
-  components/         # Header (client, pathname-aware), Footer, ThemeToggle, RelayPrototype
-  data/site.ts        # ALL content + links
+  components/
+    uiux/                       # UiuxShell (fonts + chrome), Nav, Footer, ProjectRow,
+                                # CaseStudyLayout, blocks.tsx, DeviceFrame, WireframeArt
+    Header (client, pathname-aware — hides on the four /uiux chrome routes),
+    Footer, ThemeToggle, SmoothScroll, ScrollReveal, MotionCraft, RelayPrototype
+  data/
+    site.ts                     # dev portfolio + legacy uiux content
+    uiuxProjects.ts             # Taar / Ghar / Sutra case-study data (typed block model)
 public/
-  work/relay/         # Relay case study: cover, diagrams/, screens/
-  case-studies/       # 6 Liquid Glass case study PDFs
-  og.png
+  work/relay/                   # Relay case study: cover, diagrams/, screens/
+  case-studies/                 # 6 Liquid Glass case study PDFs
+  og.png                        # + og/uiux-*.png placeholders for the case studies
 ```

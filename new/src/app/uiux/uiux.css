@@ -1,0 +1,1335 @@
+/* ========================================================================
+   UI/UX portfolio — editorial design system
+   Scope: every rule lives under .ux-shell, rendered only by the four /uiux
+   routes (index + three case studies). The site-wide styles and the legacy
+   prototype stages under /uiux are untouched.
+
+   Tokens come from the html.uiux scope in globals.css (paper / ink / mute /
+   line) plus per-project accents: pages and rows set --pa-light / --pa-dark
+   inline; --pa resolves per theme below. Fonts: Fraunces (display, light
+   300, italic for emphasis) + Hanken Grotesk (interface), self-hosted via
+   next/font on the shell wrapper.
+
+   Rules of the look: asymmetric editorial grid (label column left, content
+   right), hairline dividers instead of cards, no shadows, no glass, no
+   gradients, no emoji. Hover = underline offset + accent numeral, nothing
+   else. Motion = one-shot 12px fade-up via the site's IntersectionObserver
+   reveal system, staggered ≤60ms, fully off under motion-off.
+   ======================================================================== */
+
+/* ---- shell + tokens ---------------------------------------------------- */
+
+.ux-shell {
+  --serif: var(--font-ux-serif, 'Fraunces'), Georgia, serif;
+  --sans: var(--font-ux-sans, 'Hanken Grotesk'), system-ui, sans-serif;
+
+  /* Per-project accent: rows and case pages set --pa-light/--pa-dark inline.
+     The resolution lives on those same elements (below) — a custom property
+     resolves against the element it's declared on, so the shell can't see
+     the descendants' inline values. Outside project context, accent = ink. */
+  --pa: var(--fg);
+
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 60vh;
+}
+
+.ux-row,
+.ux-case {
+  --pa: var(--pa-light, var(--fg));
+}
+
+html.dark .ux-row,
+html.dark .ux-case {
+  --pa: var(--pa-dark, var(--fg));
+}
+
+.ux-shell :focus-visible {
+  outline: 2px solid var(--pa);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.ux-shell ::selection {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.ux-shell .mono {
+  font-family: var(--mono-ui, var(--font-mono-ui), monospace);
+  letter-spacing: 0.01em;
+}
+
+/* ---- motion: the spec's 12px rise, ≤60ms stagger, scoped --------------- */
+
+@keyframes ux-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+html.js-reveal .ux-shell [data-reveal] {
+  opacity: 0;
+}
+
+html.js-reveal .ux-shell [data-reveal].revealed {
+  opacity: 1;
+  animation: ux-reveal-in 0.6s var(--ease-apple, ease-out) backwards;
+}
+
+html.js-reveal .ux-shell [data-reveal-group] > * {
+  opacity: 0;
+}
+
+html.js-reveal .ux-shell [data-reveal-group].revealed > * {
+  opacity: 1;
+  animation: ux-reveal-in 0.6s var(--ease-apple, ease-out) backwards;
+}
+
+html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(2) { animation-delay: 0.06s; }
+html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(3) { animation-delay: 0.12s; }
+html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(4) { animation-delay: 0.18s; }
+html.js-reveal .ux-shell [data-reveal-group].revealed > *:nth-child(n + 5) { animation-delay: 0.24s; }
+
+/* motion-off (manual toggle + prefers-reduced-motion) beats the scoped
+   animation — restate the kill at matching specificity. */
+html.motion-off.js-reveal .ux-shell [data-reveal],
+html.motion-off.js-reveal .ux-shell [data-reveal-group] > * {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+/* ---- slim nav ----------------------------------------------------------- */
+
+.ux-nav {
+  border-bottom: 1px solid var(--line);
+}
+
+.ux-nav-inner {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ux-nav-back,
+.ux-nav-name,
+.ux-nav-icon {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.ux-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  font-size: 0.95rem;
+}
+
+.ux-nav-back-label,
+.ux-nav-name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease, text-underline-offset 0.2s ease;
+}
+
+.ux-nav-back:hover .ux-nav-back-label,
+.ux-nav-name:hover {
+  text-decoration-color: var(--pa);
+  text-underline-offset: 5px;
+}
+
+.ux-nav-name {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.ux-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ux-nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  transition: color 0.2s ease;
+}
+
+.ux-nav-icon:hover {
+  color: var(--pa);
+}
+
+/* The site's theme toggle button inherits site sizing; give it the same
+   44px hit area here. */
+.ux-shell .theme-toggle {
+  width: 44px;
+  height: 44px;
+}
+
+/* ---- shared editorial primitives ---------------------------------------- */
+
+.ux-main {
+  display: block;
+}
+
+.ux-container {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.ux-label {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.ux-p {
+  margin: 0 0 1em;
+  max-width: 58ch;
+}
+
+.ux-p:last-child {
+  margin-bottom: 0;
+}
+
+.ux-quiet {
+  color: var(--muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Buttons — text + hairline, no fills, no shadows. */
+.ux-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.6rem 1.15rem;
+  border: 1px solid var(--fg);
+  border-radius: 999px;
+  color: var(--fg);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.ux-btn:hover {
+  border-color: var(--pa);
+  color: var(--pa);
+}
+
+.ux-btn-ghost {
+  border-color: var(--line-strong, var(--line));
+}
+
+/* ---- index: hero --------------------------------------------------------- */
+
+.ux-hero {
+  /* padding-block only — the .ux-container class owns the inline padding */
+  padding-block: clamp(4rem, 12vh, 7.5rem) clamp(3rem, 8vh, 5rem);
+}
+
+.ux-hero-name {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(3.2rem, 11vw, 7.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.6rem;
+}
+
+.ux-hero-role {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  margin: 0 0 0.5rem;
+}
+
+.ux-hero-meta {
+  color: var(--muted);
+  margin: 0 0 2rem;
+}
+
+.ux-hero-available {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin: 0;
+  max-width: 44rem;
+}
+
+.ux-hero-available::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pa, var(--fg));
+  flex: none;
+}
+
+/* ---- index: selected work rows ------------------------------------------- */
+
+.ux-work {
+  border-top: 1px solid var(--line);
+  padding: clamp(2.5rem, 6vh, 4rem) 0;
+}
+
+.ux-work-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.ux-work-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(2rem, 5vh, 3rem);
+}
+
+/* Asymmetric rows: 01 spans wide; 02 and 03 offset into the remaining
+   column. Entire row is one link. */
+.ux-row {
+  display: flex;
+  gap: clamp(1.2rem, 4vw, 3rem);
+  align-items: flex-start;
+  color: var(--fg);
+  text-decoration: none;
+  border-top: 1px solid var(--line);
+  padding-top: 1.4rem;
+  max-width: 62rem;
+}
+
+.ux-row--offset {
+  margin-left: clamp(0rem, 14vw, 12rem);
+  max-width: 52rem;
+}
+
+.ux-row-number {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(2.6rem, 6vw, 4.5rem);
+  line-height: 1;
+  color: var(--pa); /* big numeral wears the project accent */
+  transition: color 0.25s ease;
+  flex: none;
+  min-width: 2ch;
+}
+
+.ux-row:hover .ux-row-number {
+  color: var(--fg);
+}
+
+.ux-row-body {
+  display: block;
+}
+
+.ux-row-top {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+
+.ux-row-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.ux-row-tagline {
+  display: block;
+  font-size: 1.02rem;
+  margin-bottom: 0.6rem;
+}
+
+.ux-row-problem {
+  display: block;
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 56ch;
+  margin-bottom: 0.9rem;
+}
+
+.ux-row-meta {
+  display: flex;
+  gap: 0.4rem 1.5rem;
+  flex-wrap: wrap;
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+}
+
+.ux-row-tools {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ux-row-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 500;
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease, text-underline-offset 0.2s ease;
+}
+
+.ux-row:hover .ux-row-cta {
+  text-decoration-color: var(--pa);
+  text-underline-offset: 5px;
+}
+
+.ux-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.ux-status::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.ux-status-done {
+  color: var(--fg);
+}
+
+/* ---- index: how I work ---------------------------------------------------- */
+
+.ux-how {
+  border-top: 1px solid var(--line);
+  padding: clamp(2.5rem, 6vh, 4rem) 0;
+}
+
+.ux-how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 1.4rem;
+}
+
+.ux-how-item {
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+
+.ux-how-n {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: 0 0 0.6rem;
+}
+
+.ux-how-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.3rem;
+  margin: 0 0 0.3rem;
+}
+
+.ux-how-text {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ---- index: also shipped --------------------------------------------------- */
+
+.ux-shipped {
+  border-top: 1px solid var(--line);
+  padding: clamp(2.5rem, 6vh, 4rem) 0;
+}
+
+.ux-shipped-list {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  max-width: 62rem;
+}
+
+.ux-shipped-row {
+  border-top: 1px solid var(--line);
+}
+
+.ux-shipped-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ux-shipped-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+  color: var(--fg);
+  text-decoration: none;
+  min-height: 44px;
+}
+
+.ux-shipped-title {
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease, text-underline-offset 0.2s ease;
+}
+
+.ux-shipped-link:hover .ux-shipped-title {
+  text-decoration-color: var(--pa);
+  text-underline-offset: 5px;
+}
+
+.ux-shipped-stack {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* ---- index: about + contact ------------------------------------------------ */
+
+.ux-about {
+  border-top: 1px solid var(--line);
+  padding: clamp(2.5rem, 6vh, 4rem) 0 clamp(3rem, 8vh, 5rem);
+}
+
+.ux-about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  margin-top: 1.4rem;
+}
+
+.ux-about-quote {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+  line-height: 1.35;
+  margin: 0 0 1.2rem;
+}
+
+.ux-about-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.ux-about-facts li {
+  border-top: 1px solid var(--line);
+  padding: 0.55rem 0;
+}
+
+.ux-about-facts li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ux-contact-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ux-contact-note {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0 0 1.2rem;
+}
+
+/* ---- footer ------------------------------------------------------------------ */
+
+.ux-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 2rem;
+}
+
+.ux-footer p {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding: 1.4rem 1.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.ux-footer a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease, text-underline-offset 0.2s ease;
+}
+
+.ux-footer a:hover {
+  text-decoration-color: var(--pa);
+  text-underline-offset: 5px;
+}
+
+/* ---- case study: header --------------------------------------------------------- */
+
+.ux-case {
+  --pw: 76rem;
+}
+
+.ux-case-head {
+  max-width: var(--pw);
+  margin-inline: auto;
+  padding: clamp(2.5rem, 7vh, 4.5rem) 1.25rem 2.5rem;
+}
+
+.ux-case-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.ux-case-back:hover {
+  color: var(--pa);
+}
+
+.ux-case-number {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(4rem, 12vw, 8rem);
+  line-height: 1;
+  color: var(--pa);
+  margin: 1.2rem 0 0;
+}
+
+.ux-case-title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1rem;
+}
+
+.ux-case-tagline {
+  font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+  color: var(--fg);
+  max-width: 46ch;
+  margin: 0 0 2rem;
+}
+
+.ux-case-meta {
+  display: flex;
+  gap: 2rem 3.5rem;
+  flex-wrap: wrap;
+  margin: 0;
+  border-top: 1px solid var(--line);
+  padding-top: 1.2rem;
+}
+
+.ux-case-meta-item dt {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+
+.ux-case-meta-item dd {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ---- case study: section grid (label column + content) --------------------------- */
+
+.ux-section {
+  max-width: var(--pw);
+  margin-inline: auto;
+  padding: clamp(2.2rem, 5vh, 3.4rem) 1.25rem;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 1.5rem clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.ux-section-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  position: sticky;
+  top: 1.25rem;
+}
+
+.ux-section-n {
+  color: var(--pa);
+  font-size: 0.8rem;
+}
+
+.ux-section-title {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--fg);
+}
+
+.ux-section-body {
+  max-width: 58ch;
+  min-width: 0; /* let inner scroll containers (tables) own their overflow */
+}
+
+/* ---- blocks ------------------------------------------------------------------------ */
+
+.ux-list {
+  margin: 0 0 1em;
+  padding: 0;
+  list-style: none;
+}
+
+.ux-list li {
+  position: relative;
+  padding-left: 1.1rem;
+  margin-bottom: 0.45em;
+}
+
+.ux-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+}
+
+.ux-list-ordered {
+  counter-reset: ux-next;
+}
+
+.ux-list-ordered li {
+  counter-increment: ux-next;
+  padding-left: 1.8rem;
+}
+
+.ux-list-ordered li::before {
+  content: counter(ux-next, decimal-leading-zero);
+  font-family: var(--mono-ui, monospace);
+  font-size: 0.8em;
+  top: 0.25em;
+  color: var(--pa);
+}
+
+/* hypotheses */
+.ux-hypotheses {
+  list-style: none;
+  margin: 0 0 1.2em;
+  padding: 0;
+}
+
+.ux-hypotheses li {
+  border-top: 1px solid var(--line);
+  padding: 0.9rem 0;
+}
+
+.ux-hypotheses li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ux-hypothesis {
+  margin: 0 0 0.25rem;
+  font-weight: 500;
+}
+
+.ux-hypothesis-because {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+/* flow — inline steps with arrows */
+.ux-flow {
+  list-style: none;
+  margin: 0 0 1em;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.6rem;
+}
+
+.ux-flow li {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.ux-flow-text {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 0.2rem 0;
+  font-size: 0.97rem;
+}
+
+.ux-flow-arrow {
+  color: var(--pa);
+  flex: none;
+}
+
+/* wireframes — three inline drawings, theme-aware via currentColor */
+.ux-wireframes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.ux-wireframe {
+  margin: 0;
+}
+
+.ux-wireframe-frame {
+  display: block;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.ux-wireframe:hover .ux-wireframe-frame {
+  color: var(--fg);
+  border-color: var(--line-strong, var(--line));
+}
+
+.ux-wireframe-frame svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ux-wireframe-label {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* decisions */
+.ux-decisions {
+  margin: 0;
+}
+
+.ux-decision {
+  border-top: 1px solid var(--line);
+  padding: 1rem 0;
+}
+
+.ux-decision:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ux-decision-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.ux-decision-rationale {
+  margin: 0;
+  color: var(--fg);
+  font-size: 0.97rem;
+}
+
+.ux-decision-tradeoff {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* swatches */
+.ux-swatches {
+  list-style: none;
+  margin: 0 0 1.2em;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.9rem 1.5rem;
+}
+
+.ux-swatch {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ux-swatch-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  flex: none;
+}
+
+.ux-swatch-body {
+  display: block;
+  min-width: 0;
+}
+
+.ux-swatch-name {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.ux-swatch-hex {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 0.78em;
+}
+
+.ux-swatch-use {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* type specimen */
+.ux-type-intro {
+  color: var(--muted);
+}
+
+.ux-type-row {
+  border-top: 1px solid var(--line);
+  padding: 0.9rem 0;
+}
+
+.ux-type-row:first-of-type {
+  border-top: 0;
+  padding-top: 0.4rem;
+}
+
+.ux-type-meta {
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 0.4rem;
+}
+
+.ux-type-sample-display {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.ux-type-sample-ui {
+  font-family: var(--sans);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* rules */
+.ux-rules {
+  margin: 0;
+}
+
+.ux-rule {
+  border-top: 1px solid var(--line);
+  padding: 1rem 0;
+}
+
+.ux-rule:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ux-rule-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.ux-rule-n {
+  color: var(--pa);
+  font-size: 0.8rem;
+}
+
+.ux-rule-text {
+  margin: 0;
+  color: var(--fg);
+  font-size: 0.97rem;
+}
+
+/* tables — horizontal scroll container, hairlines only */
+.ux-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ux-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 34rem;
+  font-size: 0.93rem;
+}
+
+.ux-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 0.6rem 1rem 0.6rem 0;
+  border-bottom: 1px solid var(--line-strong, var(--line));
+}
+
+.ux-table td {
+  padding: 0.7rem 1rem 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+/* slots — dashed, development only */
+.ux-slot {
+  border: 1.5px dashed var(--line-strong, var(--line));
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1em;
+  overflow-x: auto;
+}
+
+.ux-slot-single {
+  display: block;
+}
+
+.ux-slot-label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  color: var(--muted);
+}
+
+.ux-slot-note {
+  margin: 0.7rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* personas — two columns with a hairline between */
+.ux-personas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.ux-persona {
+  padding: 0 1.5rem;
+}
+
+.ux-persona:first-child {
+  padding-left: 0;
+  border-right: 1px solid var(--line);
+}
+
+.ux-persona:last-child {
+  padding-right: 0;
+}
+
+.ux-persona-name {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.25rem;
+  margin: 0 0 0.15rem;
+}
+
+.ux-persona-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.8rem;
+}
+
+.ux-persona-quote {
+  margin: 0.9rem 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.02rem;
+}
+
+/* ---- try it: device frame ------------------------------------------------------------ */
+
+.ux-tryit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: start;
+}
+
+.ux-tryit-lead {
+  font-weight: 500;
+}
+
+.ux-device {
+  width: min(390px, 100%);
+}
+
+/* aspect-ratio keeps the space reserved: no layout shift on load */
+.ux-device-frame {
+  position: relative;
+  aspect-ratio: 390 / 844;
+  max-height: min(72vh, 720px);
+  border: 1px solid var(--line-strong, var(--line));
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* scale down to fit the max-height without distortion */
+.ux-device-frame iframe,
+.ux-device-frame .ux-device-wait {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.ux-device-wait {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.ux-device-poster {
+  aspect-ratio: 390 / 500;
+  border: 1px solid var(--line-strong, var(--line));
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.ux-device-poster-note {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.ux-device-caption {
+  margin: 0.7rem 0 0;
+  font-size: 0.92rem;
+}
+
+.ux-device-caption a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease, text-underline-offset 0.2s ease;
+}
+
+.ux-device-caption a:hover {
+  text-decoration-color: var(--pa);
+  text-underline-offset: 5px;
+}
+
+/* figma embed */
+.ux-figma-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line-strong, var(--line));
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ux-figma-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ---- prev / next ------------------------------------------------------------------------ */
+
+.ux-pn {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding: 1.6rem 1.25rem 3rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.ux-pn-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: var(--fg);
+  text-decoration: none;
+  min-height: 44px;
+}
+
+.ux-pn-next {
+  text-align: right;
+  margin-left: auto;
+}
+
+.ux-pn-n {
+  color: var(--pa);
+  font-size: 0.8rem;
+}
+
+.ux-pn-dir {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.ux-pn-title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease, text-underline-offset 0.2s ease;
+}
+
+.ux-pn-link:hover .ux-pn-title {
+  text-decoration-color: var(--pa);
+  text-underline-offset: 5px;
+}
+
+/* ---- responsive --------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .ux-section {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .ux-section-label {
+    position: static;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.7rem;
+  }
+
+  .ux-row,
+  .ux-row--offset {
+    margin-left: 0;
+    max-width: none;
+  }
+
+  .ux-how-grid {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+
+  .ux-about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ux-tryit {
+    grid-template-columns: 1fr;
+  }
+
+  .ux-personas {
+    grid-template-columns: 1fr;
+  }
+
+  .ux-persona:first-child {
+    border-right: 0;
+    padding-right: 0;
+  }
+
+  .ux-persona:last-child {
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .ux-wireframes {
+    grid-template-columns: 1fr;
+  }
+
+  .ux-wireframe-frame {
+    max-width: 15rem;
+  }
+
+  .ux-nav-inner {
+    flex-wrap: wrap;
+  }
+
+  .ux-nav-name {
+    order: -1;
+    width: 100%;
+    text-align: center;
+    padding-block: 0.2rem;
+  }
+}

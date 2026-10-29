@@ -41,6 +41,15 @@ export function Header() {
   const onHome = pathname === '/';
   const resumeHref = site.socials.find((s) => s.label === 'Resume')?.href;
 
+  // The /uiux portfolio (index + the three case studies) has its own slim
+  // nav — the site header would double it. Legacy prototype stages
+  // (/uiux/*/prototype) keep the site chrome. Explicit list on purpose.
+  const uiuxOwnChrome =
+    pathname === '/uiux' ||
+    pathname === '/uiux/taar' ||
+    pathname === '/uiux/ghar' ||
+    pathname === '/uiux/sutra';
+
   // NOTE: no pathname effect needed — every element that triggers a route
   // change (sheet links, Resume, the switch pill below) closes the sheet in
   // its own click handler, which keeps the react-hooks/set-state-in-effect
@@ -55,6 +64,8 @@ export function Header() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
+
+  if (uiuxOwnChrome) return null;
 
   return (
     <header className={onHome ? 'site-header header-dev-accent' : 'site-header'}>
