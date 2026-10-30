@@ -786,13 +786,13 @@ export const hand: FaqEntry[] = [
   {
     id: 'story-patel-client-brief',
     q: [
-      'how did he get the patel networks client',
+      'how did he work with patel',
       'patel networks client story',
-      'was patel networks a real client',
+      'is patel networks a real project or a demo',
       'how did he win the client',
-      'patel project timeline',
+      'how long did the patel networks project take',
     ],
-    a: "PatelNetworks was a real client engagement, not a practice build: a Surat-based surveillance and networking hardware business. The work came through a single introduction — no marketplace, no cold outreach — and ran from first call to handover in about two months.\n\nIn that window Omkar shipped the full commerce scope: categorized catalog with exclusive CCTV kit bundles, Razorpay checkout with COD, GST invoicing with serial-tracked warranty, OTP customer accounts with order history and one-tap reorders, and WhatsApp ordering.\n\nAfter handover the client took over deployment — the storefront runs on his own server — so this one is a delivered product, not a hosted demo. The links below are the demo deployment and the owner-side admin dashboard.",
+    a: "PatelNetworks was a real client engagement, not a practice build: a Surat-based surveillance and networking hardware business. The work came through a single introduction — no marketplace, no cold outreach — and ran from first call to handover in about two months.\n\nIn those two months Omkar shipped the full commerce scope: categorized catalog with exclusive CCTV kit bundles, Razorpay checkout with COD, GST invoicing with serial-tracked warranty, OTP customer accounts with order history and one-tap reorders, and WhatsApp ordering.\n\nAfter handover the client took over deployment — the storefront runs on his own server — so this one is a delivered product, not a hosted demo. The links below are the demo deployment and the owner-side admin dashboard.",
     links: [
       { href: 'https://patelnetworks-5ne3.onrender.com/', label: 'Open live demo' },
       { href: 'https://patelnetworks-5ne3.onrender.com/admin', label: 'Open admin dashboard' },
