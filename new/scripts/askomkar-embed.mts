@@ -54,6 +54,8 @@ const samples = [
   'Does he know Prisma?',
   'Tell me about the retail ERP',
   'Has he done real client work?',
+  'How did he win the Patel client?',
+  'Is PatelNetworks a real project or a demo?',
   'Is he open to relocation?',
   'What are his salary expectations?',
   'Do you store my questions?',

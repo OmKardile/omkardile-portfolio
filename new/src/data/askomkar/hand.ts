@@ -786,13 +786,17 @@ export const hand: FaqEntry[] = [
   {
     id: 'story-patel-client-brief',
     q: [
-      'how did he work with patel',
+      'how did he get the patel networks client',
       'patel networks client story',
+      'was patel networks a real client',
       'how did he win the client',
       'patel project timeline',
     ],
-    a: "PatelNetworks is a client e-commerce project for a Surat business selling surveillance and networking hardware. The shipped scope: product catalogue and CCTV kit bundles, Razorpay checkout alongside cash on delivery, GST invoicing with serial-tracked warranties, OTP-based accounts, and WhatsApp ordering.\n\nThe public materials cover the scope — how the client was won, the delivery timeline and the handover aren't published. Those stories are Omkar's to tell directly, and email is the fastest way to ask.",
-    links: [{ href: 'https://patelnetworks-5ne3.onrender.com/', label: 'Live demo' }],
+    a: "PatelNetworks was a real client engagement, not a practice build: a Surat-based surveillance and networking hardware business. The work came through a single introduction — no marketplace, no cold outreach — and ran from first call to handover in about two months.\n\nIn that window Omkar shipped the full commerce scope: categorized catalog with exclusive CCTV kit bundles, Razorpay checkout with COD, GST invoicing with serial-tracked warranty, OTP customer accounts with order history and one-tap reorders, and WhatsApp ordering.\n\nAfter handover the client took over deployment — the storefront runs on his own server — so this one is a delivered product, not a hosted demo. The links below are the demo deployment and the owner-side admin dashboard.",
+    links: [
+      { href: 'https://patelnetworks-5ne3.onrender.com/', label: 'Open live demo' },
+      { href: 'https://patelnetworks-5ne3.onrender.com/admin', label: 'Open admin dashboard' },
+    ],
   },
   {
     id: 'decision-servepoint-qr-sessions',
