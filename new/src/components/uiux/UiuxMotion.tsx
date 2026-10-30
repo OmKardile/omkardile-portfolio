@@ -10,15 +10,22 @@ import { useEffect } from 'react';
    1. Per-char reveal — [data-chars] elements split into .ux-ch > .ux-ch-i
       spans with a --ci index; .chars-in lands on first viewport entry and
       CSS staggers the rise (hero name lines).
-   2. Scroll-velocity skew — a rAF loop turns scrollY delta into a smoothed
-      --vskew angle on the shell; [data-skew] elements read it in CSS and
-      lean with the scroll. Decays to 0 when the scroll stops.
+   2. Scroll scrub — ONE rAF loop drives every scroll-linked custom property:
+        --vskew  scroll-velocity lean (deg), smoothed, decays to 0
+        --vvel   normalized scroll speed (0..1), for velocity shear
+        --hx     hero exit progress (0..1) on .ux-hero — the scrub-exit
+        --scrub  viewport progress (-1..1, center = 0) on [data-scrub]
+        --drift  same progress, for [data-drift] ghost numerals
+      Sections join/leave the measurement via IntersectionObserver, so
+      off-screen work costs nothing. Coarse pointers get bigger gains —
+      phones get the loud version (see uiux.css, "mobile scrub").
    3. Cursor-following peeks — [data-peek] rows feed --mx/--my on pointermove
-      so the wireframe card trails the cursor; fine pointers only.
-   4. Ghost-numeral drift — [data-drift] elements get --drift (-1..1) from
-      their viewport position, scrolled on a rAF while visible. */
+      so the wireframe card trails the cursor; fine pointers only. */
 
-const SKEW_MAX = 4; // deg
+const SKEW_GAIN_FINE = 0.28;
+const SKEW_GAIN_COARSE = 0.4;
+const SKEW_MAX_FINE = 4; // deg
+const SKEW_MAX_COARSE = 7; // deg — phones lean harder
 
 /* --- 1. per-char split -------------------------------------------------- */
 
@@ -73,28 +80,98 @@ function bindChars(root: ParentNode): (() => void) | null {
   return () => io.disconnect();
 }
 
-/* --- 2. scroll-velocity skew -------------------------------------------- */
+/* --- 2. scroll scrub — one loop for every scroll-linked var -------------- */
 
-function bindVelocitySkew(root: HTMLElement): () => void {
+function bindScrub(shell: HTMLElement): () => void {
+  const hero = shell.querySelector<HTMLElement>('.ux-hero');
+  const scrubs = Array.from(shell.querySelectorAll<HTMLElement>('[data-scrub]'));
+  const drifts = Array.from(shell.querySelectorAll<HTMLElement>('[data-drift]')).map((el) => ({
+    el,
+    visible: false,
+  }));
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+
   let raf = 0;
   let last = window.scrollY;
-  let cur = 0;
+  let skew = 0;
+  let vel = 0;
+  let heroLive = false;
+  const scrubLive = new Map<HTMLElement, boolean>();
+
+  let io: IntersectionObserver | null = null;
+  if ('IntersectionObserver' in window) {
+    io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const el = entry.target as HTMLElement;
+          if (el === hero) heroLive = entry.isIntersecting;
+          if (scrubLive.has(el)) scrubLive.set(el, entry.isIntersecting);
+          const d = drifts.find((x) => x.el === el);
+          if (d) d.visible = entry.isIntersecting;
+        }
+      },
+      { rootMargin: '14% 0px 14% 0px' },
+    );
+    if (hero) io.observe(hero);
+    for (const el of scrubs) {
+      scrubLive.set(el, false);
+      io.observe(el);
+    }
+    for (const d of drifts) io.observe(d.el);
+  }
+
+  const progress = (r: DOMRect, vh: number) =>
+    (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
 
   const loop = () => {
+    const vh = window.innerHeight;
+
+    // Velocity → lean + normalized speed.
     const y = window.scrollY;
     const delta = y - last;
     last = y;
-    const target = Math.max(-SKEW_MAX, Math.min(SKEW_MAX, delta * 0.28));
-    cur += (target - cur) * 0.1;
-    if (Math.abs(cur) < 0.01) cur = 0;
-    root.style.setProperty('--vskew', `${cur.toFixed(3)}deg`);
+    const gain = coarse ? SKEW_GAIN_COARSE : SKEW_GAIN_FINE;
+    const max = coarse ? SKEW_MAX_COARSE : SKEW_MAX_FINE;
+    const target = Math.max(-max, Math.min(max, delta * gain));
+    skew += (target - skew) * 0.1;
+    if (Math.abs(skew) < 0.01) skew = 0;
+    shell.style.setProperty('--vskew', `${skew.toFixed(3)}deg`);
+    const speed = Math.min(1, Math.abs(delta) / (coarse ? 55 : 70));
+    vel += (speed - vel) * 0.12;
+    if (vel < 0.01) vel = 0;
+    shell.style.setProperty('--vvel', vel.toFixed(3));
+
+    if (vh > 0) {
+      // Hero scrub-exit: 0 while the hero is intact, →1 as it leaves.
+      if (hero && heroLive) {
+        const r = hero.getBoundingClientRect();
+        const exit = Math.max(0, Math.min(1, (64 - r.top) / (r.height * 0.9)));
+        hero.style.setProperty('--hx', exit.toFixed(4));
+      }
+      for (const [el, live] of scrubLive) {
+        if (!live) continue;
+        const p = Math.max(-1, Math.min(1, progress(el.getBoundingClientRect(), vh)));
+        el.style.setProperty('--scrub', p.toFixed(4));
+      }
+      for (const { el, visible } of drifts) {
+        if (!visible) continue;
+        const p = Math.max(-1, Math.min(1, progress(el.getBoundingClientRect(), vh)));
+        el.style.setProperty('--drift', p.toFixed(3));
+      }
+    }
+
     raf = requestAnimationFrame(loop);
   };
   raf = requestAnimationFrame(loop);
 
   return () => {
     cancelAnimationFrame(raf);
-    root.style.removeProperty('--vskew');
+    io?.disconnect();
+    shell.style.removeProperty('--vskew');
+    shell.style.removeProperty('--vvel');
+    hero?.style.removeProperty('--hx');
+    for (const el of scrubs) el.style.removeProperty('--scrub');
+    for (const { el } of drifts) el.style.removeProperty('--drift');
   };
 }
 
@@ -122,51 +199,6 @@ function bindPeeks(root: ParentNode): (() => void) | null {
   return () => cleanups.forEach((fn) => fn());
 }
 
-/* --- 4. ghost-numeral drift ---------------------------------------------- */
-
-function bindDrift(root: ParentNode): (() => void) | null {
-  const els = Array.from(root.querySelectorAll<HTMLElement>('[data-drift]'));
-  if (!els.length || !('IntersectionObserver' in window)) return null;
-
-  const state = els.map((el) => ({ el, visible: false }));
-  let raf = 0;
-
-  const update = () => {
-    raf = 0;
-    const vh = window.innerHeight;
-    for (const { el, visible } of state) {
-      if (!visible) continue;
-      const r = el.getBoundingClientRect();
-      const progress = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
-      const clamped = Math.max(-1, Math.min(1, progress));
-      el.style.setProperty('--drift', clamped.toFixed(3));
-    }
-  };
-  const onScroll = () => {
-    if (!raf) raf = requestAnimationFrame(update);
-  };
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        const item = state.find((s) => s.el === entry.target);
-        if (item) item.visible = entry.isIntersecting;
-      }
-      onScroll();
-    },
-    { rootMargin: '10% 0px 10% 0px' },
-  );
-  state.forEach((s) => io.observe(s.el));
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  return () => {
-    io.disconnect();
-    window.removeEventListener('scroll', onScroll);
-    if (raf) cancelAnimationFrame(raf);
-    state.forEach((s) => s.el.style.removeProperty('--drift'));
-  };
-}
-
 export function UiuxMotion() {
   useEffect(() => {
     const root = document.documentElement;
@@ -176,11 +208,9 @@ export function UiuxMotion() {
     const cleanups: (() => void)[] = [];
     const offChars = bindChars(shell);
     if (offChars) cleanups.push(offChars);
-    cleanups.push(bindVelocitySkew(shell));
+    cleanups.push(bindScrub(shell));
     const offPeeks = bindPeeks(shell);
     if (offPeeks) cleanups.push(offPeeks);
-    const offDrift = bindDrift(shell);
-    if (offDrift) cleanups.push(offDrift);
 
     return () => cleanups.forEach((fn) => fn());
   }, []);

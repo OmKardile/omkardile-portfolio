@@ -7,6 +7,7 @@ import { SmoothScroll } from '@/components/SmoothScroll';
 import { UiuxTheme } from '@/components/UiuxTheme';
 import { MotionCraft } from '@/components/MotionCraft';
 import { AskOmkar } from '@/components/AskOmkar';
+import { ViewNotice } from '@/components/ViewNotice';
 import { site } from '@/data/site';
 import { display, mono } from './fonts';
 import './globals.css';
@@ -97,6 +98,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         {/* AskOmkar — the floating portfolio bot. Present on every route; all
             matching happens client-side (see src/components/AskOmkar.tsx). */}
         <AskOmkar />
+        {/* One-time "best viewed on desktop" whisper — 3s, translucent, both sites. */}
+        <ViewNotice />
         <Analytics />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
       </body>

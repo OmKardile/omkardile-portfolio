@@ -1888,3 +1888,89 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
 .ux-cursor.is-down .ux-cursor-dot {
   scale: 1.6;
 }
+
+/* ---- mobile scroll scrub — the loud phone cut --------------------------------
+   UiuxMotion feeds five custom properties from one rAF loop:
+     --hx     hero exit progress 0..1     (on .ux-hero, inherited)
+     --scrub  viewport progress -1..1     (on [data-scrub], inherited)
+     --drift  viewport progress -1..1     (on [data-drift])
+     --vskew  velocity lean, deg          (on .ux-shell, inherited)
+     --vvel   normalized speed 0..1       (on .ux-shell, inherited)
+   Everything is transform/opacity only and every var defaults to neutral,
+   so desktop (>48rem) and no-JS render exactly as before. Reveal keyframes
+   define only a `from`, so during the 0.6s entrance the animation animates
+   INTO the scrubbed position — no end-of-animation jump. Persistent opacity
+   needs to beat `.ux-shell [data-reveal].revealed`, hence the mirrored
+   specificity on the fade rules. */
+@media (max-width: 48rem) {
+  .ux-hero-kicker {
+    transform: translateY(calc(var(--hx, 0) * -30px));
+  }
+
+  .ux-hero-name .ux-hero-line-fill {
+    transform: translateY(calc(var(--hx, 0) * -9vh)) translateX(calc(var(--vvel, 0) * 1.8vw))
+      scale(calc(1 - var(--hx, 0) * 0.06));
+    transform-origin: left bottom;
+    will-change: transform;
+  }
+
+  .ux-hero-name .ux-hero-line-outline {
+    transform: translateY(calc(var(--hx, 0) * 5vh))
+      translateX(calc(var(--hx, 0) * -11vw - var(--vvel, 0) * 2.6vw));
+    will-change: transform;
+  }
+
+  .ux-hero-strip {
+    transform: rotate(calc(-1.25deg + var(--hx, 0) * -4.5deg)) translateX(calc(var(--hx, 0) * 15vw))
+      skewY(var(--vskew, 0deg));
+    will-change: transform;
+  }
+
+  .ux-hero-role {
+    transform: translateY(calc(var(--hx, 0) * 9vh));
+  }
+
+  .ux-hero-meta {
+    transform: translateY(calc(var(--hx, 0) * 5vh));
+  }
+
+  /* Fades — gated on .revealed at matched specificity so the pre-reveal
+     hidden state (opacity: 0) still wins for below-fold elements. */
+  html.js-reveal .ux-shell .ux-hero-kicker.revealed {
+    opacity: calc(1 - var(--hx, 0) * 1.8);
+  }
+
+  html.js-reveal .ux-shell .ux-hero-role.revealed {
+    opacity: calc(1 - var(--hx, 0) * 2.4);
+  }
+
+  html.js-reveal .ux-shell .ux-hero-meta.revealed {
+    opacity: calc(1 - var(--hx, 0) * 2);
+  }
+
+  html.js-reveal .ux-shell .ux-hero-available.revealed {
+    opacity: calc(1 - var(--hx, 0) * 2.6);
+  }
+
+  /* Work rows: numerals swing and swell with speed, body counter-drifts. */
+  .ux-row .ux-row-number {
+    transform: translateY(calc(var(--drift, 0) * 60px)) rotate(calc(var(--drift, 0) * 8deg))
+      scale(calc(1 + var(--vvel, 0) * 0.06));
+    will-change: transform;
+  }
+
+  .ux-row .ux-row-body {
+    transform: translateY(calc(var(--scrub, 0) * -14px));
+  }
+
+  /* The diagonal swings deeper on phones. */
+  .ux-how-big {
+    transform: translateY(calc(var(--drift, 0) * 52px)) rotate(calc(var(--drift, 0) * 7deg));
+    will-change: transform;
+  }
+
+  /* Quote words keep a breath of scrub after their stagger lands. */
+  .ux-qw {
+    transform: translateY(calc(var(--scrub, 0) * 5px));
+  }
+}

@@ -3263,3 +3263,100 @@ html.js-reveal .relay-fig[data-curtain].curtain-in {
   color: inherit;
   text-underline-offset: 3px;
 }
+
+/* ---- ViewNotice — one-time "best viewed on desktop" whisper ----------------
+   Mounted once in the root layout, so it covers every route of both sites.
+   Translucent glass pill, bottom-right stacked just above the AskOmkar pill
+   pointer-events: none, aria-hidden — a whisper, not a modal. Enters with a
+   keyframe (transitions don't run on DOM insertion), auto-fades after ~3s,
+   shows once per session (sessionStorage 'vn-seen'). Site tokens only, so
+   light, dark and the /uiux paper theme all dress it correctly. */
+.vn {
+  position: fixed;
+  right: 18px;
+  left: auto;
+  bottom: calc(78px + env(safe-area-inset-bottom, 0px)); /* stacked just above the AskOmkar pill */
+  z-index: 88; /* under the AskOmkar pill (90) and panel (91) */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(64vw, 340px);
+  padding: 9px 14px;
+  border: 1px solid var(--line-strong, var(--line));
+  border-radius: 999px;
+  background: var(--soft);
+  background: color-mix(in srgb, var(--bg) 58%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.vn.is-in {
+  animation: vn-in 0.5s var(--ease-out) forwards;
+}
+
+.vn.is-out {
+  animation: vn-out 0.45s ease forwards;
+}
+
+@keyframes vn-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vn-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.vn-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+.vn-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 640px) {
+  .vn {
+    right: 14px;
+    left: auto;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    max-width: 58vw;
+    padding: 8px 12px;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vn.is-in,
+  .vn.is-out {
+    animation-duration: 0.01s;
+  }
+}

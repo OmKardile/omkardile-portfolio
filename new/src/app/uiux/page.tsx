@@ -176,7 +176,7 @@ export default function UiuxPage() {
             About
           </h2>
           <div className="ux-about-grid">
-            <div data-reveal suppressHydrationWarning>
+            <div data-reveal data-scrub suppressHydrationWarning>
               <p className="ux-about-quote">
                 <span className="sr-only">“{uiux.quote}”</span>
                 <span aria-hidden="true">
