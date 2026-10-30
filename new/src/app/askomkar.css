@@ -60,6 +60,9 @@
   bottom: calc(18px + env(safe-area-inset-bottom, 0px));
   z-index: 91;
   width: min(396px, calc(100vw - 36px));
+  /* vh fallback first — dvh is invalid on iOS 15.0–15.3 and older WebViews,
+     and an invalid max-height would leave the sheet unsized on those phones. */
+  max-height: min(660px, calc(100vh - 40px));
   max-height: min(660px, calc(100dvh - 40px));
   display: flex;
   flex-direction: column;
@@ -68,6 +71,13 @@
   border: 1.5px solid var(--fg);
   box-shadow: 8px 8px 0 var(--line-strong);
   animation: ao-in 0.28s var(--ease-out);
+}
+/* dvh fallback for iOS 15.0–15.3 and old WebViews. Written as @supports because
+   duplicate max-height declarations get merged away by CSS minification. */
+@supports not (height: 1dvh) {
+  .ao-panel {
+    max-height: min(660px, calc(100vh - 40px));
+  }
 }
 @keyframes ao-in {
   from { opacity: 0; transform: translateY(10px) scale(0.98); }
@@ -374,12 +384,39 @@
     right: 12px;
     bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     width: auto;
+    max-height: min(72vh, 560px);
     max-height: min(72dvh, 560px);
     box-shadow: 5px 5px 0 var(--line-strong);
+  }
+  @supports not (height: 1dvh) {
+    .ao-panel {
+      max-height: min(72vh, 560px);
+    }
   }
   .ao-pill {
     right: 14px;
     bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Coarse pointers — real phones and tablets. iOS zooms any focused input
+   whose font-size is under 16px, and the zoom persists after the panel
+   closes, throwing the fixed pill out of view — so the ask input gets a
+   full 16px. Tap targets go to the 44px HIG minimum where it costs nothing. */
+@media (pointer: coarse) {
+  .ao-pill {
+    padding: 13px 18px;
+    min-height: 44px;
+  }
+  .ao-close {
+    width: 38px;
+    height: 38px;
+  }
+  .ao-chip {
+    padding: 8px 12px;
+  }
+  .ao-form input {
+    font-size: 16px;
   }
 }
 

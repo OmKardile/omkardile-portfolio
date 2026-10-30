@@ -32,6 +32,12 @@ export const viewport: Viewport = {
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
     { media: '(prefers-color-scheme: dark)', color: '#0f0f11' },
   ],
+  /* viewport-fit=cover makes env(safe-area-inset-*) report real values on
+     notched phones — the AskOmkar pill/panel offset their bottom edge by it.
+     interactiveWidget=resizes-content keeps the fixed bottom sheet above the
+     Android keyboard instead of hidden behind it when the ask input focuses. */
+  viewportFit: 'cover',
+  interactiveWidget: 'resizes-content',
 };
 
 const jsonLd = {
