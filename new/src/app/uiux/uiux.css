@@ -894,6 +894,40 @@ html.js-reveal .ux-shell .ux-how-grid.revealed .ux-how-item:nth-child(3) {
   transform: translate(3px, -3px);
 }
 
+/* ---- index: personal design taste — the Liquid Glass studies ---------------- */
+
+.ux-taste-note {
+  margin: 0;
+  max-width: 58ch;
+  color: var(--muted);
+}
+
+.ux-taste-name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  font-weight: 500;
+}
+
+.ux-taste-label {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease, text-underline-offset 0.2s ease;
+}
+
+.ux-taste-idx {
+  font-family: var(--mono2);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.ux-shipped-link:hover .ux-taste-label {
+  text-decoration-color: var(--pa);
+  text-underline-offset: 5px;
+}
+
 /* ---- index: about + contact ------------------------------------------------ */
 
 .ux-about {

@@ -14,8 +14,10 @@ import { WireframeArtSvg } from '@/components/uiux/WireframeArt';
    open-to-work stamp sticker (hard accent shadow, velocity lean, hover
    straighten), a rotated scroll-skewed marquee strip, three
    asymmetric work rows with ghost numerals and cursor-following wireframe
-   peeks, a stepped how-I-work diagonal, and a word-staggered about quote.
-   Typography is still the design — no imagery. Motion: UiuxMotion. */
+   peeks, a stepped how-I-work diagonal, a mono also-shipped pair, the
+   Liquid Glass studies as a personal-taste index, and a word-staggered
+   about quote. Typography is still the design — no imagery.
+   Motion: UiuxMotion. */
 
 export const metadata: Metadata = {
   /* The root template already appends "| Omkar Kardile" — don't double it. */
@@ -160,6 +162,48 @@ export default function UiuxPage() {
                 >
                   <span className="ux-shipped-title">{s.title}</span>
                   <span className="ux-shipped-stack">{s.stack}</span>
+                  <span aria-hidden="true">↗</span>
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Personal design taste — the Liquid Glass studies. Self-initiated
+          redesigns of real products: no client, no brief, just taste — each
+          one backed by a written case-study PDF from public/case-studies. */}
+      <section className="ux-shipped ux-taste" aria-labelledby="ux-taste-title">
+        <div className="ux-container">
+          <div className="ux-work-head" data-reveal suppressHydrationWarning>
+            <h2 id="ux-taste-title" className="ux-label">
+              Personal design taste
+            </h2>
+            <p className="ux-label" aria-hidden="true">
+              01 — 06
+            </p>
+          </div>
+          <p className="ux-taste-note" data-reveal suppressHydrationWarning>
+            Six real apps, redesigned my way — no client, no brief. Each study ships with a written case study:
+            interfaces, ideas, products and people, one glass surface at a time.
+          </p>
+          <ul className="ux-shipped-list" data-reveal-group suppressHydrationWarning>
+            {uiux.liquidGlass.map((lg, i) => (
+              <li className="ux-shipped-row" key={lg.app}>
+                <a
+                  className="ux-shipped-link"
+                  href={`/case-studies/${lg.app}-case-study.pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="ux-taste-name">
+                    <span className="ux-taste-idx" aria-hidden="true">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="ux-taste-label">{lg.title}</span>
+                  </span>
+                  <span className="ux-shipped-stack">{lg.pages}</span>
                   <span aria-hidden="true">↗</span>
                   <span className="sr-only"> (opens in a new tab)</span>
                 </a>

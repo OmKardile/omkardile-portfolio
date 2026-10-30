@@ -3,6 +3,19 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.0] — 2026-10-30
+
+### Added
+
+- **"Personal design taste" section on `/uiux`** — the six Liquid Glass redesign studies (Linear, Spotify, LinkedIn, Stripe, Airbnb, Slack) return to the loud index as a mono index of their own, directly under "Also shipped": an `01 — 06` count head, one quiet intro line, rows with index numerals, page-count meta and ↗ arrows, each linking to its written case-study PDF in `public/case-studies/`. The studies (and their PDFs) had been orphaned since loud mode replaced the editorial index.
+- **One-time desktop whisper (`ViewNotice`)** — a ~3s translucent "best viewed on desktop" note stacked bottom-right above the AskOmkar pill: pointer-events none, once per session, site tokens only so light/dark/uiux all dress it. Mounted in the root layout, so both sites carry it.
+
+### Changed
+
+- **"Also shipped" swap** — SSShopee ERP is out; **PatelNetworks — Admin Panel** (`patelnetworks-5ne3.onrender.com/admin`, the owner-side dashboard shipped with the client project) is in, next to AI Recipe Generator.
+- **Reveals can no longer strand content invisible** — the root `loading.tsx` boundary made `usePathname` flip while the skeleton was still mounted, so the reveal observer armed against the skeleton and every `[data-reveal]` on the incoming page stayed at `opacity: 0` forever (reproduced on a home → `/uiux` SPA nav, 18 stuck elements). A MutationObserver now arms late-arriving content (loading swap, streamed segments, lazy nodes) and a passive scroll/resize/pageshow sweep reveals anything still stuck inside the viewport; IntersectionObserver stays the primary trigger.
+- **Loud mobile scrub (`UiuxMotion`)** — one rAF loop drives every scroll-linked variable: velocity lean (`--vskew`, coarse pointers get bigger gain and a 7° ceiling), normalized speed (`--vvel`), hero exit progress (`--hx`), viewport progress for `[data-scrub]` rows and `[data-drift]` numerals, all IO-gated off-screen. The ≤48rem cut peels the hero away in five layers, swings row numerals with flick velocity, counter-drifts row bodies, and reveal keyframes animate into the scrubbed position — no end-of-animation jump. Desktop rendering is untouched.
+
 ## [1.3.0] — 2026-10-30
 
 ### Changed

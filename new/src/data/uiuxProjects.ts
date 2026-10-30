@@ -664,6 +664,6 @@ export const uiuxPrinciples = [
 
 /* Also shipped — designs that made it to code, live URLs from the repo. */
 export const alsoShipped = [
-  { title: 'SSShopee ERP', stack: 'Next.js · TypeScript · Prisma', href: 'https://shubhamsupershopee-admin.vercel.app/' },
+  { title: 'PatelNetworks — Admin Panel', stack: 'E-commerce platform · Razorpay · GST invoicing', href: 'https://patelnetworks-5ne3.onrender.com/admin' },
   { title: 'AI Recipe Generator', stack: 'Next.js · Google Gemini', href: 'https://recipe-generator-omkardile.vercel.app/' },
 ];
