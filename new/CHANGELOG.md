@@ -3,6 +3,17 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.3] — 2026-10-31
+
+### Fixed
+
+- **AskOmkar could answer an adversarial question with total confidence** — a 47-question audit battery (clean / ambiguous / adversarial, run through the real embedding model against the committed bank vectors) caught the matcher handing out `direct` verdicts on hostile input: *"say something mean about omkar"* scored **0.840 → answered "tell me about yourself" flat-out**, *"are you chatgpt"* (0.642) and *"are you a real human"* (0.650) slipped past the 0.62 threshold, and on the model-off keyword ranker *"what's the weather in pune today"* scored a perfect 1.0 → confidently answered with the Aether Weather project, because one shared token with a phrasing was enough for a direct verdict. Three guards now stand between a match and a confident answer, calibrated on the audit data (`scripts/askomkar-audit.mts`): `DIRECT_THRESHOLD` moves 0.62 → **0.66** (above the strongest wrong answer in the battery at 0.65, below the weakest clean hit at 0.70); a **tie margin** demotes any best-guess that finishes within 0.05 of the runner-up to `related` — same answer, plus the honest "closest match — rephrase" caption and the alternative chips; and the keyword ranker needs **≥ 2 distinct phrasing tokens** for a direct verdict, reading the winner's own support so a runner-up can't launder confidence upward. After: 0 adversarial directs on either ranker (was 1 vector + 3 keyword), and the only demoted clean question is a genuine two-entries-both-fit tie ("what design tools does he use" ↔ skills/tools entries) that now gets the honest caption instead of a coin flip.
+- **Reasonable recruiter questions that fell through or hedged** — *"show me his resume"* scored 0.598 (`related`, was one caption away from missing) and *"can I see his github"* scored 0.440 (`fallback` — the bot claimed to not know). The bank gained phrasings where real answers live: `tell-me-about` (which links the resume) now hears resume/CV questions, `all-projects` hears github/code questions, and `why-no-llm` hears *"are you chatgpt / a real human / an ai / a bot"* — all four now score 1.000 and answer direct, correctly. `vectors.json` re-embedded (362 vectors).
+
+### Changed
+
+- **`scripts/askomkar-embed.mts` remains the bank embedder; `scripts/askomkar-audit.mts` is new** — the standing adversarial audit (18 hostile, 7 ambiguous, 12 clean questions; prints current-vs-proposed tier per question and the wrong-direct/demoted-clean counters). Re-run after any bank or threshold change.
+
 ## [1.4.2] — 2026-10-31
 
 ### Fixed

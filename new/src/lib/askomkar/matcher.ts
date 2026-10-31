@@ -2,13 +2,28 @@
 //
 // Two rankers, one contract:
 //   - rankByVector: cosine similarity between the visitor's question vector
-//     (computed in-browser) and the build-time bank vectors. Primary path.
+//         (computed in-browser) and the build-time bank vectors. Primary path.
 //   - rankByKeywords: token-overlap scorer used only if the embedding model
 //     fails to load (offline, CDN blocked). Weaker, but never silent.
 //
-// Tiers are calibrated against the sample table printed by
-// scripts/askomkar-embed.mts — clean hits score ≥ 0.69, adversarial or
-// unrelated input stays under ~0.62, nonsense under ~0.45.
+// Tiers are calibrated against scripts/askomkar-audit.mts (a battery of
+// clean, ambiguous and adversarial questions run through the real model):
+// clean hits score ≥ 0.70, the strongest wrong answer in the battery sits
+// at 0.65, and recruiter questions that two bank entries both answer land
+// within 0.03 of each other. Three guards keep wrong answers from being
+// spoken with confidence:
+//   - DIRECT_THRESHOLD 0.66 — above the strongest wrong answer (0.65),
+//     below the weakest clean hit (0.70); the old 0.62 answered three
+//     adversarial questions outright.
+//   - TIE_MARGIN — when the top two entries finish within 0.05 of each
+//     other the question is ambiguous, so the best guess is demoted to
+//     "related" (same answer, plus the honest caption and alternative
+//     chips) instead of a confident single pick.
+//   - keyword single-token cap — on the fallback ranker one shared token
+//     with a phrasing scores 1.0 ("weather" once answered a weather
+//     question with the Aether project, confidently). A direct verdict
+//     there now requires ≥ 2 distinct phrasing tokens; anything weaker
+//     degrades to "related", which still answers but with the caption.
 
 import { faqBank, type FaqEntry } from '@/data/askomkar/bank';
 
@@ -18,8 +33,9 @@ export type VectorsFile = {
   entries: { id: string; vectors: number[][] }[];
 };
 
-export const DIRECT_THRESHOLD = 0.62;
+export const DIRECT_THRESHOLD = 0.66;
 export const RELATED_THRESHOLD = 0.45;
+export const TIE_MARGIN = 0.05;
 
 export type Candidate = { entry: FaqEntry; score: number };
 
@@ -38,11 +54,18 @@ function cosine(a: number[], b: number[]) {
   return d;
 }
 
-function finish(cands: Candidate[]): MatchResult {
+/** `directHits`: how many distinct phrasing tokens backed the best keyword
+ *  candidate — a single shared word must never earn a confident verdict. */
+function finish(cands: Candidate[], directHits = Infinity): MatchResult {
   const ranked = cands.sort((x, y) => y.score - x.score);
   const best = ranked[0] ?? { entry: faqBank[0], score: 0 };
-  const tier =
+  const second = ranked[1]?.score ?? 0;
+  let tier: MatchResult['tier'] =
     best.score >= DIRECT_THRESHOLD ? 'direct' : best.score >= RELATED_THRESHOLD ? 'related' : 'fallback';
+  // A near-tie means the question sits between two answers — say so instead
+  // of picking one with confidence (the answer text is unchanged; it just
+  // gains the honest caption and the runner-up chips).
+  if (tier === 'direct' && (best.score - second < TIE_MARGIN || directHits < 2)) tier = 'related';
   return { tier, best, alternatives: ranked.slice(1, 4) };
 }
 
@@ -82,19 +105,31 @@ const tokenize = (s: string) =>
 export function rankByKeywords(query: string): MatchResult {
   const qTokens = tokenize(query);
   const qSet = new Set(qTokens);
-  const cands: Candidate[] = faqBank.map((entry) => {
+  const cands = faqBank.map((entry) => {
     let weight = 0;
-    // Phrasing hits count double — they are the intended questions.
-    for (const ph of entry.q) {
-      const pTokens = new Set(tokenize(ph));
-      for (const t of qSet) if (pTokens.has(t)) weight += 2;
-    }
+    let phraseHits = 0;
+    // Phrasing hits count double — they are the intended questions. The union
+    // of the entry's phrasing tokens, so a word repeated across phrasings of
+    // the same entry counts once.
+    const phTokens = new Set(entry.q.flatMap((ph) => tokenize(ph)));
+    for (const t of qSet)
+      if (phTokens.has(t)) {
+        weight += 2;
+        phraseHits++;
+      }
     // Answer-body hits count single — rescues tech nouns ("prisma", "kotlin").
     const aTokens = new Set(tokenize(entry.a));
     for (const t of qSet) if (aTokens.has(t)) weight += 1;
     // Normalize against query length so short and long questions compare fairly.
     const score = qTokens.length ? Math.min(1, weight / (qTokens.length * 2)) : 0;
-    return { entry, score };
+    return { entry, score, phraseHits };
   });
-  return finish(cands);
+  // The direct-verdict gate reads the WINNER's own phrasing support — a
+  // runner-up with more token hits must not launder confidence upward.
+  cands.sort((a, b) => b.score - a.score);
+  const bestHits = cands[0]?.phraseHits ?? 0;
+  return finish(
+    cands.map(({ entry, score }) => ({ entry, score })),
+    bestHits,
+  );
 }
