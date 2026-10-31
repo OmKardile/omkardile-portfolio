@@ -663,8 +663,8 @@ export const uiuxPrinciples = [
 ];
 
 /* Also shipped — designs that made it to code, live URLs from the repo.
-   `hint` feeds the /uiux cursor's hover guide (data-hint), not shown as copy. */
+   Self-describing rows (title + stack + ↗), so no cursor hint on these. */
 export const alsoShipped = [
-  { title: 'PatelNetworks — Admin Panel', stack: 'E-commerce platform · Razorpay · GST invoicing', href: 'https://patelnetworks-5ne3.onrender.com/admin', hint: 'Admin dashboard · new tab' },
-  { title: 'AI Recipe Generator', stack: 'Next.js · Google Gemini', href: 'https://recipe-generator-omkardile.vercel.app/', hint: 'Live app · new tab' },
+  { title: 'PatelNetworks — Admin Panel', stack: 'E-commerce platform · Razorpay · GST invoicing', href: 'https://patelnetworks-5ne3.onrender.com/admin' },
+  { title: 'AI Recipe Generator', stack: 'Next.js · Google Gemini', href: 'https://recipe-generator-omkardile.vercel.app/' },
 ];

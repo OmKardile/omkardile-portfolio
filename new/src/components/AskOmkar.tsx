@@ -324,7 +324,10 @@ export function AskOmkar() {
             </button>
           </header>
 
-          <div className="ao-log" ref={logRef} aria-live="polite">
+          {/* data-lenis-prevent: the site's Lenis smooth-scroll intercepts
+              wheel input globally — without this flag it scrolls the PAGE
+              instead of the log, so the chat can't be scrolled at all. */}
+          <div className="ao-log" ref={logRef} aria-live="polite" data-lenis-prevent>
             {msgs.map((m, i) => (
               <div key={i} className={m.role === 'user' ? 'ao-msg ao-msg-user' : 'ao-msg'}>
                 {m.text ? (

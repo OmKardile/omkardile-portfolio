@@ -159,7 +159,6 @@ export default function UiuxPage() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  data-hint={s.hint}
                 >
                   <span className="ux-shipped-title">{s.title}</span>
                   <span className="ux-shipped-stack">{s.stack}</span>
@@ -197,7 +196,6 @@ export default function UiuxPage() {
                   href={`/case-studies/${lg.app}-case-study.pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  data-hint="Case PDF · new tab"
                 >
                   <span className="ux-taste-name">
                     <span className="ux-taste-idx" aria-hidden="true">
@@ -272,7 +270,7 @@ export default function UiuxPage() {
       {/* Quiet pointer back to the dev portfolio (the nav's ← Portfolio covers
           it too; this one is for readers who reached the footer). */}
       <div className="ux-container" style={{ paddingBottom: '3rem' }}>
-        <Link href="/" className="ux-case-back" data-reveal suppressHydrationWarning data-hint="Dev portfolio">
+        <Link href="/" className="ux-case-back" data-reveal suppressHydrationWarning>
           <span aria-hidden="true">←</span> Developer portfolio
         </Link>
       </div>

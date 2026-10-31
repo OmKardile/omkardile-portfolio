@@ -1871,6 +1871,10 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   height: 6px;
   margin: -3px 0 0 -3px;
   background: var(--fg);
+  /* 1px paper halo — the cursor is ink, and ink-on-ink (hovered .ux-btn
+     inverts to var(--fg)) used to make it vanish. On paper the halo is
+     invisible; on ink surfaces it keeps the square readable. */
+  box-shadow: 0 0 0 1px var(--bg);
 }
 
 .ux-cursor-ring {
@@ -1879,6 +1883,7 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   margin: -16px 0 0 -16px;
   border: 1px solid var(--fg);
   border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--bg); /* same halo, same reason */
   opacity: 0.55;
   transition: opacity 0.2s ease;
 }
@@ -1899,16 +1904,21 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   transition: opacity 0.18s ease;
 }
 
-/* hint chip — the quiet CTA guide. Anchored top-left at the ring's lerp
-   point, offset below-right so it never sits under the dot; the entrance
-   rise rides the `translate` property (pure translation — safe next to the
-   JS transform), scale is JS-lerped. */
+/* hint chip — the quiet CTA guide. Anchored to the hovered element's BOX
+   (below its left edge; above near the viewport floor; clamped at the
+   sides) by UiuxCursor, so it reads as an annotation of the CTA instead
+   of a blob riding the pointer — a pointer-chasing chip always lands ON
+   the button it names, because the pointer is inside that button. The 1px
+   var(--bg) halo keeps the ink chip crisp where it crosses ink surfaces.
+   The entrance rise rides the `translate` property (pure translation —
+   safe next to the JS transform); position is a plain JS transform set
+   per frame while the anchor is live. */
 .ux-cursor-hint {
-  margin: 20px 0 0 18px;
-  padding: 0.32rem 0.5rem;
+  padding: 0.34rem 0.55rem;
   border-radius: 3px;
   background: var(--fg);
   color: var(--bg);
+  box-shadow: 0 0 0 1px var(--bg);
   font-family: var(--mono2);
   font-size: 0.56rem;
   font-weight: 700;
@@ -1927,9 +1937,9 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   translate: 0 0;
 }
 
-/* the VIEW chip and the press squeeze win — the hint steps aside */
-.ux-cursor.is-label .ux-cursor-hint,
-.ux-cursor.is-down .ux-cursor-hint {
+/* the VIEW chip wins — the hint steps aside (press keeps the hint up:
+   it describes the CTA, and flicker on click reads as a glitch) */
+.ux-cursor.is-label .ux-cursor-hint {
   opacity: 0;
   translate: 0 5px;
 }

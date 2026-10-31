@@ -3,6 +3,18 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.1] — 2026-10-31
+
+### Fixed
+
+- **AskOmkar's chat log could not be scrolled** — the site's Lenis smooth-scroll engine intercepts wheel input globally, so wheeling over the log scrolled the page behind the panel while the log itself never moved (reproduced: log `scrollTop` frozen at 807, page at 3631). The log now carries `data-lenis-prevent`, the escape hatch Lenis's own contract in `globals.css` already anticipates; `overscroll-behavior: contain` stops the scroll chaining there.
+- **The hover hint chip landed on top of the CTA it described** — a pointer-chasing chip is doomed: the pointer is inside the element by definition, so the chip (offset a fixed 18/20px from the ring) sat on the hovered button and read as a rendering bug, merging with the button's ink hover fill. The hint is now anchored to the ELEMENT's box: below its left edge by default, flipped above near the viewport floor, clamped at the side edges, re-read every frame so it sticks to the CTA while the page glides under it (Lenis) and drops when the element scrolls away or unmounts. Binding moved from `pointermove` to one delegated `pointerover` listener; measurement happens once per show.
+- **The ink cursor vanished on ink surfaces** — `.ux-btn:hover` fills with `var(--fg)`, so the ink dot and ring went invisible over the hovered Email/LinkedIn buttons. Both now carry a 1px `var(--bg)` halo (`box-shadow`), invisible on paper and exactly what keeps them readable on ink.
+
+### Changed
+
+- **Hints culled to genuinely quiet CTAs** — the user's rule was "every CTA except the very obvious ones": rows that already announce themselves (Also shipped, the Liquid Glass taste rows with their "N-PAGE CASE STUDY" meta, "← All work", "← Developer portfolio", "Open prototype ↗", "Open full screen ↗") lost their `data-hint`, and the unused `hint` field left `uiuxProjects.ts`. Hints remain where the outcome isn't written on the control: the two icon-only nav actions, the theme toggle, "← Portfolio" (dev or design?), the footer's inline "Omkar Kardile" link, and the mailto/LinkedIn contact buttons.
+
 ## [1.4.0] — 2026-10-30
 
 ### Added
