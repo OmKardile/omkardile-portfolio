@@ -11,14 +11,14 @@ export function UiuxNav() {
   return (
     <header className="ux-nav" data-reveal suppressHydrationWarning>
       <nav className="ux-nav-inner" aria-label="UI/UX portfolio">
-        <Link href="/" className="ux-nav-back">
+        <Link href="/" className="ux-nav-back" data-hint="Dev portfolio">
           <span aria-hidden="true">←</span> <span className="ux-nav-back-label">Portfolio</span>
         </Link>
         <Link href="/uiux" className="ux-nav-name">
           Omkar Kardile — Design
         </Link>
         <div className="ux-nav-actions">
-          <a href={`mailto:${site.email}`} className="ux-nav-icon" aria-label="Email Omkar">
+          <a href={`mailto:${site.email}`} className="ux-nav-icon" aria-label="Email Omkar" data-hint="Opens mail app">
             <Mail size={16} strokeWidth={2} aria-hidden="true" />
           </a>
           <a
@@ -27,6 +27,7 @@ export function UiuxNav() {
             rel="noopener noreferrer"
             className="ux-nav-icon"
             aria-label="Omkar on LinkedIn (opens in a new tab)"
+            data-hint="LinkedIn · new tab"
           >
             <Linkedin size={16} strokeWidth={2} aria-hidden="true" />
           </a>

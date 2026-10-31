@@ -47,7 +47,7 @@ export function CaseStudyLayout({
     >
       {/* Case header */}
       <header className="ux-case-head" data-reveal suppressHydrationWarning>
-        <Link href="/uiux" className="ux-case-back">
+        <Link href="/uiux" className="ux-case-back" data-hint="Back to all work">
           <span aria-hidden="true">←</span> All work
         </Link>
         <p className="ux-case-number" aria-hidden="true">

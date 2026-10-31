@@ -662,8 +662,9 @@ export const uiuxPrinciples = [
   { n: '03', title: 'Ship it', text: 'Figma files don’t ship. Code does.' },
 ];
 
-/* Also shipped — designs that made it to code, live URLs from the repo. */
+/* Also shipped — designs that made it to code, live URLs from the repo.
+   `hint` feeds the /uiux cursor's hover guide (data-hint), not shown as copy. */
 export const alsoShipped = [
-  { title: 'PatelNetworks — Admin Panel', stack: 'E-commerce platform · Razorpay · GST invoicing', href: 'https://patelnetworks-5ne3.onrender.com/admin' },
-  { title: 'AI Recipe Generator', stack: 'Next.js · Google Gemini', href: 'https://recipe-generator-omkardile.vercel.app/' },
+  { title: 'PatelNetworks — Admin Panel', stack: 'E-commerce platform · Razorpay · GST invoicing', href: 'https://patelnetworks-5ne3.onrender.com/admin', hint: 'Admin dashboard · new tab' },
+  { title: 'AI Recipe Generator', stack: 'Next.js · Google Gemini', href: 'https://recipe-generator-omkardile.vercel.app/', hint: 'Live app · new tab' },
 ];

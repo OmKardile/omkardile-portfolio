@@ -64,14 +64,14 @@ export function DeviceFrame({ src, title, href }: { src: string; title: string; 
       ) : (
         <div className="ux-device-poster">
           <p className="mono ux-device-poster-note">390 × 844 · best on a wider screen</p>
-          <a className="ux-btn ux-btn-ghost" href={href} target="_blank" rel="noopener noreferrer">
+          <a className="ux-btn ux-btn-ghost" href={href} target="_blank" rel="noopener noreferrer" data-hint="Prototype · new tab">
             Open prototype <span aria-hidden="true">↗</span>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </div>
       )}
       <p className="ux-device-caption">
-        <a href={href} target="_blank" rel="noopener noreferrer">
+        <a href={href} target="_blank" rel="noopener noreferrer" data-hint="Prototype · new tab">
           Open full screen <span aria-hidden="true">↗</span>
           <span className="sr-only"> (opens in a new tab)</span>
         </a>

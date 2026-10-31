@@ -4,7 +4,7 @@ export function UiuxFooter() {
     <footer className="ux-footer">
       <p>
         Designed &amp; developed by{' '}
-        <a href="https://omkardile.is-a.dev/" target="_blank" rel="noopener noreferrer">
+        <a href="https://omkardile.is-a.dev/" target="_blank" rel="noopener noreferrer" data-hint="Live site · new tab">
           Omkar Kardile
           <span className="sr-only"> (opens in a new tab)</span>
         </a>

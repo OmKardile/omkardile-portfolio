@@ -159,6 +159,7 @@ export default function UiuxPage() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-hint={s.hint}
                 >
                   <span className="ux-shipped-title">{s.title}</span>
                   <span className="ux-shipped-stack">{s.stack}</span>
@@ -196,6 +197,7 @@ export default function UiuxPage() {
                   href={`/case-studies/${lg.app}-case-study.pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-hint="Case PDF · new tab"
                 >
                   <span className="ux-taste-name">
                     <span className="ux-taste-idx" aria-hidden="true">
@@ -245,7 +247,7 @@ export default function UiuxPage() {
                 conversation.
               </p>
               <div className="ux-contact-actions">
-                <a className="ux-btn" href={`mailto:${site.email}`} data-magnetic>
+                <a className="ux-btn" href={`mailto:${site.email}`} data-magnetic data-hint="Opens mail app">
                   <Mail size={15} strokeWidth={2} aria-hidden="true" /> Email me
                 </a>
                 {linkedIn ? (
@@ -255,6 +257,7 @@ export default function UiuxPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-magnetic
+                    data-hint="LinkedIn · new tab"
                   >
                     <Linkedin size={15} strokeWidth={2} aria-hidden="true" /> LinkedIn
                     <span className="sr-only"> (opens in a new tab)</span>
@@ -269,7 +272,7 @@ export default function UiuxPage() {
       {/* Quiet pointer back to the dev portfolio (the nav's ← Portfolio covers
           it too; this one is for readers who reached the footer). */}
       <div className="ux-container" style={{ paddingBottom: '3rem' }}>
-        <Link href="/" className="ux-case-back" data-reveal suppressHydrationWarning>
+        <Link href="/" className="ux-case-back" data-reveal suppressHydrationWarning data-hint="Dev portfolio">
           <span aria-hidden="true">←</span> Developer portfolio
         </Link>
       </div>

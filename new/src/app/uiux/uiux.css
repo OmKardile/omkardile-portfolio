@@ -1813,12 +1813,14 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   }
 }
 
-/* ---- custom pointer (UiuxCursor) -------------------------------------------
+/* ---- custom pointer (UiuxCursor) -----------------------------------------
    The route's own pointer: a 6px ink dot that tracks 1:1 and a 32px
    wireframe square that lags behind with a velocity lean — the row-peek
    card's hard-border look, shrunk to pointer size. Over links the ring
    wraps the dot; over [data-cursor] targets (project rows say "View") the
-   cursor becomes a filled Space Mono label chip; press squeezes it.
+   cursor becomes a filled Space Mono label chip; over [data-hint] CTAs a
+   small hint caption trails the ring ("opens mail app · new tab") — the
+   quiet guide for actions whose outcome isn't obvious; press squeezes it.
 
    The native cursor is hidden ONLY inside .ux-shell and ONLY when the
    component has confirmed a fine pointer + motion allowance (it sets
@@ -1853,11 +1855,15 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
 
 .ux-cursor-dot,
 .ux-cursor-ring,
-.ux-cursor-chip {
+.ux-cursor-chip,
+.ux-cursor-hint {
   position: fixed;
   top: 0;
   left: 0;
   will-change: transform;
+  /* scale is driven inside the JS transform (UiuxCursor) — an individual
+     `scale` here would compose before the translate and throw the element
+     to scale× the pointer position. */
 }
 
 .ux-cursor-dot {
@@ -1865,8 +1871,6 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   height: 6px;
   margin: -3px 0 0 -3px;
   background: var(--fg);
-  scale: 1;
-  transition: scale 0.2s var(--ease-apple, ease-out);
 }
 
 .ux-cursor-ring {
@@ -1876,8 +1880,7 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   border: 1px solid var(--fg);
   border-radius: 4px;
   opacity: 0.55;
-  scale: 1;
-  transition: scale 0.25s var(--ease-apple, ease-out), opacity 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 .ux-cursor-chip {
@@ -1893,24 +1896,52 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   text-transform: uppercase;
   white-space: nowrap;
   opacity: 0;
-  scale: 0.4;
-  transition: scale 0.28s var(--ease-apple, ease-out), opacity 0.18s ease;
+  transition: opacity 0.18s ease;
 }
 
-/* link hover — the ring wraps the dot */
+/* hint chip — the quiet CTA guide. Anchored top-left at the ring's lerp
+   point, offset below-right so it never sits under the dot; the entrance
+   rise rides the `translate` property (pure translation — safe next to the
+   JS transform), scale is JS-lerped. */
+.ux-cursor-hint {
+  margin: 20px 0 0 18px;
+  padding: 0.32rem 0.5rem;
+  border-radius: 3px;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--mono2);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  translate: 0 5px;
+  transition:
+    translate 0.3s var(--ease-apple, ease-out),
+    opacity 0.2s ease;
+}
+
+.ux-cursor.is-hint .ux-cursor-hint {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* the VIEW chip and the press squeeze win — the hint steps aside */
+.ux-cursor.is-label .ux-cursor-hint,
+.ux-cursor.is-down .ux-cursor-hint {
+  opacity: 0;
+  translate: 0 5px;
+}
+
+/* link hover — the ring wraps the dot (scale is JS-lerped) */
 .ux-cursor.is-link .ux-cursor-ring {
-  scale: 1.45;
   opacity: 0.9;
-}
-
-.ux-cursor.is-link .ux-cursor-dot {
-  scale: 0.6;
 }
 
 /* label mode — the chip replaces dot and ring */
 .ux-cursor.is-label .ux-cursor-chip {
   opacity: 1;
-  scale: 1;
 }
 
 .ux-cursor.is-label .ux-cursor-ring,
@@ -1918,13 +1949,9 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   opacity: 0;
 }
 
-/* press — squeeze */
+/* press — squeeze (scale targets live in UiuxCursor's rAF loop) */
 .ux-cursor.is-down .ux-cursor-ring {
-  scale: 0.85;
-}
-
-.ux-cursor.is-down .ux-cursor-dot {
-  scale: 1.6;
+  opacity: 0.4;
 }
 
 /* ---- mobile scroll scrub — the loud phone cut --------------------------------

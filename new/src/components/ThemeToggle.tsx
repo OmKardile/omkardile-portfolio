@@ -31,8 +31,16 @@ export function ThemeToggle() {
     }
   }
 
+  // data-hint is read by the /uiux cursor's hint chip (inert on the dev
+  // portfolio, which has no cursor-chip reader).
   return (
-    <button type="button" className="theme-toggle" onClick={toggle} aria-label="Toggle dark mode">
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={toggle}
+      aria-label="Toggle dark mode"
+      data-hint="Switch theme"
+    >
       <svg
         className="icon-moon"
         aria-hidden="true"
