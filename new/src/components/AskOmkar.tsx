@@ -329,7 +329,13 @@ export function AskOmkar() {
   return (
     <>
       {!open && (
-        <button className="ao-pill" onClick={toggle} aria-expanded="false" aria-controls="askomkar-panel">
+        <button
+          className="ao-pill"
+          onClick={toggle}
+          aria-expanded="false"
+          aria-controls="askomkar-panel"
+          data-hint="Pre-written answers · runs locally"
+        >
           <span className="ao-pill-dot" aria-hidden="true" />
           AskOmkar
         </button>

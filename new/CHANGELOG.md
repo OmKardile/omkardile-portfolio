@@ -3,6 +3,23 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.6] — 2026-11-01
+
+### Added
+
+- **The custom cursor is now site-wide — it replaces the native pointer on every route, not just /uiux.** The /uiux-only cursor (per-frame `elementFromPoint` hit-testing, dot + trailing wireframe ring) is mounted from the root layout as `Cursor`, and the shell-scoped rules became global: dev portfolio, /uiux, and the AskOmkar pill/drawer all answer to the same pointer. Over the drawer it keeps working — CTAs grow the ring, the pill carries a hint — and form fields still hand back the native I-beam (`is-out`). Touch and reduced-motion keep the native cursor everywhere, unchanged.
+- **Hint seeds on the main site's non-obvious CTAs** (the quiet-guide rule from 1.4.1 finally applies outside /uiux): the AskOmkar pill — *"Pre-written answers · runs locally"*, the header resume link — *"Opens PDF"*. ThemeToggle's already-planted *"Switch theme"* hint is now actually read (it was inert on the dev portfolio, as its own comment admitted). Obvious CTAs — nav links, project links, the burger — stay clean.
+
+### Fixed
+
+- **The hint caption is anchored to the POINTER now, not the element box.** On wide CTAs the element-anchored caption floated far from where the visitor was looking, and next to adjacent CTAs it read as nobody's annotation — "can't see which element". The caption now rides beside the pointer (right of, below; flips above near the viewport floor, left near the right edge), driven by the ring's lerped position so it glides; it still only lives while the per-frame hit test returns that CTA.
+- **The chip/hint font silently never resolved.** They render in a body portal — outside every shell scope — so the shell-scoped `var(--mono2)` computed to nothing and the label fell back to an inherited font. The global `--mono` (Fragment Mono) is set explicitly in cursor.css.
+- **Dead code removed:** the engine's `initCursor` follower — its `#cursor` host element never existed in the markup, so it never ran; the main site's only cursor was the native one. The misleading "never hides the native cursor" note went with it.
+
+### Changed
+
+- Cursor styles moved from the /uiux stylesheet to global `src/app/cursor.css` (same token colors — `--fg`/`--bg` — so the pointer re-inks itself with every theme). `UiuxCursor.tsx` is superseded by `src/components/Cursor.tsx`. Verified in Playwright: **19/19** global-cursor checks (dot 1:1, native hidden, pill/toggle/resume hints beside the pointer, drawer CTAs live, input I-beam, single instance on /uiux, "View" chip centered), plus regressions green: answers **20/20**, chat/cursor smoke **5/5**. `npm run build` green.
+
 ## [1.4.5] — 2026-11-01
 
 ### Fixed

@@ -111,6 +111,7 @@ export function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="header-resume"
+                data-hint="Opens PDF"
               >
                 Resume <span aria-hidden="true">↗</span>
               </a>

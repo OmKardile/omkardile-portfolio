@@ -3,7 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-/* UiuxCursor — the /uiux route's custom pointer.
+/* Cursor — the site-wide custom pointer. Replaces the native cursor on
+   EVERY route (dev portfolio, /uiux, over the AskOmkar pill and panel),
+   not just inside the /uiux shell — the native pointer used to pop back
+   over global chrome, which read as the custom cursor losing control.
 
    ONE rAF loop, ONE source of truth: every frame the loop runs
    document.elementFromPoint() at the raw pointer position and re-derives
@@ -25,29 +28,31 @@ import { createPortal } from 'react-dom';
             on the pointer with its MEASURED size (its width varies with
             the text, so a fixed margin used to leave it hanging off-side)
    - hint — small ink caption for [data-hint] CTAs whose outcome isn't
-            obvious ("opens mail app", "switch theme"). Anchored to the
-            ELEMENT's box, not the pointer — a pointer-chasing caption
-            always lands on top of the button it names. Alive only while
-            the hit test actually returns that CTA, and suppressed over
-            [data-cursor] rows, which already announce themselves.
+            obvious ("switch theme", "opens PDF", "pre-written answers").
+            Anchored to the POINTER, not the element box: on wide CTAs an
+            element-anchored caption sits far from where the visitor is
+            looking, and with adjacent CTAs it reads as nobody's annotation.
+            The offset (right of, below) keeps it off the button's face, it
+            flips above near the viewport floor and to the left near the
+            right edge. Alive only while the hit test actually returns that
+            CTA, and suppressed over [data-cursor] rows, which already
+            announce themselves.
 
    States: grows over links/buttons, becomes the chip over [data-cursor]
-   rows, shows the hint below (or above, near the floor) the hovered
-   [data-hint] element, squeezes on press, and fades out over global chrome
-   outside .ux-shell — the AskOmkar pill/drawer and form fields keep their
-   native cursor — and whenever the pointer leaves the window.
+   rows, shows the hint beside the pointer over [data-hint] CTAs, squeezes
+   on press, and fades out over form fields — typing keeps the native
+   I-beam — and whenever the pointer leaves the window.
 
    Touch and prefers-reduced-motion keep the native cursor: the component
-   no-ops and the html flag never lands. Unmounting (SPA navigation away
-   from /uiux) removes the flag, so the native cursor returns. */
+   no-ops and the html flag never lands. Unmounting removes the flag, so
+   the native cursor returns. */
 
-const SHELL = '.ux-shell';
 const LABEL = '[data-cursor]';
 const HINT = '[data-hint]';
 const FIELD = 'input, textarea, select';
 const INTERACTIVE = 'a, button, [role="button"], summary';
 
-export function UiuxCursor() {
+export function Cursor() {
   const [mounted, setMounted] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLSpanElement>(null);
@@ -121,9 +126,8 @@ export function UiuxCursor() {
          Returns null outside the document, the topmost element otherwise
          (pointer-events: none decorations are skipped, matching :hover). */
       const hit = document.elementFromPoint(tx, ty);
-      const overShell = !!hit?.closest?.(SHELL);
       const overField = !!hit?.closest?.(FIELD);
-      const inside = overShell && !overField; // fields keep the native I-beam
+      const inside = !!hit && !overField; // fields keep the native I-beam
       const labelEl = inside ? (hit as Element).closest(LABEL) : null;
       const nextLabel = (labelEl?.getAttribute('data-cursor') ?? '').trim();
 
@@ -143,7 +147,7 @@ export function UiuxCursor() {
 
       /* The hint re-derives from the SAME hit test: only alive while the
          pointer genuinely sits on the CTA, so it dies the moment the CTA
-         scrolls away, unmounts, or gets covered by the AskOmkar panel. */
+         scrolls away, unmounts, or gets covered by another surface. */
       setHint(inside && !labelEl ? (hit as Element).closest(HINT) : null);
 
       dx += (tx - dx) * 0.6;
@@ -162,10 +166,12 @@ export function UiuxCursor() {
          hangs it off-side the moment the text is wider than ~28px */
       chip.style.transform = `translate3d(${(rx - chipW / 2).toFixed(1)}px, ${(ry - chipH / 2).toFixed(1)}px, 0) rotate(${(-2 + vel * 0.4).toFixed(2)}deg) scale(${s.chip.toFixed(3)})`;
 
-      /* Hint: anchored to its element, re-read every frame so it sticks to
-         the CTA while the page glides under it (Lenis). Below the element's
-         left edge by default — never on top of it; flips above near the
-         viewport floor; clamps at the side edges. */
+      /* Hint: rides BESIDE THE POINTER (right of, below) so the caption is
+         visually glued to the thing being pointed at — the visitor's eye is
+         already on the cursor, and on wide CTAs an element-anchored caption
+         floated too far away to read as belonging to anything. Flips above
+         the pointer near the viewport floor and to its left near the right
+         edge; the ring's lerped position drives it so it glides, not jitters. */
       if (hintEl) {
         const vw = window.innerWidth;
         const vh = window.innerHeight;
@@ -173,11 +179,11 @@ export function UiuxCursor() {
         if (!r.width && !r.height) {
           setHint(null); // unmounted mid-hover (SPA swap)
         } else {
-          let hx = r.left;
-          if (hx + hintW > vw - 12) hx = vw - 12 - hintW;
+          let hx = rx + 18;
+          if (hx + hintW > vw - 12) hx = rx - hintW - 18;
           if (hx < 12) hx = 12;
-          let hy = r.bottom + 10;
-          if (hy + hintH > vh - 12) hy = r.top - hintH - 10;
+          let hy = ry + 20;
+          if (hy + hintH > vh - 12) hy = ry - hintH - 16;
           hint.style.transform = `translate3d(${hx.toFixed(1)}px, ${hy.toFixed(1)}px, 0)`;
         }
       }

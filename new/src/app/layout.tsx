@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { Header } from '@/components/Header';
 import { DetailsAnimate } from '@/components/DetailsAnimate';
+import { Cursor } from '@/components/Cursor';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { UiuxTheme } from '@/components/UiuxTheme';
@@ -11,6 +12,7 @@ import { ViewNotice } from '@/components/ViewNotice';
 import { site } from '@/data/site';
 import { display, mono } from './fonts';
 import './globals.css';
+import './cursor.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -98,6 +100,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         {/* AskOmkar — the floating portfolio bot. Present on every route; all
             matching happens client-side (see src/components/AskOmkar.tsx). */}
         <AskOmkar />
+        {/* Cursor — the site-wide custom pointer (fine pointers only; it
+            no-ops on touch and reduced-motion). Replaces the native cursor
+            on every route and over the AskOmkar chrome; renders itself into
+            a body portal. See src/components/Cursor.tsx. */}
+        <Cursor />
         {/* One-time "best viewed on desktop" whisper — 3s, translucent, both sites. */}
         <ViewNotice />
         <Analytics />
