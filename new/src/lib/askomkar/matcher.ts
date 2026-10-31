@@ -90,9 +90,11 @@ export function rankByVector(qvec: number[], vectors: VectorsFile): MatchResult 
 // ---------- Keyword fallback ----------
 
 const STOP = new Set([
-  'the', 'a', 'an', 'is', 'are', 'was', 'were', 'do', 'does', 'did', 'he', 'him', 'his', 'omkar',
-  'what', 'how', 'why', 'when', 'where', 'can', 'i', 'you', 'your', 'my', 'me', 'we', 'of', 'to',
+  'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'am', 'do', 'does', 'did',
+  'has', 'have', 'had', 'he', 'him', 'his', 'omkar', 'who', 'what', 'how', 'why', 'when', 'where',
+  'can', 'could', 'would', 'should', 'will', 'i', 'you', 'your', 'my', 'me', 'we', 'of', 'to',
   'in', 'on', 'for', 'with', 'about', 'and', 'or', 'it', 'this', 'that', 'tell', 'know', 'want',
+  'done', 'get', 'got',
 ]);
 
 const tokenize = (s: string) =>
@@ -100,7 +102,28 @@ const tokenize = (s: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9\s+#.-]/g, ' ')
     .split(/\s+/)
-    .filter((t) => t.length > 1 && !STOP.has(t));
+    .filter((t) => t.length > 1 && !STOP.has(t))
+    .map(stem);
+
+/** Light morphological folding — the keyword fallback has no embeddings to
+ *  bridge inflected forms, so "rates" must meet "rate", "shipped" must meet
+ *  "ship", "companies" must meet "company". Applied identically to query,
+ *  phrasing and answer tokens (see tokenize) so both sides land in the same
+ *  space. Conservative on purpose: no suffix is stripped that could change a
+ *  tech noun ("supabase", "express", "ios" survive untouched). */
+function stem(t: string): string {
+  if (t.length > 4 && t.endsWith('ies')) return `${t.slice(0, -3)}y`; // companies → company
+  if (t.length > 5 && t.endsWith('ing')) {
+    const s = t.slice(0, -3);
+    return s.at(-1) === s.at(-2) ? s.slice(0, -1) : s; // tracking → track, shipping → ship
+  }
+  if (t.length > 5 && t.endsWith('ed')) {
+    const s = t.slice(0, -2);
+    return s.at(-1) === s.at(-2) ? s.slice(0, -1) : s; // shipped → ship
+  }
+  if (t.length > 3 && t.endsWith('s') && !t.endsWith('ss')) return t.slice(0, -1); // rates → rate
+  return t;
+}
 
 export function rankByKeywords(query: string): MatchResult {
   const qTokens = tokenize(query);

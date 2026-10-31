@@ -30,6 +30,11 @@ const derived: FaqEntry[] = projects.map((p) => {
       `what is ${short}?`,
       `how did Omkar build ${short}?`,
       `${short} project`,
+      // Turned (passive / inverted) forms of the same questions — visitors ask
+      // "what was X built with", not only "what did he build X with".
+      `what does ${short} do?`,
+      `how was ${short} built?`,
+      `what was ${short} built with?`,
     ],
     a: `**${p.title}** — ${p.kind}, ${p.year}, ${statusLabel(p.status)}.\n\n${p.summary}\n\nStack: ${p.stack}.`,
     links,

@@ -24,7 +24,10 @@ export type FaqLink = { href: string; label: string; note?: string };
 
 export type FaqEntry = {
   id: string;
-  /** Phrasings this entry should match. 2–5 per entry; the embed script turns each into a vector. */
+  /** Phrasings this entry should match — the embed script turns each into a
+   *  vector. Include the TURNED forms visitors actually type: active → passive
+   *  ("what was X built with"), inverted ("who was X built for"), and the
+   *  recruiter's own words ("actively looking", "passively open"). */
   q: string[];
   /** Markdown-lite answer body. */
   a: string;
@@ -157,6 +160,16 @@ export const hand: FaqEntry[] = [
       'can we hire him',
       'availability',
       'is he available now',
+      // The active / passive seeking axis — recruiters ask both flavors.
+      'is he actively looking for a job',
+      'is he actively job hunting',
+      'is he actively interviewing',
+      'is he passively open to opportunities',
+      'is he open to new opportunities',
+      'is he open to opportunities',
+      'would he change jobs for the right offer',
+      'is he open to freelance work',
+      'does he take freelance projects',
     ],
     a: "**Yes — the site says open to work** on every page: open to UI/UX design and frontend development roles and collaborations. Email is the fastest way to start the conversation.\n\nThis bot itself doubles as the proof he can build the modern stack end to end — it ships on the same portfolio it answers for.",
     links: [L.email, L.resume],
@@ -204,6 +217,7 @@ export const hand: FaqEntry[] = [
       'sunbeam infotech diploma',
       'what did he study',
       'mobile computing diploma',
+      'what qualifications does he hold',
     ],
     a: "**PG-DMC — Post Graduate Diploma in Mobile Computing**, completed Feb 2026 at SunBeam Infotech, Pune (authorized training centre of **C-DAC ACTS**, the government-backed IT training body).\n\nIt's a full-stack program — which lines up with what he ships: native Android (Kotlin), web frontends, and the backends behind them.",
     links: [L.work],
@@ -230,6 +244,11 @@ export const hand: FaqEntry[] = [
       'has he worked professionally',
       'professional experience',
       'what jobs has he had',
+      'which companies has he worked at',
+      'where does he work now',
+      'is he working anywhere right now',
+      'what is he doing now',
+      'current employer',
     ],
     a: "The published timeline:\n\n- **UI/UX Designer — SWAAS TECHNO**, Khardi · Jan 2024 – Jan 2025\n- **Web Design Intern — Arrow Technologies**, Nashik · Jan 2023 – Jan 2024\n- **Virtual Intern — Bharat Technologies** · Aug 2023 – Dec 2023\n- **PG-DMC, SunBeam (C-DAC ACTS)** · completed Feb 2026\n\nSince then: shipping products — including work delivered to a paying client.",
     links: [L.resume, L.work],
@@ -290,6 +309,8 @@ export const hand: FaqEntry[] = [
       'what positions does he want',
       'roles he is interested in',
       'is he looking for design or development',
+      'what kind of teams does he want to join',
+      'what roles would suit him',
     ],
     a: 'Per the site: **UI/UX design and frontend development roles and collaborations** — he is deliberately hybrid.\n\nStrongest fit: product-minded teams where design and code sit close together — product designer who ships, or frontend engineer who designs. The /uiux and main portfolios are two views of the same person.',
     links: [L.uiux, L.email],
@@ -355,8 +376,10 @@ export const hand: FaqEntry[] = [
       'kotlin experience',
       'capacitor',
       'ios development',
+      'does he do ios development',
+      'does he know react native',
     ],
-    a: 'All three mobile routes, with shipped evidence:\n\n- **Native Android (Kotlin)** — Bandwidth Bandit: foreground service, NetworkStatsManager, live-speed notification\n- **React Native** — a real-time chat app currently in development\n- **Capacitor 8** — HandOff, a web app shipped to Android\n\nPlus the formal credential: the C-DAC PG-DMC is a mobile-computing program.',
+    a: 'All three mobile routes, with shipped evidence:\n\n- **Native Android (Kotlin)** — Bandwidth Bandit: foreground service, NetworkStatsManager, live-speed notification\n- **React Native** — a real-time chat app currently in development\n- **Capacitor 8** — HandOff, a web app shipped to Android\n\nThe published build list also includes **native iOS** — the shipped public evidence so far is Android and Capacitor. Plus the formal credential: the C-DAC PG-DMC is a mobile-computing program.',
     links: [
       { href: 'https://github.com/OmKardile/bandwidth-bandit/releases/tag/v1.0.0', label: 'Bandwidth Bandit v1.0.0' },
       { href: 'https://github.com/OmKardile/handOff/releases/tag/beta.v1', label: 'HandOff beta' },
@@ -400,6 +423,18 @@ export const hand: FaqEntry[] = [
     ],
   },
   {
+    id: 'languages',
+    q: [
+      'what programming languages does he know',
+      'which languages does he code in',
+      'what languages does he program in',
+      'does he know python',
+      'does he know java',
+    ],
+    a: "The published build list is the honest answer: **TypeScript / JavaScript**, **Kotlin** and **SQL** — plus the frameworks around them (React, Next.js, Node/Express, React Native).\n\nIf you are checking a specific language that is not listed here, the resume is the authoritative, current list — Omkar keeps it updated.",
+    links: [L.resume, L.github],
+  },
+  {
     id: 'design-tools',
     q: [
       'does he use figma',
@@ -425,6 +460,8 @@ export const hand: FaqEntry[] = [
       'where is his github',
       'what is his github',
       'show me his code',
+      'how many projects has he shipped',
+      'how many apps has he built',
     ],
     a: "Eight live, two in active development — every fact verified against a running deployment or a public repo:\n\n- **SSShopee** — retail ERP + customer storefront, live in real use\n- **ServePoint** — café operations platform (PWA)\n- **PatelNetworks** — client e-commerce, shipped to client\n- **tech // site** — multi-niche publishing platform with a Gemini drafting tool\n- **HandOff** — privacy-first digital business card, web + Android\n- **Bandwidth Bandit** — native Android network monitor\n- **Aether Weather** — weather-reactive PWA in a Liquid Glass shell\n- **AI Recipe Generator** — Gemini-powered cooking assistant\n- *In development:* a food ordering platform and a real-time chat app",
     links: [L.work, L.uiux],
@@ -452,8 +489,9 @@ export const hand: FaqEntry[] = [
       'what can the ssshopee erp do',
       'how does ssshopee work',
       'pos system he built',
+      'what was the retail erp built with',
     ],
-    a: "**SSShopee — one retail business, two applications.** The owner's side is a Next.js ERP: POS with barcode scanning and GST receipts, inventory with restock, stock-take and expiry tracking, purchases, income and expense tracking, udhar (credit) ledgers, and analytics.\n\nThe customer side is a storefront with its own database, cookie cart and COD/UPI checkout. Products sync from the ERP to the shop — the owner edits once, the store updates.",
+    a: "**SSShopee — one retail business, two applications.** The owner's side is a Next.js ERP: POS with barcode scanning and GST receipts, inventory with restock, stock-take and expiry tracking, purchases, income and expense tracking, udhar (credit) ledgers, and analytics.\n\nThe customer side is a storefront with its own database, cookie cart and COD/UPI checkout. Products sync from the ERP to the shop — the owner edits once, the store updates.\n\nStack: Next.js 16 · TypeScript · Prisma 6 · Supabase PostgreSQL · Tailwind CSS 4.",
     links: [
       {
         href: 'https://shubhamsupershopee-admin.vercel.app/',
@@ -682,6 +720,10 @@ export const hand: FaqEntry[] = [
       'how much does he cost',
       'notice period',
       'when can he join',
+      'when can he start',
+      'freelance rates',
+      'how much does he charge',
+      'project pricing',
     ],
     a: "Compensation and joining logistics are **deliberately kept off this bot** — those are conversations Omkar wants to have with the actual human on the other side, in context.\n\nHe replies fast; email is the fastest channel.",
     links: [L.email],

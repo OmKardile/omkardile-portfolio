@@ -3,6 +3,22 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.4] — 2026-10-31
+
+### Fixed
+
+- **Turned questions — the same question in passive voice, inverted or reordered — matched the wrong entry with confidence.** A rebuilt audit battery (90 questions, each asserting its expected entry) caught: *"what kind of teams does he want to join"* scoring **0.669 → answered with the salary deflection flat-out**, *"freelance rates"* **0.694 → answered with the client-work story**, *"is he actively interviewing"* → the interview-question meta entry, *"is he open to freelance work"* **0.645 → client-work**, *"what was the retail erp built with"* → the ERP origin story (no stack in it), *"does he know react native"* → frontend-skills. The bank now carries the turned forms alongside the canonical ones: every project entry gained *"what does X do / how was X built / what was X built with"*, the deep dives gained *"who was patelnetworks built for"*, *"how is the ssshopee data synced"*, *"how are servepoint tables verified"*, *"where was he employed"*, *"where did he study"*, *"what qualifications does he hold"*, *"the agentic ai case study"*, *"notes app that forgets — tell me about it"*, and ssshopee-deep's answer now ends with its stack line so a "built with" question is answered where it lands. After: all 39 turned questions land on an entry that actually answers them, 0 wrong directs.
+- **The active/passive job-seeking axis had no phrasings at all** — *"is he actively looking for a job / actively job hunting / actively interviewing / passively open to opportunities / open to new opportunities / would he change jobs for the right offer / open to freelance work / does he take freelance projects"* now all hit `open-to-work` direct (0.76–1.0), while *"when can he start / freelance rates / how much does he charge / project pricing"* land on the deliberate salary-and-joining-logistics deflection — each with the right buttons under it.
+- **The model-off keyword fallback couldn't bridge inflected forms — and answered wrong with confidence when it did match.** *"who was patelnetworks built for"* went DIRECT on who-is-omkar (1.00) off the generic verb *"built"*, and *"what has he done with react"* went DIRECT on client-work (0.67) off *"has he done"*. The stop list gains the auxiliary/generic verbs (has, have, had, who, done, been, being, be, am, would, could, should, will, get, got) and a light stemmer folds rates→rate, apps→app, shipped→ship, companies→company identically on query, phrasing and answer tokens — conservative on purpose, so tech nouns (supabase, express, ios, typescript) survive untouched.
+
+### Added
+
+- **A `languages` entry — the one real coverage hole the audit found.** *"what languages does he program in / does he know python / java"* scored a 0.458 tie between servepoint-deep and strongest-stack — both wrong answers to the question asked. The new entry answers honestly from the site's published build list (TypeScript/JavaScript, Kotlin, SQL, plus the frameworks around them) and hands the authoritative, current list to the resume link instead of inventing one. `mobile-skills` also now states the published build list includes **native iOS** while the shipped public evidence so far is Android and Capacitor — the site claimed it, the bot didn't say it.
+
+### Changed
+
+- **`scripts/askomkar-audit.mts` is now an assertion suite, not a printout** — 90 questions (20 adversarial, 8 ambiguous, 12 clean, 39 turned, 11 status), each with an expected-entry allowlist; exits non-zero on any failure; on the keyword path only a confident-wrong verdict (direct on the wrong id) fails — honest degradation to related-with-caption or fallback is the designed behavior there. `vectors.json` re-embedded: 423 vectors for 75 entries. Live-verified in the widget with the model warm: 16/16, including all five previously-wrong answers now landing correctly and *"how old is omkar"* still demoted to related-with-caption (nothing wrong spoken). `npm run build` green.
+
 ## [1.4.3] — 2026-10-31
 
 ### Fixed
