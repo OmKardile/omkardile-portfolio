@@ -188,11 +188,37 @@ export function AskOmkar() {
     [],
   );
 
-  // Scroll to the newest message.
+  // Is the reader pinned to the latest line? Sampled on every real scroll
+  // of the log. Message insertion changes scrollHeight WITHOUT firing a
+  // scroll event, so the flag captures the reader's intent from before the
+  // message landed — the near-bottom distance measured after insertion
+  // would go false the first time a tall answer overflows the threshold
+  // and the log would stop following forever.
+  const pinnedRef = useRef(true);
+
+  // Follow the newest message while the reader is pinned to the bottom —
+  // yanking to the latest line while they scrolled up to re-read an answer
+  // reads as the log fighting their scrolling. Scrolling back down re-pins.
   useEffect(() => {
     const el = logRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (!el) return;
+    if (pinnedRef.current) el.scrollTop = el.scrollHeight;
   }, [msgs, busy]);
+
+  // The pin sampler itself. The log mounts with the panel (open), so this
+  // effect re-attaches on every open and resets to pinned — a fresh
+  // conversation always starts at the latest line.
+  useEffect(() => {
+    if (!open) return;
+    const el = logRef.current;
+    if (!el) return;
+    pinnedRef.current = true;
+    const onScroll = () => {
+      pinnedRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 96;
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, [open]);
 
   // Esc closes; focus lands in the input when the panel opens.
   useEffect(() => {
@@ -310,7 +336,13 @@ export function AskOmkar() {
       )}
 
       {open && (
-        <section id="askomkar-panel" className="ao-panel" role="dialog" aria-label="AskOmkar — answers about Omkar">
+        <section
+          id="askomkar-panel"
+          className="ao-panel"
+          role="dialog"
+          aria-label="AskOmkar — answers about Omkar"
+          data-lenis-prevent
+        >
           <header className="ao-head">
             <span className="ao-avatar" aria-hidden="true">
               AO
@@ -324,10 +356,14 @@ export function AskOmkar() {
             </button>
           </header>
 
-          {/* data-lenis-prevent: the site's Lenis smooth-scroll intercepts
-              wheel input globally — without this flag it scrolls the PAGE
-              instead of the log, so the chat can't be scrolled at all. */}
-          <div className="ao-log" ref={logRef} aria-live="polite" data-lenis-prevent>
+          {/* The whole panel is a Lenis-free zone (data-lenis-prevent above):
+              Lenis intercepts wheel input globally, so without it a wheel
+              over the header, CTA bar or form scrolled the PAGE behind the
+              chat while the chat itself sat still — the panel read as
+              broken. Inside, .ao-log is a plain native overflow container:
+              wheel over the log scrolls the conversation, wheel over the
+              chrome scrolls nothing. */}
+          <div className="ao-log" ref={logRef} aria-live="polite">
             {msgs.map((m, i) => (
               <div key={i} className={m.role === 'user' ? 'ao-msg ao-msg-user' : 'ao-msg'}>
                 {m.text ? (

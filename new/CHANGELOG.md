@@ -3,6 +3,19 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.2] — 2026-10-31
+
+### Fixed
+
+- **Cursor states went stale under inertial scroll** — every hover state was derived from `pointermove`/`pointerover` events, which stop firing the moment the pointer stands still: wheel the page (or let Lenis glide it) from under a motionless cursor and the "View" chip, the link grow, or a hint caption stayed painted over content that had already scrolled away (reproduced: hover a row, wheel 1200px without moving the mouse — the chip was still visible and labeled "View"; the link grow stuck the same way). `UiuxCursor` now re-derives ALL state every frame from `document.elementFromPoint` at the raw pointer — the same hit test the browser runs for `:hover` — so a state can never outlive the element it names; the delegated `pointerover` listener is gone (one rAF loop, one source of truth). The hint also dies correctly when the AskOmkar panel covers its CTA, and the whole cursor fades on window blur.
+- **The "View" chip hung off-center of the pointer** — the chip centered itself with a fixed `-14px` margin tuned for a ~28px box, but its width varies with the label, so anything wider (VIEW ≈ 55px) floated ~13px right of the pointer. It is now centered inside the rAF transform from its measured box (≤1px off at any text width).
+- **Wheeling over the AskOmkar chrome scrolled the page behind the chat** — `data-lenis-prevent` sat on the log only, so a wheel over the header, the Email/GitHub bar or the form was still hijacked by Lenis: the chat sat still while the page moved under the panel — which reads exactly as "the chatbox doesn't scroll". The flag moved to the panel root: the whole drawer is a Lenis-free zone, and the log inside remains a plain native overflow container (wheel over the log scrolls the conversation; wheel over the chrome scrolls nothing).
+- **The chat log yanked to the newest message mid-read** — every message/busy tick forced `scrollTop` to the bottom even while the reader had scrolled up to re-read an answer. Follows are now gated on a pinned flag sampled from the log's own scroll events (message insertion doesn't fire one, so the flag holds the reader's intent from before the message landed): pinned at the bottom it follows every message; scrolled up it never moves, and scrolling back down re-pins.
+
+### Changed
+
+- **Form fields keep the native text cursor** — `html.ux-cursor-on` now re-enables the native cursor on `input/textarea/select` inside the shell (the custom cursor fades out over them, same as global chrome), so a typing area always shows the I-beam; none exist on `/uiux` today, this is the contract for any future one.
+
 ## [1.4.1] — 2026-10-31
 
 ### Fixed
