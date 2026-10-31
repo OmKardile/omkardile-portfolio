@@ -13,6 +13,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - **"Also shipped" swap** — SSShopee ERP is out; **PatelNetworks — Admin Panel** (`patelnetworks-5ne3.onrender.com/admin`, the owner-side dashboard shipped with the client project) is in, next to AI Recipe Generator.
+
+### Fixed
+
+- **The case-study "← All work" link was unclickable on desktop** — the big accent project number's inline text box (line-height 0.85 lets the content area tower ~0.3em above the border box) covered the link's centre at every viewport ≥ ~1000px, so `elementFromPoint` returned the `<p>` and clicks died there (verified at 1440/1280/1024; worked at 800). The decorative aria-hidden numeral now carries `pointer-events: none`, its cap drops 10rem → 9rem and it gains a step of margin so it never climbs into the link's row again.
+- **Project numbering tamed** — index ghost numerals shrink on mobile (`clamp(4rem, 19vw, 6.5rem)`, was `4.5rem/22vw/7rem`) and the flick swing softens to ±6° with a 48px drift cap, so the digits stay inside the row bounds on narrow screens.
 - **Reveals can no longer strand content invisible** — the root `loading.tsx` boundary made `usePathname` flip while the skeleton was still mounted, so the reveal observer armed against the skeleton and every `[data-reveal]` on the incoming page stayed at `opacity: 0` forever (reproduced on a home → `/uiux` SPA nav, 18 stuck elements). A MutationObserver now arms late-arriving content (loading swap, streamed segments, lazy nodes) and a passive scroll/resize/pageshow sweep reveals anything still stuck inside the viewport; IntersectionObserver stays the primary trigger.
 - **Loud mobile scrub (`UiuxMotion`)** — one rAF loop drives every scroll-linked variable: velocity lean (`--vskew`, coarse pointers get bigger gain and a 7° ceiling), normalized speed (`--vvel`), hero exit progress (`--hx`), viewport progress for `[data-scrub]` rows and `[data-drift]` numerals, all IO-gated off-screen. The ≤48rem cut peels the hero away in five layers, swings row numerals with flick velocity, counter-drifts row bodies, and reveal keyframes animate into the scrubbed position — no end-of-animation jump. Desktop rendering is untouched.
 

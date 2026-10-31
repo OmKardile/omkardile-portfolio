@@ -1063,10 +1063,14 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
 .ux-case-number {
   font-family: var(--display);
   font-weight: 400;
-  font-size: clamp(5rem, 14vw, 10rem);
+  font-size: clamp(4.5rem, 13vw, 9rem);
   line-height: 0.85;
   color: var(--pa);
-  margin: 1.2rem 0 0;
+  margin: 1.6rem 0 0;
+  /* Decorative, aria-hidden — but its inline text box (line-height 0.85
+     lets the content area tower ~0.3em above the border box) used to sit
+     on top of the back link and eat its clicks. Never hit-test it. */
+  pointer-events: none;
 }
 
 .ux-case-title {
@@ -1784,7 +1788,7 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
   }
 
   .ux-row-number {
-    font-size: clamp(4.5rem, 22vw, 7rem);
+    font-size: clamp(4rem, 19vw, 6.5rem);
     top: -0.08em;
   }
 
@@ -1986,9 +1990,11 @@ html.js-reveal .ux-shell [data-reveal].revealed .ux-qw {
     opacity: calc(1 - var(--hx, 0) * 2.6);
   }
 
-  /* Work rows: numerals swing and swell with speed, body counter-drifts. */
+  /* Work rows: numerals swing and swell with speed, body counter-drifts.
+     Swing kept ≤6deg and drift ≤48px so the digits never leave the row
+     bounds on narrow screens. */
   .ux-row .ux-row-number {
-    transform: translateY(calc(var(--drift, 0) * 60px)) rotate(calc(var(--drift, 0) * 8deg))
+    transform: translateY(calc(var(--drift, 0) * 48px)) rotate(calc(var(--drift, 0) * 6deg))
       scale(calc(1 + var(--vvel, 0) * 0.06));
     will-change: transform;
   }
