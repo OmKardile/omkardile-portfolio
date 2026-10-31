@@ -3,6 +3,22 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.5] — 2026-11-01
+
+### Fixed
+
+- **AskOmkar handed visitors dead links — three distinct 404s.** `/uiux/relay` has no page (only the prototype is routed), and `/uiux/lethe` and `/uiux/stoop` were never routed at all — yet `lethe-study`, `stoop-study`, `fun-fact`, `relay-study` and `ai-experience` all pointed at them. Every internal link now points at a page that exists, and the rebuilt audit battery **mechanically resolves every href in the bank against the real route table** (`src/app/**/page.tsx`) and fails on any dead link, so this class of bug cannot come back silently.
+- **The bot claimed things the live site doesn't say.** "Five complete case studies (Relay, Taar, Sutra, Lethe, Stoop)" — the /uiux index publishes **three** written case studies (Taar, Ghar, Sutra — labeled *In progress*), Relay exists as its live prototype stage, and the six Liquid Glass studies ship as written PDFs; Ghar was missing from every claim and "two coded prototypes" undercounted the three prototype routes. "The /uiux portfolio says open to remote" — that string lives only in stale data and is rendered nowhere. "Ten projects that went all the way to live URLs" — eight are live, two are in development. `uiux-overview`, `design-skills`, `design-tools`, `how-learned`, `location` and `relocation` all reworded to what the site actually publishes; Lethe and Stoop are now framed honestly as fully written concept studies whose portfolio pages are the next step, linking `/uiux` instead of a 404.
+
+### Added
+
+- **Seven answers for questions the bank had no entry for** (from the secondary info bank): `design-style` — editorial typography, strong whitespace, Swiss-inspired composition, Apple / Teenage Engineering / creative-studio influences; `good-software` — solve an actual problem, make complicated workflows easier, feel thoughtfully designed, plus the full-lifecycle stance; `engineering-philosophy` — why over popularity, Capacitor/RN/native and DB/hosting trade-offs, AI where it genuinely helps and deterministic software where that's more reliable; `career-goals` — the product-minded-engineer direction (the classic HR question with no answer before now); `deployment-breadth` — Vercel/Render/Railway hosting, Supabase/Neon/Firebase data, Capacitor/Android Studio/Bun/GitHub/Docker around the build; `interests-deep` — local-first, privacy-conscious design, application security, SaaS/multi-tenant architecture; `outside-work` — consumer tech, audio quality, digital publishing, gaming, interface experimentation.
+- **The active/passive hiring axis now has a real answer, not just matching.** Published status first ("open to work", stamped on /uiux), then the honest line: where he sits this week — actively interviewing or listening for the right fit — is a moving detail a pre-written bot won't fake, so it hands that one to Omkar by email. `education-btech` names the field (B.Tech in **Computer Science**). Twist/bait phrasings added where assumptions come in as statements: "he is just a designer right", "he doesn't do backend right", "he is a fresher right", "has he ever worked with a real client" — each hears the correction from the entry that owns the fact.
+
+### Changed
+
+- `vectors.json` re-embedded: **495 vectors for 82 entries**. `scripts/askomkar-audit.mts` rebuilt as a four-section assertion suite: bank↔vectors sync, internal-link resolution against real routes, claim guards (the three retired claims stay retired), a 37-question vector battery (new entries, turned/passive forms, bait forms, hostile input must degrade honestly) plus keyword-fallback bans on the three previously-confident wrong answers — **ALL CHECKS PASS**. Live widget re-verified in Playwright: **13/13** (chips, passive "built with" stack answer, passive job-seeking, design style, five-year plan, deployment, bait correction, no dead links rendered, roast attempt stays honest). `npm run build` green.
+
 ## [1.4.4] — 2026-10-31
 
 ### Fixed
