@@ -1286,6 +1286,27 @@ html.dark .theme-toggle .icon-moon {
   text-underline-offset: 4px;
 }
 
+/* Cursor motion preference toggle (footer, both sites) — styled as a quiet
+   footer link that happens to be a <button>: same muted ink, same hover.
+   Labels itself "Cursor" because it scopes to the custom pointer (the only
+   motion that consults the OS preference), not to site-wide motion. When
+   the custom pointer is active the global cursor:none rule covers it like
+   any other element; with the pointer off, the native hand shows here. */
+.motion-toggle {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.motion-toggle:hover {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 /* Availability note — the /uiux footer's closing line above the standard row. */
 .footer-availability {
   padding-block: 1.8rem 0.2rem;

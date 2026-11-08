@@ -1,4 +1,5 @@
 import { site } from '@/data/site';
+import { MotionToggle } from './MotionToggle';
 
 /* `note` renders an availability line above the standard bottom row —
    the /uiux footer uses it ("Open to UI/UX design and frontend…").
@@ -31,6 +32,8 @@ export function Footer({ note, ticker }: { note?: string; ticker?: string[] }) {
         <p>{site.name} © 2026 · Pune, India</p>
         <div className="footer-links">
           <a href="#top">Back to top ↑</a>
+          {/* Escape hatch: forces the custom pointer on reduced-motion OSes. */}
+          <MotionToggle />
         </div>
       </div>
     </footer>

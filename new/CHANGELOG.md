@@ -3,6 +3,16 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.7] — 2026-11-08
+
+### Added
+
+- **Footer motion-preference toggle — "Cursor: auto / on / off"** on both sites (the dev footer's bottom row, the /uiux credit line). The site's motion philosophy is "always on" (Lenis, reveals, the progress bar run for every visitor), but the custom pointer still honored the OS reduced-motion request — which silently hid it, and every hint chip, from visitors whose OS has "Animation effects: Off" (Windows) or Reduce Motion (macOS/iOS). **"on" overrides the OS**, "off" forces the native cursor, "auto" (default) follows it. The toggle is styled as a quiet footer link and labelled "Cursor" on purpose: it currently scopes to the pointer, the only motion that consults the OS preference.
+
+### Fixed
+
+- **The cursor's activation gate now treats an explicit visitor choice as the authority.** `Cursor` reads `localStorage('motion-pref')` as React state and re-inits live on the toggle's `'motion-pref'` event — flipping the toggle switches the pointer without a reload, and the choice persists across visits. This is the fix for "can't see any diff": on machines where the OS asks for reduced motion, the entire 1.4.6 pointer work (site-wide replacement, hint chips riding the pointer) never appeared at all. Verified end to end on an emulated reduced-motion OS: footer click → pointer live → dot tracks → native cursor hidden; "off" hands it back; the choice survives a reload.
+
 ## [1.4.6] — 2026-11-01
 
 ### Added

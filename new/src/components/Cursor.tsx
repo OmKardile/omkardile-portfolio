@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { motionPref, type MotionPref } from './MotionToggle';
 
 /* Cursor — the site-wide custom pointer. Replaces the native cursor on
    EVERY route (dev portfolio, /uiux, over the AskOmkar pill and panel),
@@ -43,9 +44,13 @@ import { createPortal } from 'react-dom';
    on press, and fades out over form fields — typing keeps the native
    I-beam — and whenever the pointer leaves the window.
 
-   Touch and prefers-reduced-motion keep the native cursor: the component
-   no-ops and the html flag never lands. Unmounting removes the flag, so
-   the native cursor returns. */
+   Touch keeps the native cursor. Reduced motion keeps it too — UNLESS the
+   visitor explicitly opts in via the footer toggle (localStorage
+   'motion-pref': 'on' overrides the OS request — the escape hatch for
+   machines with Animation effects Off, which otherwise see none of this;
+   'off' forces native; 'auto' follows the OS). The choice is React state,
+   so flipping the toggle tears the engine down and re-inits it live — no
+   reload. Unmounting removes the flag, so the native cursor returns. */
 
 const LABEL = '[data-cursor]';
 const HINT = '[data-hint]';
@@ -54,6 +59,10 @@ const INTERACTIVE = 'a, button, [role="button"], summary';
 
 export function Cursor() {
   const [mounted, setMounted] = useState(false);
+  /* The stored cursor-motion choice (footer toggle) as React state: when it
+     changes, the init effect below tears the engine down and re-runs it —
+     the toggle switches the custom pointer live, no reload. */
+  const [motion, setMotion] = useState<MotionPref>('auto');
   const wrapRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLSpanElement>(null);
   const ringRef = useRef<HTMLSpanElement>(null);
@@ -62,13 +71,27 @@ export function Cursor() {
 
   useEffect(() => setMounted(true), []);
 
-  /* Depends on `mounted`: the first pass has no portal (refs null), the
-     second runs once the wrapper exists in document.body. */
+  /* Keep the stored choice in sync: read once on mount, then follow the
+     'motion-pref' event the footer toggle dispatches on every click. */
+  useEffect(() => {
+    const sync = () => setMotion(motionPref());
+    sync();
+    window.addEventListener('motion-pref', sync);
+    return () => window.removeEventListener('motion-pref', sync);
+  }, []);
+
+  /* Depends on `mounted` (the first pass has no portal — refs null) and on
+     `motion` (a toggle click re-runs the whole setup or tears it down). */
   useEffect(() => {
     if (!mounted) return;
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (!fine.matches || calm.matches) return;
+    /* Coarse pointers never get the custom cursor. Reduced motion is not a
+       permanent bail: an explicit choice from the footer toggle wins over
+       the OS — 'on' forces the pointer on reduced-motion machines, 'off'
+       forces native, 'auto' (default) follows the OS request. */
+    if (!fine.matches) return;
+    if (motion === 'off' || (motion === 'auto' && calm.matches)) return;
 
     const wrap = wrapRef.current;
     const dot = dotRef.current;
@@ -218,7 +241,7 @@ export function Cursor() {
       window.removeEventListener('blur', onBlur);
       root.classList.remove('ux-cursor-on');
     };
-  }, [mounted]);
+  }, [mounted, motion]);
 
   if (!mounted) return null;
   return createPortal(

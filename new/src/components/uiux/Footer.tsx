@@ -1,4 +1,6 @@
 /* Footer for every /uiux page — one credit line, per the portfolio spec. */
+import { MotionToggle } from '../MotionToggle';
+
 export function UiuxFooter() {
   return (
     <footer className="ux-footer">
@@ -8,6 +10,9 @@ export function UiuxFooter() {
           Omkar Kardile
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
+        {/* Escape hatch: forces the custom pointer on reduced-motion OSes. */}
+        {' · '}
+        <MotionToggle />
       </p>
     </footer>
   );

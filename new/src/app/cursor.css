@@ -11,10 +11,13 @@
    nothing goes stale while Lenis glides the page under a still pointer.
 
    The native cursor is hidden EVERYWHERE and ONLY when the component has
-   confirmed a fine pointer + motion allowance (it sets html.ux-cursor-on).
+   confirmed a fine pointer + an allowed motion state (it sets
+   html.ux-cursor-on). Reduced motion disables it — unless the visitor
+   explicitly opts in via the footer "Cursor: on" toggle (localStorage
+   'motion-pref'), the escape hatch for OSes with Animation effects Off.
    Form fields opt back in below — typing needs the native I-beam — and
-   the custom cursor fades out over them (.is-out). Touch and
-   reduced-motion users keep the native cursor everywhere.
+   the custom cursor fades out over them (.is-out). Touch keeps the native
+   cursor everywhere.
 
    Colors are the global theme tokens (--fg/--bg), so the pointer re-inks
    itself with every theme (light, dark, /uiux paper). The chip/hint set
