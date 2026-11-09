@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Footer } from '@/components/Footer';
 import { site } from '@/data/site';
+import { nowPlaying, playlist, reading, learning } from '@/data/now';
 
 export const metadata: Metadata = {
   title: 'Now',
@@ -34,8 +35,9 @@ export default function NowPage() {
           Now.
         </h1>
         <p style={{ color: 'var(--muted)', marginBlock: '1rem 0', maxWidth: '34rem' }}>
-          Designer and developer in Pune. This page says what I&apos;m building and what
-          I&apos;m looking for at this exact moment — dated, so it can go stale honestly.
+          Designer and developer in Pune. This page says what I&apos;m building, what
+          I&apos;m looking for, what I&apos;m listening to and what I&apos;m reading at
+          this exact moment — dated, so it can go stale honestly.
         </p>
       </section>
 
@@ -108,10 +110,153 @@ export default function NowPage() {
         </div>
       </section>
 
-      {/* 03 / Elsewhere */}
+      {/* 03 / Listening */}
+      <section className="section container" aria-labelledby="listening-title">
+        <div className="section-head" data-reveal suppressHydrationWarning>
+          <p className="section-index mono">03 / Listening</p>
+          <h2 id="listening-title" className="section-title" data-split suppressHydrationWarning>
+            The current rotation.
+          </h2>
+        </div>
+        <div data-reveal suppressHydrationWarning style={{ maxWidth: '38rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: '0.6rem',
+              paddingBlock: '0.9rem',
+              borderBottom: '1px solid var(--line)',
+            }}
+          >
+            <span
+              aria-hidden="true"
+              style={{
+                display: 'inline-block',
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                background: 'var(--green)',
+                flexShrink: 0,
+                transform: 'translateY(-1px)',
+              }}
+            />
+            <p style={{ margin: 0 }}>
+              <span
+                className="mono"
+                style={{ fontSize: '0.68rem', color: 'var(--muted)', marginRight: '0.6rem', letterSpacing: '0.08em' }}
+              >
+                NOW PLAYING
+              </span>
+              <strong style={{ fontWeight: 600 }}>{nowPlaying.title}</strong>
+              <span style={{ color: 'var(--muted)' }}> — {nowPlaying.artist}</span>
+              <span className="mono" style={{ color: 'var(--muted)', fontSize: '0.76rem' }}>
+                {' '}· {nowPlaying.note}
+              </span>
+            </p>
+          </div>
+          {playlist.map((t) => (
+            <div
+              key={t.title}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                gap: '1rem',
+                paddingBlock: '0.8rem',
+                borderBottom: '1px solid var(--line)',
+              }}
+            >
+              <p style={{ margin: 0 }}>
+                <strong style={{ fontWeight: 600 }}>{t.title}</strong>
+                <span style={{ color: 'var(--muted)' }}> — {t.artist}</span>
+              </p>
+              <span
+                className="mono"
+                style={{ color: 'var(--muted)', fontSize: '0.74rem', textAlign: 'right', flexShrink: 0 }}
+              >
+                {t.note}
+              </span>
+            </div>
+          ))}
+          <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.72rem', marginTop: '0.9rem' }}>
+            ↑ the rotation, roughly by plays · {NOW_STAMP}
+          </p>
+        </div>
+      </section>
+
+      {/* 04 / Reading */}
+      <section className="section container" aria-labelledby="reading-title">
+        <div className="section-head" data-reveal suppressHydrationWarning>
+          <p className="section-index mono">04 / Reading</p>
+          <h2 id="reading-title" className="section-title" data-split suppressHydrationWarning>
+            In the bag.
+          </h2>
+        </div>
+        <div data-reveal suppressHydrationWarning style={{ maxWidth: '38rem' }}>
+          {reading.map((b) => (
+            <div
+              key={b.title}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                gap: '1rem',
+                paddingBlock: '0.8rem',
+                borderBottom: '1px solid var(--line)',
+              }}
+            >
+              <p style={{ margin: 0 }}>
+                <strong style={{ fontWeight: 600 }}>{b.title}</strong>
+                <span style={{ color: 'var(--muted)' }}> — {b.author}</span>
+              </p>
+              <span
+                className="mono"
+                style={{ color: 'var(--muted)', fontSize: '0.74rem', textAlign: 'right', flexShrink: 0 }}
+              >
+                {b.note}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 05 / Learning */}
+      <section className="section container" aria-labelledby="learning-title">
+        <div className="section-head" data-reveal suppressHydrationWarning>
+          <p className="section-index mono">05 / Learning</p>
+          <h2 id="learning-title" className="section-title" data-split suppressHydrationWarning>
+            Sharpening.
+          </h2>
+        </div>
+        <div data-reveal suppressHydrationWarning style={{ maxWidth: '38rem' }}>
+          {learning.map((l) => (
+            <div
+              key={l.topic}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                gap: '1rem',
+                paddingBlock: '0.8rem',
+                borderBottom: '1px solid var(--line)',
+              }}
+            >
+              <p style={{ margin: 0, fontWeight: 600 }}>{l.topic}</p>
+              <span
+                className="mono"
+                style={{ color: 'var(--muted)', fontSize: '0.74rem', textAlign: 'right', flexShrink: 0 }}
+              >
+                {l.note}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 06 / Elsewhere */}
       <section className="section container" aria-labelledby="elsewhere-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">03 / Elsewhere</p>
+          <p className="section-index mono">06 / Elsewhere</p>
           <h2 id="elsewhere-title" className="section-title" data-split suppressHydrationWarning>
             The rest of me.
           </h2>

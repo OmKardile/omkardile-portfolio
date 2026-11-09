@@ -36,6 +36,7 @@ export function Footer({ note, ticker }: { note?: string; ticker?: string[] }) {
               recruiter path (Work / Skills / Experience / Contact / Resume). */}
           <Link href="/now">Now</Link>
           <Link href="/colophon">Colophon</Link>
+          <Link href="/library">Library</Link>
           <a href="#top">Back to top ↑</a>
           {/* Escape hatch: forces the custom pointer on reduced-motion OSes. */}
           <MotionToggle />

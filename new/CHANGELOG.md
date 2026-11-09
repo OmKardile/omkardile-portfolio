@@ -3,6 +3,15 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.9] — 2026-11-09
+
+### Added
+
+- **/library — the docs, as shipped.** The repo's system documents, rendered whole on-site: **design-system.md** (new, first-party — one ink on one paper with every token value from the shipped `:root`/`html.dark`/`html.uiux` blocks, the Archivo/Fragment Mono job split, the motion tokens, and the a11y discipline) joins **custom-cursor.md** and **README.md** as a live document; each sits in a reading-room accordion (`lg-row`, so the 420ms fold animation applies) with its real build-time metadata — path, line count, KB — and a link to its source blob. The CHANGELOG card parses its own history: version count, latest release, and the newest entry rendered verbatim. **02 / Collections** catalogs what the site runs on with stats computed from the actual files at build time — `site.ts` (projects/roles/skills), `uiuxProjects.ts` (3 case studies), `hand.ts` (pre-written answers), `vectors.json` (its real size on disk), `globals.css`, `cursor.css`, `matcher.ts` (line counts). No number on the page was typed by hand. Rendering is a dependency-free markdown→React renderer (`src/lib/md.tsx`) written to the docs' known subset — headings, tables, lists (with true `start` numbers and one nesting level), fenced code, inline styles — so no parser dep enters the tree and nothing is ever `dangerouslySetInnerHTML`.
+- **/now grows the personal sections.** The dated present now covers the rest of the day: **03 / Listening** (a green-dot NOW PLAYING row plus the current rotation, five tracks with per-track notes and a "roughly by plays" stamp), **04 / Reading** (the shelf), **05 / Learning** (what's being sharpened, tied to the site's own stack — WebGL/GLSL, variable font axes), and Elsewhere renumbers to 06. All of it reads from a new data module, `src/data/now.ts` — keeping /now honest is a one-file edit, and the page's date stamp is what vouches for the entries.
+- **Footer + sitemap** carry the Library link (the meta corner is now Now / Colophon / Library / Back to top / Cursor toggle), and `sitemap.xml` lists `/library` at priority 0.6.
+- **README refreshed alongside the library**: the route table lists `/now`, `/colophon` and `/library`, the structure tree names the three meta pages, and the stale motion note ("no reduced-motion kill switch", true before [1.4.7]) now describes the shipped behavior — always-on site motion, with the footer Cursor toggle as the pointer's explicit override.
+
 ## [1.4.8] — 2026-11-09
 
 ### Added

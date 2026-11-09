@@ -3381,3 +3381,123 @@ html.js-reveal .relay-fig[data-curtain].curtain-in {
     animation-duration: 0.01s;
   }
 }
+
+/* ---------- /library — rendered documents (.doc inside .lg-body) ----------
+   The markdown renderer (src/lib/md.tsx) emits plain semantic tags; these
+   rules give them the site's voice. Scoped under .doc so nothing leaks. */
+
+.doc {
+  font-size: 0.93rem;
+  line-height: 1.65;
+  max-width: 46rem;
+}
+
+.doc h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-top: 0.4rem;
+}
+
+.doc h2 {
+  font-size: 1.02rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  margin-top: 2rem;
+}
+
+.doc h3,
+.doc h4 {
+  font-size: 0.93rem;
+  font-weight: 650;
+  margin-top: 1.4rem;
+}
+
+.doc p {
+  margin: 0;
+}
+
+.doc ul,
+.doc ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.doc li + li {
+  margin-top: 0.35rem;
+}
+
+.doc li > ul {
+  margin-top: 0.35rem;
+}
+
+.doc code {
+  font-family: var(--mono);
+  font-size: 0.78em;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+}
+
+.doc pre {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+}
+
+.doc pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.doc .doc-tablewrap {
+  overflow-x: auto;
+}
+
+.doc table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.doc th,
+.doc td {
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.doc th {
+  background: var(--soft);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.doc hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 1.6rem 0;
+}
+
+.doc blockquote {
+  margin: 0;
+  border-left: 2px solid var(--line-strong);
+  padding-left: 0.9rem;
+  color: var(--muted);
+}
+
+.doc a {
+  color: var(--accent-dev);
+  text-underline-offset: 3px;
+}

@@ -10,6 +10,9 @@ Single Next.js 16 app hosting **three faces** of the same person, deployed as **
 | `/uiux/ghar` | Case study 02 — Pune tiffin app | Ghar terracotta `#A63D1F` |
 | `/uiux/sutra` | Case study 03 — checkout + design system | Taar navy `#1F2A44` |
 | `/uiux/relay/prototype` | Relay case study — live clickable React prototype (legacy stage) | Relay palette (pine/gold) |
+| `/now` | The dated present — building, looking for, listening, reading | — |
+| `/colophon` | The maker's receipt — type, ink, motion, machine | — |
+| `/library` | The docs, as shipped — system docs rendered from the repo at build time + the file collections | — |
 | `/creative` | Slot for the creative version — navbar pill **hidden** while it's in dev | — |
 
 Dark mode: toggle in the navbar, system preference by default, persisted in `localStorage`, no flash.
@@ -155,7 +158,7 @@ Applied from the owner's Apple UX Design System reference document — **the dis
 - **Reduce Transparency**: the sticky header (the site's only glass element) drops its blur and goes opaque.
 - **Increase Contrast**: separators and the header edge strengthen.
 - **Hit targets**: 44px minimum on all pills, toggle and buttons.
-- **Smooth scroll**: native `scroll-behavior: smooth` + `scroll-padding-top` so anchors land clear of the sticky header. Motion — including the Lenis engine — is always enabled; there is no preference toggle and no reduced-motion kill switch (the footer motion button was removed in 1.2.0).
+- **Smooth scroll**: native `scroll-behavior: smooth` + `scroll-padding-top` so anchors land clear of the sticky header. Site motion — Lenis, reveals, the progress hairline — is always enabled for every visitor; the one exception is the custom pointer, which honors the OS reduced-motion request with the footer **Cursor: auto / on / off** toggle as the explicit override ([1.4.7] — see `custom-cursor.md`).
 - **Semantic colors + dark mode**: everything runs on CSS custom properties (`--bg/--fg/--muted/--line/--soft/--accent`), with `color-scheme` set per theme.
 - **Dual accents**: `/` wears dev blue (`--accent-dev`, light `#2563eb` / dark `#60a5fa`). Site chrome keeps the classic orange for the /uiux switch pill, but the /uiux portfolio pages themselves run the editorial paper theme (`html.uiux` scope: paper `#F6F3EE` / ink `#1B1D22` / mute `#6B685F` / line `#DDD7CC`, dark `#141518` / `#ECE8DF` / `#A09C92` / `#2B2D33`) with **per-project accents** — pages set `--pa-light`/`--pa-dark` inline and `uiux.css` resolves them to `--pa` (Taar/Sutra navy, Ghar terracotta). Both portfolios share the same accent *patterns*, so recoloring a whole portfolio stays a one-line change. Status dots stay green on purpose — they mean live, not brand.
 - Deliberately skipped: glass skins, spring gesture libraries, squircles — this site stays flat and fast on purpose.
@@ -171,6 +174,9 @@ src/
     uiux/taar|ghar|sutra/page.tsx  # case studies 01–03 (data-driven template)
     uiux/relay|taar|sutra/prototype/  # legacy live prototype stages (site chrome)
     creative/page.tsx           # placeholder slot for the creative version
+    now/page.tsx                # the dated present (building / looking for / listening / reading)
+    colophon/page.tsx           # the maker's receipt (type, ink, motion, machine)
+    library/page.tsx            # the docs, as shipped — build-time rendered + file collections
     layout.tsx                  # root: metadata, JSON-LD, no-flash theme script, analytics
     sitemap.ts, robots.ts, not-found.tsx, icon.svg
   components/
