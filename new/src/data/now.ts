@@ -8,13 +8,37 @@
 export type Track = { title: string; artist: string; note: string };
 export type Book = { title: string; author: string; note: string };
 export type Topic = { topic: string; note: string };
+export type NowPlaying = Track & { status: 'playing' | 'paused' };
+export type PlaylistLink = { name: string; platform: string; href: string; note: string };
 
-/** The track with the green dot right now. */
-export const nowPlaying: Track = {
+/** The track with the status dot right now — status is 'playing' for the
+    green dot + NOW PLAYING label, 'paused' for the hollow ring + PAUSED. */
+export const nowPlaying: NowPlaying = {
   title: 'cold/mess',
   artist: 'Prateek Kuhad',
   note: 'the late-night build soundtrack',
+  status: 'playing',
 };
+
+/** The proper playlists — links verified live before shipping. */
+export const playlists: PlaylistLink[] = [
+  {
+    name: "Vibin' in Classroom",
+    platform: 'Apple Music',
+    href: 'https://music.apple.com/in/playlist/vibin-in-classroom/pl.u-aZb0N5vC17LZqva',
+    note: '69 tracks · embedded below',
+  },
+  {
+    name: '🎶🎧📺 mixtape',
+    platform: 'YouTube Music',
+    href: 'https://music.youtube.com/playlist?list=PLObPPiklR9no',
+    note: 'the other tab',
+  },
+];
+
+/** The Apple Music embed of the first playlist, as shared. */
+export const appleMusicEmbed =
+  'https://embed.music.apple.com/in/playlist/vibin-in-classroom/pl.u-aZb0N5vC17LZqva';
 
 /** The current rotation, roughly in order of plays. */
 export const playlist: Track[] = [

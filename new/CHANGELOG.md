@@ -3,6 +3,12 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.1] — 2026-11-09
+
+### Added
+
+- **/now listening — the state and the playlists.** The status row now carries a state: `playing` renders the green dot with the NOW PLAYING label, `paused` swaps it for a hollow ring and PAUSED — one field on `nowPlaying` in `src/data/now.ts`, and the page's date stamp vouches for it. Below the rotation, a **THE PLAYLISTS** block links the two real playlists, each verified live before shipping: **"Vibin' in Classroom"** (Apple Music, 69 tracks) and **"🎶🎧📺 mixtape"** (YouTube Music). "Vibin' in Classroom" is also embedded in place — the actual Apple Music iframe, sandboxed exactly as shared, lazy-loaded (`loading="lazy"`, so it never touches LCP), transparent background, with a `title` for assistive tech.
+
 ## [1.5.0] — 2026-11-09
 
 ### Added

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Footer } from '@/components/Footer';
 import { site } from '@/data/site';
-import { nowPlaying, playlist, reading, learning } from '@/data/now';
+import { nowPlaying, playlist, playlists, appleMusicEmbed, reading, learning } from '@/data/now';
 
 export const metadata: Metadata = {
   title: 'Now',
@@ -58,11 +58,11 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.5.0] just shipped: the site-wide custom pointer with hints riding
+              Version [1.5.1] just shipped: the site-wide custom pointer with hints riding
               it ([1.4.6]), the footer motion toggle for reduced-motion machines ([1.4.7]),
-              this page and /colophon ([1.4.8]), the /library docs room ([1.4.9]) — now
-              indexing every public GitHub repo&apos;s design folders and markdown docs
-              ([1.5.0]). Every change is logged in the repo&apos;s CHANGELOG.
+              this page and /colophon ([1.4.8]), the /library docs room gone repo-wide
+              ([1.4.9]–[1.5.0]), and the listening playlists with a playing/paused state
+              ([1.5.1]). Every change is logged in the repo&apos;s CHANGELOG.
             </p>
             <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.78rem', marginTop: '0.45rem' }}>
               Next.js 16 · React 19 · Tailwind CSS 4 · Lenis
@@ -137,7 +137,8 @@ export default function NowPage() {
                 width: 8,
                 height: 8,
                 borderRadius: '50%',
-                background: 'var(--green)',
+                background: nowPlaying.status === 'playing' ? 'var(--green)' : 'transparent',
+                border: nowPlaying.status === 'playing' ? 'none' : '1.5px solid var(--muted)',
                 flexShrink: 0,
                 transform: 'translateY(-1px)',
               }}
@@ -147,7 +148,7 @@ export default function NowPage() {
                 className="mono"
                 style={{ fontSize: '0.68rem', color: 'var(--muted)', marginRight: '0.6rem', letterSpacing: '0.08em' }}
               >
-                NOW PLAYING
+                {nowPlaying.status === 'playing' ? 'NOW PLAYING' : 'PAUSED'}
               </span>
               <strong style={{ fontWeight: 600 }}>{nowPlaying.title}</strong>
               <span style={{ color: 'var(--muted)' }}> — {nowPlaying.artist}</span>
@@ -183,6 +184,67 @@ export default function NowPage() {
           <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.72rem', marginTop: '0.9rem' }}>
             ↑ the rotation, roughly by plays · {NOW_STAMP}
           </p>
+
+          {/* The proper playlists — linked, the Apple one embedded. */}
+          <div style={{ marginTop: '1.4rem' }}>
+            <p
+              className="mono"
+              style={{ fontSize: '0.68rem', color: 'var(--muted)', letterSpacing: '0.08em', marginBlock: '0 0.2rem' }}
+            >
+              THE PLAYLISTS
+            </p>
+            {playlists.map((pl) => (
+              <div
+                key={pl.name}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'baseline',
+                  gap: '1rem',
+                  paddingBlock: '0.8rem',
+                  borderBottom: '1px solid var(--line)',
+                }}
+              >
+                <p style={{ margin: 0 }}>
+                  <a
+                    href={pl.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-hint={`${pl.platform} · new tab`}
+                  >
+                    <strong style={{ fontWeight: 600 }}>{pl.name}</strong>
+                  </a>
+                  <span style={{ color: 'var(--muted)' }}> — {pl.platform}</span>
+                </p>
+                <span
+                  className="mono"
+                  style={{ color: 'var(--muted)', fontSize: '0.74rem', textAlign: 'right', flexShrink: 0 }}
+                >
+                  {pl.note}
+                </span>
+              </div>
+            ))}
+            <iframe
+              allow="autoplay *; encrypted-media *;"
+              frameBorder={0}
+              height={450}
+              loading="lazy"
+              sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+              src={appleMusicEmbed}
+              title="Apple Music — Vibin' in Classroom"
+              style={{
+                width: '100%',
+                maxWidth: 660,
+                overflow: 'hidden',
+                background: 'transparent',
+                display: 'block',
+                marginBlock: '1.2rem 0.4rem',
+              }}
+            />
+            <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.72rem' }}>
+              &quot;Vibin&apos; in Classroom&quot;, embedded from Apple Music — the link above opens the full playlist.
+            </p>
+          </div>
         </div>
       </section>
 
