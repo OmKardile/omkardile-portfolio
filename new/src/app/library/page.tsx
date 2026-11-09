@@ -5,24 +5,37 @@ import { Footer } from '@/components/Footer';
 import { projects, experience, capabilities } from '@/data/site';
 import { hand } from '@/data/askomkar/hand';
 import { uiuxProjects } from '@/data/uiuxProjects';
+import { ghRepos, GH_INDEXED } from '@/data/library';
 import { Markdown } from '@/lib/md';
 
 export const metadata: Metadata = {
   title: 'Library',
   description:
-    'The docs and collections behind the site — the design system, the cursor architecture, the wiring README, the changelog — rendered from the repo at build time.',
+    'The docs library — this site\u2019s system documents rendered whole at build time, plus every design folder, markdown doc and collection across the GitHub repos.',
   alternates: { canonical: './' },
 };
 
-/* /library — the docs live with the code they describe. Every word on this
-   page is read from the repo at build time: the three system documents are
-   rendered whole from their markdown, the CHANGELOG card parses its own
-   version history, and every collection stat (projects, case studies,
-   answers, line counts) is computed from the real files — nothing here is
-   a number that was typed by hand. */
+/* /library — the docs live with the code they describe, on this site and
+   across every repo. The reading room renders the system documents whole
+   from the repo at build time; 02 / Across GitHub indexes every public
+   repo's design folders, markdown docs and collections, generated into
+   src/data/library.ts by scripts/gen-library-data.py from a live scan
+   (git clone --depth 1 per repo, trees listed with ls-tree, node_modules
+   excluded). Every collection stat is computed from real files — nothing
+   here is a number that was typed by hand. */
 
 const REPO_BLOB =
   'https://github.com/OmKardile/omkardile-portfolio/blob/main/new';
+
+/** The per-repo doc lists are capped in the UI; the full index lives in the
+    data file and in the repo itself. */
+const MAX_MDS_SHOWN = 12;
+
+const ghBlob = (repo: string, branch: string, path: string) =>
+  `https://github.com/OmKardile/${repo}/blob/${branch}/${path
+    .split('/')
+    .map(encodeURIComponent)
+    .join('/')}`;
 
 function readDoc(file: string) {
   try {
@@ -109,6 +122,12 @@ export default function LibraryPage() {
 
   const vectorsBytes = statFile('src/data/askomkar/vectors.json');
 
+  /* The GitHub index — stats computed from the generated data, not typed. */
+  const totalDocs = ghRepos.reduce((n, r) => n + r.mds.length, 0);
+  const designSystemCount = ghRepos.filter((r) =>
+    r.collections.some((c) => c.folder === 'design-system'),
+  ).length;
+
   const COLLECTIONS = [
     {
       file: 'src/data/site.ts',
@@ -162,9 +181,10 @@ export default function LibraryPage() {
           Library.
         </h1>
         <p style={{ color: 'var(--muted)', marginBlock: '1rem 0', maxWidth: '34rem' }}>
-          The system docs live with the code they describe. Everything on this page
-          is read from the repo at build time — rendered whole, counted live, and
-          linked to its source blob. No number on this page was typed by hand.
+          The docs live with the code they describe — on this site and across every
+          repo. The system documents are rendered whole from the build; the GitHub
+          index below carries every design folder, markdown doc and collection in
+          the other repositories. No number on this page was typed by hand.
         </p>
       </section>
 
@@ -241,10 +261,119 @@ export default function LibraryPage() {
         </div>
       </section>
 
-      {/* 02 / Collections */}
+      {/* 02 / Across GitHub */}
+      <section className="section container" aria-labelledby="github-title">
+        <div className="section-head" data-reveal suppressHydrationWarning>
+          <p className="section-index mono">02 / Across GitHub</p>
+          <h2 id="github-title" className="section-title" data-split suppressHydrationWarning>
+            Every repo&apos;s docs.
+          </h2>
+        </div>
+        <p
+          data-reveal
+          suppressHydrationWarning
+          className="mono"
+          style={{ color: 'var(--muted)', fontSize: '0.76rem', marginBottom: '0.6rem' }}
+        >
+          {ghRepos.length} public repos · {totalDocs} markdown documents ·{' '}
+          {designSystemCount} design systems · indexed {GH_INDEXED}
+        </p>
+        <div className="lg-list" data-reveal suppressHydrationWarning>
+          {ghRepos.map((r, ri) => {
+            const shown = r.mds.slice(0, MAX_MDS_SHOWN);
+            const rest = r.mds.length - shown.length;
+            return (
+              <details className="lg-row" name="github" key={r.name}>
+                <summary>
+                  <span className="lg-idx mono">{String(ri + 1).padStart(2, '0')}</span>
+                  <span className="lg-head">
+                    <span className="lg-line">
+                      <span className="lg-name">{r.name}</span>
+                      <span className="lg-kind"> · {r.kind}</span>
+                    </span>
+                    <span className="lg-sum">{r.description}</span>
+                  </span>
+                  <span className="ch-chev" aria-hidden="true">
+                    +
+                  </span>
+                </summary>
+                <div className="lg-body">
+                  <p className="mono" style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>
+                    {r.branch} · {r.files} files · {r.mds.length} markdown docs ·{' '}
+                    <a
+                      href={`https://github.com/OmKardile/${r.name}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-hint="Repo · new tab"
+                    >
+                      repo ↗
+                    </a>
+                  </p>
+                  {r.collections.length > 0 && (
+                    <p className="mono" style={{ fontSize: '0.74rem', marginBlock: '0.5rem' }}>
+                      {r.collections.map((c) => (
+                        <span key={c.folder} style={{ marginRight: '0.9rem', display: 'inline-block' }}>
+                          <a
+                            href={`https://github.com/OmKardile/${r.name}/tree/${r.branch}/${c.folder}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-hint="Folder · new tab"
+                          >
+                            {c.folder}/
+                          </a>{' '}
+                          ×{c.count}
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                  <ul
+                    style={{
+                      listStyle: 'none',
+                      padding: 0,
+                      margin: '0.4rem 0 0',
+                      display: 'grid',
+                      gap: '0.3rem',
+                    }}
+                  >
+                    {shown.map((m) => (
+                      <li key={m}>
+                        <a
+                          className="mono"
+                          style={{ fontSize: '0.78rem' }}
+                          href={ghBlob(r.name, r.branch, m)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-hint="Doc · new tab"
+                        >
+                          {m}
+                        </a>
+                      </li>
+                    ))}
+                    {rest > 0 && (
+                      <li className="mono" style={{ fontSize: '0.78rem' }}>
+                        <a
+                          href={`https://github.com/OmKardile/${r.name}/tree/${r.branch}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          data-hint="Repo tree · new tab"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          + {rest} more in the repo ↗
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              </details>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 03 / Collections */}
       <section className="section container" aria-labelledby="collections-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">02 / Collections</p>
+          <p className="section-index mono">03 / Collections</p>
           <h2 id="collections-title" className="section-title" data-split suppressHydrationWarning>
             What the site runs on.
           </h2>
@@ -300,7 +429,8 @@ export default function LibraryPage() {
 
       <section className="section container">
         <p data-reveal suppressHydrationWarning className="mono" style={{ color: 'var(--muted)', fontSize: '0.78rem' }}>
-          Set whole from the repo at build time · {versions.length} versions and counting.
+          Set whole from the repo at build time · {versions.length} versions and counting ·
+          the GitHub index generated {GH_INDEXED}.
         </p>
       </section>
 

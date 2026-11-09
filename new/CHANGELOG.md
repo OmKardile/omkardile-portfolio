@@ -3,6 +3,16 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.0] — 2026-11-09
+
+### Added
+
+- **/library goes repo-wide — "02 / Across GitHub".** The library was scoped to this portfolio's own docs; it now indexes **every public repo**: all 29 repositories scanned live (treeless `git clone --depth 1` each, `git ls-tree` over the full trees), yielding **541 markdown documents** and **3 dedicated design systems** (`handOff`, `servepoint`, `ecommerce-5.2`) plus doc libraries in `edit` (a 182-doc VitePress site), `obsidian` (the notes vault), `patel-networks`, `ecommerce-5.3`, `tech-site` and more. Each repo is a reading-room accordion with its kind (design system / docs library / notes vault / doc collection), a one-line description drawn from the repo's own README or metadata, real stats (branch · file count · markdown count), linked collection folders (`design-system/ ×23`, `docs/ ×43`…) and up to twelve per-document blob links with a "+ N more in the repo" tail. The index lives in a generated data module, `src/data/library.ts`, produced by `scripts/gen-library-data.py` from a live scan — stats on the page are computed from that data, never typed; `node_modules` READMEs are excluded from every count. Order is by document count, heaviest first. "03 / Collections" (what this site runs on) renumbers accordingly.
+
+### Changed
+
+- **/library hero and metadata** now state the wider scope: the docs live with the code they describe — on this site *and* across every repo — and the closing line stamps the index date ("the GitHub index generated November 9, 2026") next to the build-time statement.
+
 ## [1.4.9] — 2026-11-09
 
 ### Added
