@@ -1,12 +1,12 @@
 /* Across-GitHub doc index — generated from a live scan of
    github.com/OmKardile (git clone --depth 1 per repo, trees listed
    with git ls-tree, node_modules excluded), then curated: only the
-   design systems and the doc collections stay. The README-only repos
-   are repos, not docs; omkardile-portfolio is catalogued in the
-   reading room above, so it does not repeat here. The design-system/
-   file lists are complete (all extensions) — they power the download
-   buttons. Regenerate with scripts/curate-library.py; don't hand-edit
-   the numbers. */
+   design systems and the project doc collections stay. Out are the
+   README-only repos (repos, not docs), the notes vault, the personal
+   archive, and omkardile-portfolio — the reading room above already
+   renders its docs whole. The design-system/ file lists are complete
+   (all extensions) — they power the download buttons. Regenerate with
+   scripts/curate-library.py; don't hand-edit the numbers. */
 
 export type GhCollection = { folder: string; count: number };
 
@@ -414,64 +414,6 @@ export const ghRepos: GhRepo[] = [
     ],
   },
   {
-    name: 'obsidian',
-    branch: 'main',
-    description: 'The notes vault — notebook, prep and sunbeam collections, 44 notes strong.',
-    kind: 'notes vault',
-    files: 101,
-    mds: [
-      'CCC.md',
-      'SSS erp.md',
-      'Untitled 1.md',
-      'Untitled 2.md',
-      'Untitled.md',
-      'Welcome.md',
-      'linkedin-chatgpt-master-prompt.md',
-      'notebook/NoteBook 1.md',
-      'notebook/dates revision.md',
-      'notebook/note- android capacitor.md',
-      'notebook/note- android permissions.md',
-      'notebook/note- capacitor.md',
-      'notebook/note- deployment.md',
-      'prep/dsa mcq prep.md',
-      'prep/edag - 3d developer.md',
-      'prep/josh java core.md',
-      'prep/quickinsure software developer.md',
-      'prep/rapid fire.md',
-      'sunbeam/java/[brief] core java interview questions-1.md',
-      'sunbeam/java/[short] core java interview questions-1.md',
-      'sunbeam/project/car service station/DB.sql.md',
-      'sunbeam/project/car service station/FINAL - CAR SERVICING.md',
-      'sunbeam/project/car service station/FUNCTIONAL FLOW DIAGRAM.md',
-      'sunbeam/project/car service station/Functional Module Breakdown (DETAIL MODEL).md',
-      'sunbeam/project/car service station/Proposal report.md',
-      'sunbeam/project/car service station/Work Flows.md',
-      'sunbeam/project/car service station/online car service station.md',
-      'sunbeam/project/car service station/readme/ANALYSIS_COMPLETE.md',
-      'sunbeam/project/car service station/readme/API_ANALYSIS.md',
-      'sunbeam/project/car service station/readme/API_TESTING_GUIDE.md',
-      'sunbeam/project/car service station/readme/ARCHITECTURE_DIAGRAM.md',
-      'sunbeam/project/car service station/readme/ISSUES AND FIXES.md',
-      'sunbeam/project/car service station/readme/QUICK_REFERENCE.md',
-      'sunbeam/project/car service station/readme/START_HERE.md',
-      'sunbeam/project/car service station/readme/car-service-station-app ~ backend.md',
-      'sunbeam/project/car service station/readme/car-service-station-app ~ mobile frontend.md',
-      'sunbeam/project/car service station/readme/readme.md - admin-panel.md',
-      'sunbeam/project/mediaConnect.md',
-      'sunbeam/project/pins.md',
-      'temp 1.md',
-      'temp.md',
-      'trash 4.1.md',
-      'trash 5.0.md',
-      'web.md',
-    ],
-    collections: [
-      { folder: 'notebook', count: 6 },
-      { folder: 'prep', count: 5 },
-      { folder: 'sunbeam', count: 21 },
-    ],
-  },
-  {
     name: 'patel-networks',
     branch: 'main',
     description: 'Patel Networks / MegaTechzy — surveillance hardware procurement platform.',
@@ -658,28 +600,6 @@ export const ghRepos: GhRepo[] = [
     ],
     collections: [
       { folder: 'content', count: 11 },
-    ],
-  },
-  {
-    name: 'dear-abantika-lts',
-    branch: 'main',
-    description: 'Abantika — premium wellness companion (LTS).',
-    kind: 'doc collection',
-    files: 641,
-    mds: [
-      'CHANGELOG.md',
-      'README.md',
-      'archive/upload/extracted/ABANTIKA_README.md',
-      'archive/upload/extracted/ATTRIBUTIONS.md',
-      'archive/upload/extracted/FEATURES_SUMMARY.md',
-      'archive/upload/extracted/README.md',
-      'archive/upload/extracted/guidelines/Guidelines.md',
-      'archive/upload/v5-main/dear-abantika-v5.0-main/README.md',
-      'archive/upload/v5-main/dear-abantika-v5.0-main/worklog.md',
-      'download/README.md',
-    ],
-    collections: [
-      { folder: 'archive', count: 7 },
     ],
   },
 ];
