@@ -85,6 +85,12 @@ export function DetailsAnimate() {
       if (!details || !details.contains(summary)) return;
       if (summary !== details.querySelector('summary')) return; // nested summaries: leave native
 
+      // Interactive content inside the summary — a download chip, a link —
+      // owns the click, not the fold. The UA already skips its own toggle
+      // for such targets; this manager has to match it, and it has to be
+      // checked here, in the capture phase, before anything can defer it.
+      if ((e.target as Element).closest?.('button, a, input, select, textarea, label')) return;
+
       e.preventDefault();
       toggleDetails(details, summary);
     };

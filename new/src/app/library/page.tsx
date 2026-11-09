@@ -24,8 +24,9 @@ export const metadata: Metadata = {
    scripts/curate-library.py from a live scan (git clone --depth 1 per
    repo, trees listed with ls-tree, node_modules excluded). Every
    collection stat is computed from real files — nothing here is a number
-   that was typed by hand. The design-system folders download as zips,
-   assembled in the browser by src/components/DesignSystemDownload.tsx. */
+   that was typed by hand. The design-system folders download as zips —
+   the chip sits on the row itself, assembled in the browser by
+   src/components/DesignSystemDownload.tsx. */
 
 const REPO_BLOB =
   'https://github.com/OmKardile/omkardile-portfolio/blob/main/new';
@@ -298,6 +299,14 @@ export default function LibraryPage() {
                     </span>
                     <span className="lg-sum">{r.description}</span>
                   </span>
+                  {r.dsFolder && r.dsFiles && (
+                    <DesignSystemDownload
+                      repo={r.name}
+                      branch={r.branch}
+                      folder={r.dsFolder}
+                      files={r.dsFiles}
+                    />
+                  )}
                   <span className="ch-chev" aria-hidden="true">
                     +
                   </span>
@@ -330,14 +339,6 @@ export default function LibraryPage() {
                         </span>
                       ))}
                     </p>
-                  )}
-                  {r.dsFolder && r.dsFiles && (
-                    <DesignSystemDownload
-                      repo={r.name}
-                      branch={r.branch}
-                      folder={r.dsFolder}
-                      files={r.dsFiles}
-                    />
                   )}
                   <ul
                     style={{

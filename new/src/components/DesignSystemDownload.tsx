@@ -2,11 +2,16 @@
 
 import { useState } from 'react';
 
-/* The design-system download button. Builds the zip in the browser, live
-   from raw.githubusercontent.com (CORS-open), with a dependency-free
-   store-method ZIP writer — CRC32 table, local headers, central directory,
-   EOCD. No jszip, no third-party download service; the bytes come straight
-   from the repo and the archive is assembled on the visitor's machine. */
+/* The design-system download chip — sits on the repo row itself, visible
+   without unfolding anything. Builds the zip in the browser, live from
+   raw.githubusercontent.com (CORS-open), with a dependency-free
+   store-method ZIP writer — CRC32 table, local headers, central
+   directory, EOCD. No jszip, no third-party download service; the bytes
+   come straight from the repo and the archive is assembled on the
+   visitor's machine. The click is kept from folding the row
+   (preventDefault on the summary's default toggle); progress shows in
+   the chip ("zipping 7/23"), success flips it to "zipped ↓ N", and a
+   failed fetch turns the chip into a link to the folder on GitHub. */
 
 const CRC_TABLE = /* @__PURE__ */ (() => {
   const t = new Uint32Array(256);
@@ -66,10 +71,13 @@ type Props = { repo: string; branch: string; folder: string; files: string[] };
 
 export function DesignSystemDownload({ repo, branch, folder, files }: Props) {
   const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState(false);
 
-  async function download() {
+  async function download(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault(); /* the row stays folded — only the zip happens */
+    e.stopPropagation();
     setBusy(true);
     setErr(false);
     setMsg(null);
@@ -84,7 +92,7 @@ export function DesignSystemDownload({ repo, branch, folder, files }: Props) {
             .map(encodeURIComponent)
             .join('/')}`,
         );
-        if (!res.ok) throw new Error(`${f} → HTTP ${res.status}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         entries.push({
           name: f.slice(folder.length + 1),
           data: new Uint8Array(await res.arrayBuffer()),
@@ -99,6 +107,7 @@ export function DesignSystemDownload({ repo, branch, folder, files }: Props) {
       a.remove();
       URL.revokeObjectURL(url);
       setMsg(null);
+      setDone(true);
     } catch (e) {
       setErr(true);
       setMsg(e instanceof Error ? e.message : 'fetch failed');
@@ -107,49 +116,64 @@ export function DesignSystemDownload({ repo, branch, folder, files }: Props) {
     }
   }
 
-  return (
-    <p className="mono" style={{ margin: '0.6rem 0 0', fontSize: '0.76rem', display: 'flex', alignItems: 'center', gap: '0.7rem', flexWrap: 'wrap' }}>
-      <button
-        onClick={download}
-        disabled={busy}
-        data-hint="Zip built in your browser · live from the repo"
+  const chipStyle = {
+    flexShrink: 0,
+    alignSelf: 'center' as const,
+    font: 'inherit',
+    fontFamily: 'var(--mono)',
+    fontSize: '0.7rem',
+    letterSpacing: '0.04em',
+    whiteSpace: 'nowrap' as const,
+    padding: '0.3rem 0.6rem',
+    transition: 'background 160ms ease, color 160ms ease',
+  };
+
+  if (err) {
+    /* fetch failed — the chip itself becomes the way out */
+    return (
+      <a
+        href={`https://github.com/OmKardile/${repo}/tree/${branch}/${folder}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={msg ?? 'fetch failed'}
+        data-hint="Zip failed · read the folder on GitHub"
+        className="mono"
         style={{
-          font: 'inherit',
-          fontSize: '0.74rem',
-          letterSpacing: '0.04em',
-          padding: '0.4rem 0.75rem',
-          border: '1px solid var(--fg)',
+          ...chipStyle,
+          border: '1px solid var(--line)',
           background: 'transparent',
-          color: 'var(--fg)',
-          cursor: 'pointer',
-          transition: 'background 160ms ease, color 160ms ease',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'var(--fg)';
-          e.currentTarget.style.color = 'var(--bg)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'transparent';
-          e.currentTarget.style.color = 'var(--fg)';
+          color: 'var(--muted)',
+          textDecoration: 'none',
         }}
       >
-        {busy
-          ? `zipping ${msg ?? ''}…`
-          : `download ${folder}/ ↓ ${files.length} files`}
-      </button>
-      {err && (
-        <span style={{ color: 'var(--muted)' }}>
-          {msg} —{' '}
-          <a
-            href={`https://github.com/OmKardile/${repo}/tree/${branch}/${folder}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-hint="Folder · new tab"
-          >
-            read it on GitHub instead ↗
-          </a>
-        </span>
-      )}
-    </p>
+        on GitHub ↗
+      </a>
+    );
+  }
+
+  return (
+    <button
+      onClick={download}
+      disabled={busy}
+      data-hint={`${repo} ${folder}/ · zip built in your browser`}
+      aria-label={`Download ${repo}'s ${folder} folder as a zip — ${files.length} files, assembled in your browser`}
+      style={{
+        ...chipStyle,
+        border: '1px solid var(--fg)',
+        background: 'transparent',
+        color: 'var(--fg)',
+        cursor: busy ? 'progress' : 'pointer',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = 'var(--fg)';
+        e.currentTarget.style.color = 'var(--bg)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'transparent';
+        e.currentTarget.style.color = 'var(--fg)';
+      }}
+    >
+      {busy ? `zipping ${msg}…` : done ? `zipped ↓ ${files.length}` : `download ↓ ${files.length}`}
+    </button>
   );
 }

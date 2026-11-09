@@ -12,7 +12,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- **Design-system download buttons.** Each of the three `design-system/` repos gets a **"download design-system/ ↓ N files"** button inside its row. Clicking it fetches the folder's real files — complete file list, all extensions — from `raw.githubusercontent.com` and assembles a proper ZIP **in the browser**: a dependency-free store-method ZIP writer (CRC32 table, local file headers, central directory, EOCD) in `src/components/DesignSystemDownload.tsx`, ~120 lines, no jszip, no third-party download service. Progress shows in the button ("zipping 7/23…"); a failed fetch degrades to an inline link reading the folder on GitHub.
+- **Design-system download buttons — right on the rows.** Each of the three `design-system/` repos carries a **"download ↓ N" chip directly on its row**, visible without unfolding anything. Clicking it fetches the folder's real files — complete file list, all extensions — from `raw.githubusercontent.com` and assembles a proper ZIP **in the browser**: a dependency-free store-method ZIP writer (CRC32 table, local file headers, central directory, EOCD) in `src/components/DesignSystemDownload.tsx`, ~150 lines, no jszip, no third-party download service. The chip never folds the row it lives in — the accordion manager (`DetailsAnimate`) now yields clicks on interactive content inside any summary, matching what the UA already does natively; progress shows in place ("zipping 7/23"), success flips it to "zipped ↓ N", and a failed fetch turns the chip itself into a link to the folder on GitHub.
 
 ## [1.5.1] — 2026-11-09
 
