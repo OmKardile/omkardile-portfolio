@@ -7,6 +7,7 @@ import { hand } from '@/data/askomkar/hand';
 import { uiuxProjects } from '@/data/uiuxProjects';
 import { ghRepos, GH_INDEXED } from '@/data/library';
 import { Markdown } from '@/lib/md';
+import { DesignSystemDownload } from '@/components/DesignSystemDownload';
 
 export const metadata: Metadata = {
   title: 'Library',
@@ -183,8 +184,9 @@ export default function LibraryPage() {
         <p style={{ color: 'var(--muted)', marginBlock: '1rem 0', maxWidth: '34rem' }}>
           The docs live with the code they describe — on this site and across every
           repo. The system documents are rendered whole from the build; the GitHub
-          index below carries every design folder, markdown doc and collection in
-          the other repositories. No number on this page was typed by hand.
+          index below carries the design systems and the doc collections — the
+          repos where the docs are the point — with the design-system folders
+          downloadable as zips, built in your browser. No number was typed by hand.
         </p>
       </section>
 
@@ -266,7 +268,7 @@ export default function LibraryPage() {
         <div className="section-head" data-reveal suppressHydrationWarning>
           <p className="section-index mono">02 / Across GitHub</p>
           <h2 id="github-title" className="section-title" data-split suppressHydrationWarning>
-            Every repo&apos;s docs.
+            The systems and the collections.
           </h2>
         </div>
         <p
@@ -275,8 +277,9 @@ export default function LibraryPage() {
           className="mono"
           style={{ color: 'var(--muted)', fontSize: '0.76rem', marginBottom: '0.6rem' }}
         >
-          {ghRepos.length} public repos · {totalDocs} markdown documents ·{' '}
-          {designSystemCount} design systems · indexed {GH_INDEXED}
+          {ghRepos.length} of 29 public repos · {totalDocs} markdown documents ·{' '}
+          {designSystemCount} design systems, downloadable · the rest are repos, not
+          docs · indexed {GH_INDEXED}
         </p>
         <div className="lg-list" data-reveal suppressHydrationWarning>
           {ghRepos.map((r, ri) => {
@@ -325,6 +328,14 @@ export default function LibraryPage() {
                         </span>
                       ))}
                     </p>
+                  )}
+                  {r.dsFolder && r.dsFiles && (
+                    <DesignSystemDownload
+                      repo={r.name}
+                      branch={r.branch}
+                      folder={r.dsFolder}
+                      files={r.dsFiles}
+                    />
                   )}
                   <ul
                     style={{

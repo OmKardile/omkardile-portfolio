@@ -3,6 +3,16 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.2] — 2026-11-09
+
+### Changed
+
+- **/library "02 / Across GitHub" is curated down to the point.** Of the 29 public repos, the index now keeps the **10 where the docs are the point** — the 3 design systems (handOff, servepoint, ecommerce-5.2), the doc libraries (edit, patel-networks, ecommerce-5.3) and the collections (obsidian's notes vault, sss-erp-hybrid, tech-site, dear-abantika-lts) — 477 markdown documents. The 19 README-only repos are dropped ("the rest are repos, not docs", the stats line now says); omkardile-portfolio stays out too, since the reading room already renders its docs whole. Section retitled "The systems and the collections."
+
+### Added
+
+- **Design-system download buttons.** Each of the three `design-system/` repos gets a **"download design-system/ ↓ N files"** button inside its row. Clicking it fetches the folder's real files — complete file list, all extensions — from `raw.githubusercontent.com` and assembles a proper ZIP **in the browser**: a dependency-free store-method ZIP writer (CRC32 table, local file headers, central directory, EOCD) in `src/components/DesignSystemDownload.tsx`, ~120 lines, no jszip, no third-party download service. Progress shows in the button ("zipping 7/23…"); a failed fetch degrades to an inline link reading the folder on GitHub.
+
 ## [1.5.1] — 2026-11-09
 
 ### Added
