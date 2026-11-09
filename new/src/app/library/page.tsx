@@ -12,18 +12,20 @@ import { DesignSystemDownload } from '@/components/DesignSystemDownload';
 export const metadata: Metadata = {
   title: 'Library',
   description:
-    'The docs library — this site\u2019s system documents rendered whole at build time, plus every design folder, markdown doc and collection across the GitHub repos.',
+    'The docs library — this site\u2019s system documents rendered whole at build time, plus the design systems and the doc collections across the GitHub repos, with the design-system folders downloadable as zips.',
   alternates: { canonical: './' },
 };
 
 /* /library — the docs live with the code they describe, on this site and
    across every repo. The reading room renders the system documents whole
-   from the repo at build time; 02 / Across GitHub indexes every public
-   repo's design folders, markdown docs and collections, generated into
-   src/data/library.ts by scripts/gen-library-data.py from a live scan
-   (git clone --depth 1 per repo, trees listed with ls-tree, node_modules
-   excluded). Every collection stat is computed from real files — nothing
-   here is a number that was typed by hand. */
+   from the repo at build time; 02 / Across GitHub is curated to the repos
+   where the docs are the point — the design systems and the doc
+   collections — generated into src/data/library.ts by
+   scripts/curate-library.py from a live scan (git clone --depth 1 per
+   repo, trees listed with ls-tree, node_modules excluded). Every
+   collection stat is computed from real files — nothing here is a number
+   that was typed by hand. The design-system folders download as zips,
+   assembled in the browser by src/components/DesignSystemDownload.tsx. */
 
 const REPO_BLOB =
   'https://github.com/OmKardile/omkardile-portfolio/blob/main/new';

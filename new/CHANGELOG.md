@@ -8,6 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - **/library "02 / Across GitHub" is curated down to the point.** Of the 29 public repos, the index now keeps the **10 where the docs are the point** — the 3 design systems (handOff, servepoint, ecommerce-5.2), the doc libraries (edit, patel-networks, ecommerce-5.3) and the collections (obsidian's notes vault, sss-erp-hybrid, tech-site, dear-abantika-lts) — 477 markdown documents. The 19 README-only repos are dropped ("the rest are repos, not docs", the stats line now says); omkardile-portfolio stays out too, since the reading room already renders its docs whole. Section retitled "The systems and the collections."
+- **Same-day polish.** The sss-erp-hybrid description loses a stray backslash ("my brother's business"), the /library metadata and file comment name the curated scope and the zip buttons, and the /now bench card stamps [1.5.2]. Every download button click-tested: all three ZIPs land as valid archives (entry counts, relative paths, CRC).
 
 ### Added
 

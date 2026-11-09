@@ -614,7 +614,7 @@ export const ghRepos: GhRepo[] = [
   {
     name: 'sss-erp-hybrid',
     branch: 'main',
-    description: 'Shopee ERP for my brother\\\'s business — web, Windows and Android from one codebase.',
+    description: 'Shopee ERP for my brother\'s business — web, Windows and Android from one codebase.',
     kind: 'doc collection',
     files: 410,
     mds: [
