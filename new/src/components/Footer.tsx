@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { site } from '@/data/site';
 import { MotionToggle } from './MotionToggle';
 
@@ -31,6 +32,10 @@ export function Footer({ note, ticker }: { note?: string; ticker?: string[] }) {
       <div className="container footer-inner">
         <p>{site.name} © 2026 · Pune, India</p>
         <div className="footer-links">
+          {/* Meta pages live in the quiet corner: the header stays the
+              recruiter path (Work / Skills / Experience / Contact / Resume). */}
+          <Link href="/now">Now</Link>
+          <Link href="/colophon">Colophon</Link>
           <a href="#top">Back to top ↑</a>
           {/* Escape hatch: forces the custom pointer on reduced-motion OSes. */}
           <MotionToggle />

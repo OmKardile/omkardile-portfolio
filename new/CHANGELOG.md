@@ -3,6 +3,15 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.8] — 2026-11-09
+
+### Added
+
+- **/now — the dated present.** A nownownow-style page that says what's being built and what's being looked for *at this exact moment*, with a visible "Updated November 2026" stamp so it can go stale honestly. Every claim derives from repo data: the bench holds the portfolio itself (recently [1.4.6]–[1.4.7]) plus the two `status: 'building'` projects from the work data (Full-Stack Food Ordering App, Real-Time Chat App), "Looking for" reuses the homepage's open-to statement verbatim with the email CTA (hint: "Opens mail app"), and "Elsewhere" carries the socials with per-label hints.
+- **/colophon — the maker's receipt.** How the site is made, in five sections: **Type** (Archivo — one variable family whose wdth axis is the wave hero's own variable; Fragment Mono as the readout voice, including the cursor's chips and hints); **Ink** (the `--fg`/`--bg` token system, accents kept in their lanes — dev blue / uiux orange — with **live swatches that render from the real custom properties**, so toggling the theme flips them in place, which is the section's argument made visible); **Motion** (always-on philosophy — Lenis, reveals, progress hairline — and its one exception, the per-frame hit-tested pointer with the [1.4.7] footer toggle); **Machine** (Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · Lenis on Vercel, the CHANGELOG discipline, and the AskOmkar retrieval-not-generation story: 82 pre-written answers, offline MiniLM 384-dim embeddings, runtime embedding of only the question in-browser, honest fallback); **Receipts** (source repo, the changelog itself, /now).
+- **Footer links** — "Now" and "Colophon" joined the shared footer's links row on every page that renders it, next to "Back to top ↑" and the cursor toggle. Deliberate placement: the header stays the recruiter path (Work / Skills / Experience / Contact / Resume / UI/UX); the meta pages live in the quiet corner.
+- **Sitemap** carries both new routes (priority 0.6).
+
 ## [1.4.7] — 2026-11-08
 
 ### Added
