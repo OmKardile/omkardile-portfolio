@@ -8,7 +8,9 @@
 // (~23 MB, cached after the first fetch) is triggered by the FIRST free-typed
 // question — never by opening the drawer: the first question is answered by
 // keyword matching while the model warms in the background, and every later
-// question matches by meaning. Nothing downloads on chat open.
+// question matches by meaning. Nothing downloads on chat open — and on Data
+// Saver or a slow connection (Network Information API) nothing ever does:
+// the warm-up is skipped and keyword matching carries the drawer.
 //
 // Guarantees by construction:
 //   - no server calls at answer time (the only network fetch is the one-time
@@ -176,7 +178,7 @@ export function AskOmkar() {
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
-  const [warm, setWarm] = useState<'idle' | 'warming' | 'ready' | 'failed'>('idle');
+  const [warm, setWarm] = useState<'idle' | 'warming' | 'ready' | 'failed' | 'off'>('idle');
   const [progress, setProgress] = useState(0);
 
   const logRef = useRef<HTMLDivElement>(null);
@@ -253,6 +255,8 @@ export function AskOmkar() {
   // not cost a ~23 MB download. The first free-typed question triggers the
   // warm-up (see send): keyword matching answers it immediately, the model
   // loads in the background, and every later question matches by meaning.
+  // Data Saver (or a slow effectiveType, where the browser exposes one)
+  // cancels the warm-up for the whole session — keyword matching carries it.
 
   // First open plants the intro message (never inside a state updater —
   // updater functions must stay pure or React can drop the update).
@@ -290,18 +294,39 @@ export function AskOmkar() {
       } else {
         // Model not warm yet: answer NOW by keyword instead of holding the
         // question hostage to a ~23 MB download, and warm the model in the
-        // background so the next question matches by meaning.
+        // background so the next question matches by meaning — unless the
+        // connection asks not to. Data Saver on, or a slow effectiveType
+        // (slow-2g/2g/3g; Network Information API, Chromium only — Safari
+        // exposes none of it and gets the default warm-up), keeps the ~23 MB
+        // model off for the whole session; keyword matching carries it.
         match = rankByKeywords(q);
+        const conn = (
+          navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }
+        ).connection;
+        const metered =
+          conn?.saveData === true ||
+          conn?.effectiveType === 'slow-2g' ||
+          conn?.effectiveType === '2g' ||
+          conn?.effectiveType === '3g';
+        let staysOff = false;
         if (warm === 'idle') {
-          setWarm('warming');
-          loadEmbedder((f) => setProgress(f))
-            .then(() => setWarm('ready'))
-            .catch(() => setWarm('failed'));
+          if (metered) {
+            setWarm('off');
+            staysOff = true;
+          } else {
+            setWarm('warming');
+            loadEmbedder((f) => setProgress(f))
+              .then(() => setWarm('ready'))
+              .catch(() => setWarm('failed'));
+          }
         }
+        const off = warm === 'off' || staysOff;
         warmNote =
           warm === 'failed'
             ? undefined
-            : 'Matched by keyword while the local matcher warms up (~23 MB, one-time, cached) — ask again and it matches by meaning.';
+            : off
+              ? 'Matched by keyword — Data Saver or a slow connection, so the on-device matcher stays off.'
+              : 'Matched by keyword while the local matcher warms up (~23 MB, one-time, cached) — ask again and it matches by meaning.';
       }
       logAsk(q, match.best.entry.id, match.best.score, match.tier);
       const { entry } = match.best;
