@@ -63,7 +63,7 @@ download/
 /.zscripts
 /Caddyfile
 /skills
-/scripts
+# scripts/ is tracked on purpose — the verifier and generator scripts are receipts
 /download
 /bun.lock
 /DESIGN.md
