@@ -12,7 +12,7 @@ import { DesignSystemDownload } from '@/components/DesignSystemDownload';
 export const metadata: Metadata = {
   title: 'Library',
   description:
-    'The docs library — this site\u2019s system documents rendered whole at build time, plus the design systems and the doc collections across the GitHub repos, with the design-system folders downloadable as zips.',
+    'The docs library — this site\u2019s system documents rendered whole at build time, plus the design systems and the doc collections across the GitHub repos with the design-system folders downloadable as zips, and the sites guide: what every site runs on.',
   alternates: { canonical: './' },
 };
 
@@ -26,7 +26,11 @@ export const metadata: Metadata = {
    collection stat is computed from real files — nothing here is a number
    that was typed by hand. The design-system folders download as zips —
    the chip sits on the row itself, assembled in the browser by
-   src/components/DesignSystemDownload.tsx. */
+   src/components/DesignSystemDownload.tsx. 03 / The sites is the guide to
+   what my sites run on — every site and app, this one included, the stack
+   in plain sight on the row, rendered from src/data/site.ts (the
+   portfolio\u2019s machine line from /colophon); 04 / Collections keeps
+   the data files this site renders from, stats computed at build time. */
 
 const REPO_BLOB =
   'https://github.com/OmKardile/omkardile-portfolio/blob/main/new';
@@ -170,6 +174,49 @@ export default function LibraryPage() {
     },
   ];
 
+  /* The sites guide — every site and app, this one included, with the
+     stack in plain sight on the row (no unfolding to read it). Project
+     rows render straight from the work data — title, status, year, stack,
+     summary and links all come from src/data/site.ts; the portfolio's
+     machine line is the colophon's. Nothing typed twice. */
+  type SiteRow = {
+    name: string;
+    status: 'live' | 'building';
+    when: string;
+    stack: string;
+    kind: string;
+    summary: string;
+    links: { href: string; label: string; note?: string }[];
+  };
+  const portfolio: SiteRow = {
+    name: 'omkardile.is-a.dev',
+    status: 'live',
+    when: 'continuous',
+    stack: 'Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · Lenis, on Vercel',
+    kind: 'Portfolio · the site you\u2019re on',
+    summary:
+      'The site you\u2019re on. Every page renders whole from data files at build time — the collections in 04 below carry them — and every change ships through a logged version in the CHANGELOG.',
+    links: [
+      { href: '/colophon', label: 'the receipt · /colophon' },
+      { href: 'https://github.com/OmKardile/omkardile-portfolio', label: 'source repo' },
+      { href: '/now', label: 'the dated present · /now' },
+    ],
+  };
+  const SITES: SiteRow[] = [
+    portfolio,
+    ...projects.map((p) => ({
+      name: p.title.split(' — ')[0],
+      status: p.status,
+      when: p.year,
+      stack: p.stack,
+      kind: p.kind,
+      summary: p.summary,
+      links: p.links ?? [],
+    })),
+  ];
+  const liveCount = SITES.filter((s) => s.status === 'live').length;
+  const buildingCount = SITES.length - liveCount;
+
   return (
     <>
       <section className="section container" aria-labelledby="library-title">
@@ -187,9 +234,10 @@ export default function LibraryPage() {
         <p style={{ color: 'var(--muted)', marginBlock: '1rem 0', maxWidth: '34rem' }}>
           The docs live with the code they describe — on this site and across every
           repo. The system documents are rendered whole from the build; the GitHub
-          index below carries the design systems and the doc collections — the
-          repos where the docs are the point — with the design-system folders
-          downloadable as zips, built in your browser. No number was typed by hand.
+          index carries the design systems and the doc collections — the repos
+          where the docs are the point — with the design-system folders
+          downloadable as zips, built in your browser; and the sites guide at the
+          bottom says what every one of my sites runs on. No number was typed by hand.
         </p>
       </section>
 
@@ -384,14 +432,102 @@ export default function LibraryPage() {
         </div>
       </section>
 
-      {/* 03 / Collections */}
-      <section className="section container" aria-labelledby="collections-title">
+      {/* 03 / The sites — the guide to what every site runs on. The stack
+          sits on the row itself; unfolding gives the story and the links. */}
+      <section className="section container" aria-labelledby="sites-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">03 / Collections</p>
-          <h2 id="collections-title" className="section-title" data-split suppressHydrationWarning>
-            What the site runs on.
+          <p className="section-index mono">03 / The sites</p>
+          <h2 id="sites-title" className="section-title" data-split suppressHydrationWarning>
+            What my sites run on.
           </h2>
         </div>
+        <p
+          data-reveal
+          suppressHydrationWarning
+          className="mono"
+          style={{ color: 'var(--muted)', fontSize: '0.76rem', marginBottom: '0.6rem' }}
+        >
+          {SITES.length} sites and apps · {liveCount} live, {buildingCount} building ·
+          the project stacks carried from src/data/site.ts, this site&apos;s from /colophon
+        </p>
+        <div className="lg-list" data-reveal suppressHydrationWarning>
+          {SITES.map((s, si) => (
+            <details className="lg-row" name="sites" key={s.name}>
+              <summary>
+                <span className="lg-idx mono">{String(si + 1).padStart(2, '0')}</span>
+                <span className="lg-head">
+                  <span className="lg-line">
+                    <span className="lg-name">{s.name}</span>
+                    <span className="lg-kind">
+                      {' · '}
+                      <span style={{ color: s.status === 'live' ? 'var(--green)' : 'var(--muted)' }}>
+                        {s.status}
+                      </span>
+                      {' · '}
+                      {s.when}
+                    </span>
+                  </span>
+                  <span className="lg-sum">runs on {s.stack}</span>
+                </span>
+                <span className="ch-chev" aria-hidden="true">
+                  +
+                </span>
+              </summary>
+              <div className="lg-body">
+                <p className="mono" style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>
+                  {s.kind} · {s.when} · {s.status}
+                </p>
+                <p style={{ margin: 0, maxWidth: '40rem' }}>{s.summary}</p>
+                {s.links.length > 0 && (
+                  <p
+                    className="mono"
+                    style={{ fontSize: '0.78rem', display: 'grid', gap: '0.3rem' }}
+                  >
+                    {s.links.map((l) => (
+                      <span key={l.href}>
+                        <a
+                          href={l.href}
+                          target={l.href.startsWith('http') ? '_blank' : undefined}
+                          rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                          data-hint={`${s.name} · ${l.label}`}
+                        >
+                          {l.label}
+                          {l.href.startsWith('http') ? ' ↗' : ''}
+                        </a>
+                      </span>
+                    ))}
+                  </p>
+                )}
+                {s.links.some((l) => l.note) && (
+                  <p className="mono" style={{ fontSize: '0.72rem', color: 'var(--muted)' }}>
+                    {s.links
+                      .filter((l) => l.note)
+                      .map((l) => `${l.label} — ${l.note}`)
+                      .join(' · ')}
+                  </p>
+                )}
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* 04 / Collections — the data files this site renders from. */}
+      <section className="section container" aria-labelledby="collections-title">
+        <div className="section-head" data-reveal suppressHydrationWarning>
+          <p className="section-index mono">04 / Collections</p>
+          <h2 id="collections-title" className="section-title" data-split suppressHydrationWarning>
+            This site, file by file.
+          </h2>
+        </div>
+        <p
+          data-reveal
+          suppressHydrationWarning
+          className="mono"
+          style={{ color: 'var(--muted)', fontSize: '0.76rem', marginBottom: '0.6rem' }}
+        >
+          the data files the portfolio itself renders from — stats computed at build time
+        </p>
         <div data-reveal suppressHydrationWarning>
           {COLLECTIONS.map((c) => (
             <div

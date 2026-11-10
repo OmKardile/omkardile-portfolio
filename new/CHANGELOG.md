@@ -3,6 +3,16 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.3] — 2026-11-10
+
+### Added
+
+- **/library "03 / The sites" — "What my sites run on."** The section that cataloged only this portfolio's data files under "What the site runs on." now leads with every site and app, this one included: **11 rows — the portfolio plus all 10 projects** carried straight from `src/data/site.ts` (title, status, year, stack, summary, links; the portfolio's machine line comes from /colophon). Guide-like by design: the stack sits **in plain sight on each row** — "runs on Next.js 16 · TypeScript · Prisma 6 · Supabase PostgreSQL · Tailwind CSS 4" — no unfolding needed, with the status colored on the line (live in green, building muted) and the full story plus the real links on unfold. The stats line is computed from the data, not typed: **11 sites and apps · 9 live, 2 building**. Unfolding the portfolio row tells the site's own story and links the receipt (/colophon), the source repo and /now.
+
+### Changed
+
+- **The data files stay, retitled "04 / Collections — This site, file by file."** The seven build-time-stat rows (`site.ts`, `uiuxProjects.ts`, `hand.ts`, `vectors.json`, `globals.css`, `cursor.css`, `matcher.ts`) keep their computed numbers under a line that says what they are: the data files the portfolio itself renders from. The hero, the metadata description and the file comment now name the wider scope — the docs across the repos, the zips, and the sites guide.
+
 ## [1.5.2] — 2026-11-09
 
 ### Changed

@@ -58,13 +58,14 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.5.2] just shipped: the site-wide custom pointer with hints riding
+              Version [1.5.3] just shipped: the site-wide custom pointer with hints riding
               it ([1.4.6]), the footer motion toggle for reduced-motion machines ([1.4.7]),
               this page and /colophon ([1.4.8]), the /library docs room gone repo-wide
               ([1.4.9]–[1.5.0]), the listening playlists with a playing/paused state
-              ([1.5.1]), and /library curated down to the design systems and the doc
-              collections — with the design-system folders downloadable as zips, built
-              right in the browser ([1.5.2]). Every change is logged in the
+              ([1.5.1]), the design-system zips built right in the browser with the chips
+              living on the rows themselves ([1.5.2]), and the /library sites guide —
+              what my sites run on, all eleven of them, the stack in plain sight on
+              every row ([1.5.3]). Every change is logged in the
               repo&apos;s CHANGELOG.
             </p>
             <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.78rem', marginTop: '0.45rem' }}>
