@@ -21,6 +21,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Resume at /resume.pdf.** The Google Drive link — clunky on mobile, blocked on some corporate networks — is replaced by the PDF hosted on-site (same file, verified); the nav, the contact links, AskOmkar's CTA bar and the answer bank all point at it.
 - **"last commit" chips on the live work cards.** The five shipped projects backed by public repos (SSShopee, ServePoint, PatelNetworks, tech // site, HandOff) carry their repo's last-push date, fetched from each repo's commits Atom feed at build time (revalidated daily — the uncapped HTML-side feed, not the 60/h REST API); a failed fetch omits the chip instead of lying.
 
+### Fixed — 2026-11-11
+
+- **AskOmkar never pulls ~23 MB on a metered connection.** When the browser reports Data Saver on, or an `effectiveType` of slow-2g / 2g / 3g (Network Information API — Chromium only; Safari exposes none of it and keeps the default warm-up), the first free-typed question no longer starts the model warm-up at all. Keyword matching carries the drawer for the whole session, and the answer says why the on-device matcher stays off.
+- **`scripts/` can no longer be silently dropped.** The repo's `.gitignore` listed `scripts/` under sandbox infra — so verifier and generator scripts written between sessions never got committed unless force-added, and each session rewrote them from scratch. The ignore is gone; `verify-154.py` (the 47-check production verifier), `evidence-154.py`, `gen-og-images.py` and `askomkar-embed.mts` stay tracked. Re-run against production on 2026-11-11: **47 passed, 0 failed**.
+
 ## [1.5.3] — 2026-11-10
 
 ### Added
