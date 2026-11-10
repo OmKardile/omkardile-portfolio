@@ -1023,6 +1023,24 @@ html.dark .theme-toggle .icon-moon {
   line-height: 1.5;
 }
 
+.card-pushed {
+  color: var(--fg);
+  font-size: 0.72rem;
+  margin-top: -0.4rem;
+  letter-spacing: 0.02em;
+}
+
+.card-pushed::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 0.45rem;
+  vertical-align: 1px;
+}
+
 .card-link {
   font-size: 0.92rem;
   font-weight: 550;
@@ -2049,6 +2067,17 @@ html.dark .theme-toggle .icon-moon {
 
 /* The ported prototype keeps its own identity (warm paper, navy, Fraunces +
    Hanken Grotesk) and is fully scoped under .taar so nothing leaks out. */
+
+/* Chrome-free prototype stages for the DeviceFrame iframes on the case
+   studies (/uiux/<slug>/prototype/embed): pinned to the iframe viewport,
+   own scrolling if the app runs taller than the frame. The chrome
+   suppression lives in the embed pages via body:has(.ux-embed-stage). */
+.ux-embed-stage {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+}
+
 .taar-stage {
   background: #e9e4db;
 }

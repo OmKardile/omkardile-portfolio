@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 import type { UiuxProject } from '@/data/uiuxProjects';
-import { BlockRenderer } from '@/components/uiux/blocks';
+import { BlockRenderer, isEmptyInProd } from '@/components/uiux/blocks';
 import { DeviceFrame } from '@/components/uiux/DeviceFrame';
 
 /* Shared case-study template, driven entirely by the data in
@@ -38,7 +38,14 @@ export function CaseStudyLayout({
   next?: UiuxProject;
 }) {
   const { sections } = project;
-  const wireframes = sections.findIndex((s) => s.title === 'Wireframes');
+
+  /* Sections whose evidence hasn't been collected yet collapse entirely in
+     production — a heading with nothing under it reads as a broken page.
+     Development keeps them, rendered as dashed placeholders. The survivors
+     renumber 01..N so the case never shows a numbering gap. */
+  const DEV = process.env.NODE_ENV === 'development';
+  const shown = DEV ? sections : sections.filter((s) => !isEmptyInProd(s.blocks));
+  const wireframes = shown.findIndex((s) => s.title === 'Wireframes');
 
   return (
     <article
@@ -75,10 +82,11 @@ export function CaseStudyLayout({
         </dl>
       </header>
 
-      {/* The nine sections — and the live embed, slotted after Wireframes */}
-      {sections.map((section, i) => (
+      {/* The numbered sections — and the live embed, slotted after Wireframes.
+          Empty-in-prod sections are gone, so the label renumbers 01..N. */}
+      {shown.map((section, i) => (
         <Fragment key={section.n}>
-          <SectionRow n={section.n} title={section.title}>
+          <SectionRow n={String(i + 1).padStart(2, '0')} title={section.title}>
             <BlockRenderer blocks={section.blocks} />
           </SectionRow>
           {i === wireframes && project.prototypeUrl ? (
@@ -89,7 +97,7 @@ export function CaseStudyLayout({
                   <p className="ux-p">{project.tryIt.more}</p>
                 </div>
                 <DeviceFrame
-                  src={project.prototypeUrl}
+                  src={project.prototypeEmbedUrl ?? project.prototypeUrl}
                   title={`Live prototype of ${project.title}`}
                   href={project.prototypeUrl}
                 />

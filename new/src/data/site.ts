@@ -38,7 +38,7 @@ export const site = {
   socials: [
     { label: 'GitHub', href: 'https://github.com/OmKardile' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/omkar-kardile-49501b213/' },
-    { label: 'Resume', href: 'https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=sharing' },
+    { label: 'Resume', href: '/resume.pdf' },
   ],
   // Interactive Liquid Glass apps live in the old codebase. When they get a new
   // home, change this one constant — every app link derives from it.
@@ -221,6 +221,10 @@ export const capabilities = {
       'Figma',
       'Framer',
     ],
+    /* The verified-claims rule, applied to the chips: a skill with no
+       shipped evidence yet is marked "learning" on the card, not passed
+       off as practiced. Everything unmarked has receipts on the site. */
+    learning: ['UX Research', 'Usability & User Testing', 'Framer'],
   },
   build: {
     label: 'Build',
@@ -240,6 +244,7 @@ export const capabilities = {
       'Google Gemini APIs',
       'Kotlin',
     ],
+    learning: ['Native iOS'],
   },
 };
 

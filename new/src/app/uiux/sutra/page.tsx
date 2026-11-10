@@ -19,8 +19,14 @@ export const metadata: Metadata = {
     url: `${site.url}/uiux/${project.slug}`,
     title: `${project.title} | UI/UX Case Study ${project.number}`,
     description: project.tagline,
-    /* Placeholder path — replace with a real screenshot. */
-    images: ['/og/uiux-sutra.png'],
+    /* Rendered from the case study's own accent — scripts/gen-og-images.py */
+    images: [`/og/uiux-${project.slug}.png`],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${project.title} | UI/UX Case Study ${project.number}`,
+    description: project.tagline,
+    images: [`/og/uiux-${project.slug}.png`],
   },
 };
 

@@ -64,8 +64,54 @@ function CardLinks({ links }: { links?: { href: string; label: string; note?: st
   );
 }
 
-export default function Home() {
+/* Last-commit chip: fetched at build time (revalidated daily server-side),
+   so "actively maintained" is a verifiable claim, not a vibe. Source is the
+   repo's commits Atom feed, not the REST API — the API caps anonymous
+   requests at 60/h per IP, which a shared build runner burns through; the
+   HTML-side feed carries the same latest-commit timestamp uncapped. The
+   feed-level <updated> is the newest commit on main. Fetch failure just
+   omits the chip — it never lies. */
+async function lastPush(repo: string): Promise<string | null> {
+  if (!repo) return null;
+  try {
+    const res = await fetch(`https://github.com/OmKardile/${repo}/commits/main.atom`, {
+      headers: { 'User-Agent': 'omkardile-portfolio' },
+      next: { revalidate: 86400 },
+    });
+    if (!res.ok) return null;
+    const xml = await res.text();
+    const m = xml.match(/<updated>([^<]+)<\/updated>/);
+    if (!m) return null;
+    return new Date(m[1]).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      timeZone: 'UTC',
+    });
+  } catch {
+    return null;
+  }
+}
+
+export default async function Home() {
   const resumeHref = site.socials.find((s) => s.label === 'Resume')?.href;
+
+  /* Repos that back the live work cards — only the ones that exist on
+     GitHub get the chip; the mapping is verified against the API call.
+     Building projects with no repo yet simply don't appear here. */
+  const REPO_FOR: Record<string, string> = {
+    ssshopee: 'sss-erp-hybrid',
+    servepoint: 'servepoint',
+    patelnetworks: 'patel-networks',
+    'tech-site': 'tech-site',
+    handoff: 'handOff',
+  };
+
+  const liveProjects = projects.filter((p) => p.status === 'live');
+  const pushes = await Promise.all(
+    liveProjects.map(async (p) => lastPush(REPO_FOR[p.slug] ?? '')),
+  );
+  // Nothing to show? Keep the section a plain grid (never an empty promise).
+  const hasAnyPush = pushes.some(Boolean);
 
   return (
     <>
@@ -101,31 +147,35 @@ export default function Home() {
           id="work-title"
           index="01 / Selected work"
           title="Built and shipped."
-          note="Live products and client work — from a retail ERP to a café operations platform. Links point only to verified destinations."
+          note="Live products and client work — from a retail ERP to a café operations platform. Every link opens the real thing."
         />
         <ul className="work-grid" data-reveal-group suppressHydrationWarning>
-          {projects
-            .filter((p) => p.status === 'live')
-            .map((p) => {
-              const linked = !!p.links && p.links.length > 0;
-              return (
-                <li key={p.slug} className={linked ? 'work-card work-card-linked' : 'work-card'}>
-                  {/* Plain card (no whole-card anchor): the …more toggle inside
-                      the summary must not sit inside an <a>, and every linked
-                      card already carries labeled links at its foot. */}
-                  <div>
-                    <div className="card-top">
-                      <span className="mono card-index">{p.index}</span>
-                      <StatusTag status={p.status} />
-                    </div>
-                    <h3 className="card-title">{p.title}</h3>
-                    <CardSummary text={p.summary} />
-                    <p className="mono card-stack">{p.stack}</p>
-                    <CardLinks links={p.links} />
+          {liveProjects.map((p, pi) => {
+            const linked = !!p.links && p.links.length > 0;
+            const pushed = pushes[pi];
+            return (
+              <li key={p.slug} className={linked ? 'work-card work-card-linked' : 'work-card'}>
+                {/* Plain card (no whole-card anchor): the …more toggle inside
+                    the summary must not sit inside an <a>, and every linked
+                    card already carries labeled links at its foot. */}
+                <div>
+                  <div className="card-top">
+                    <span className="mono card-index">{p.index}</span>
+                    <StatusTag status={p.status} />
                   </div>
-                </li>
-              );
-            })}
+                  <h3 className="card-title">{p.title}</h3>
+                  <CardSummary text={p.summary} />
+                  <p className="mono card-stack">{p.stack}</p>
+                  {hasAnyPush && pushed ? (
+                    <p className="mono card-pushed" title="Last push to the repo, from its commit feed at build time">
+                      last commit {pushed}
+                    </p>
+                  ) : null}
+                  <CardLinks links={p.links} />
+                </div>
+              </li>
+            );
+          })}
         </ul>
 
         {/* In development — quiet bench rows under the grid. The shipped work
@@ -160,15 +210,35 @@ export default function Home() {
               <h3 className="skill-label">{cap.label}</h3>
               <p className="skill-note">{cap.note}</p>
               <ul className="skill-list">
-                {cap.items.map((item) => (
-                  <li key={item} className="skill-chip">
-                    {item}
-                  </li>
-                ))}
+                {cap.items.map((item) => {
+                  const learning = cap.learning.includes(item);
+                  return (
+                    <li
+                      key={item}
+                      className="skill-chip"
+                      title={learning ? 'Learning — no shipped evidence yet' : undefined}
+                    >
+                      {item}
+                      {learning ? (
+                        <span className="mono" style={{ color: 'var(--muted)' }} aria-label="learning">
+                          {' '}· learning
+                        </span>
+                      ) : null}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
         </div>
+        <p
+          className="mono"
+          data-reveal
+          suppressHydrationWarning
+          style={{ color: 'var(--muted)', fontSize: '0.74rem', marginTop: '0.8rem' }}
+        >
+          · learning — marked honestly: evidence pending, the receipts land as they ship.
+        </p>
       </section>
 
       {/* Experience */}

@@ -14,6 +14,17 @@ import { WireframeArtSvg } from '@/components/uiux/WireframeArt';
 
 const DEV = process.env.NODE_ENV === 'development';
 
+/** True when every block in the list is unfinished evidence — a slot or an
+    unfilled table. A section made only of these renders nothing in
+    production, so CaseStudyLayout hides the whole section (and renumbers
+    the survivors) instead of shipping a bare heading or a one-line
+    placeholder. Development keeps every section visible as placeholders. */
+export function isEmptyInProd(blocks: Block[]): boolean {
+  return blocks.every(
+    (b) => b.type === 'slot' || (b.type === 'table' && b.filled === false),
+  );
+}
+
 function TableBlock({ block }: { block: Extract<Block, { type: 'table' }> }) {
   if (!block.filled && !DEV) {
     return <p className="ux-quiet">Research in progress.</p>;

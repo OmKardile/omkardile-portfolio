@@ -1,12 +1,30 @@
 import type { Metadata } from 'next';
 import { Footer } from '@/components/Footer';
 import { site } from '@/data/site';
+import { hand } from '@/data/askomkar/hand';
+import { faqBank } from '@/data/askomkar/bank';
 
 export const metadata: Metadata = {
   title: 'Colophon',
   description:
     'How this site is made: the type, the ink tokens, the motion system and the machine underneath — designed and built by the same person.',
   alternates: { canonical: './' },
+  openGraph: {
+    type: 'website',
+    siteName: site.name,
+    url: `${site.url}/colophon`,
+    title: 'Colophon — how this site is made',
+    description:
+      'The type, the ink, the motion and the machine underneath this site — every claim traceable to the codebase.',
+    images: ['/og/colophon.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Colophon — how this site is made',
+    description:
+      'The type, the ink, the motion and the machine underneath this site — every claim traceable to the codebase.',
+    images: ['/og/colophon.png'],
+  },
 };
 
 /* /colophon — the maker's page: how this site is made. Every claim traces
@@ -34,6 +52,11 @@ const mono = {
 } as const;
 
 export default function ColophonPage() {
+  /* The AskOmkar numbers, computed — never typed. The served bank is the
+     hand-written entries plus one derived entry per project in site.ts, so
+     the counts can't drift from the data files the bot actually ships. */
+  const handCount = hand.length;
+  const derivedCount = faqBank.length - handCount;
   return (
     <>
       <section className="section container" aria-labelledby="colophon-title">
@@ -168,11 +191,13 @@ export default function ColophonPage() {
           </p>
           <p style={{ marginTop: '0.8rem' }}>
             <strong>AskOmkar</strong> — the floating bot on every page — is retrieval, not
-            generation: 82 pre-written answers, embedded offline into vectors with MiniLM
-            (384-dim). At runtime only <em>your question</em> is embedded, in-browser, by a
-            lazily-fetched ~23MB model that caches after the first visit; a cosine matcher
-            picks the answer locally. Nothing is sent to a server, and when your question is
-            outside the bank it says so instead of improvising.
+            generation: {faqBank.length} pre-written answers ({handCount} hand-written,{' '}
+            {derivedCount} derived from the site&apos;s own project data so they can&apos;t drift
+            from it), embedded offline into vectors with MiniLM (384-dim). At runtime only{' '}
+            <em>your question</em> is embedded, in-browser, by a ~23MB model fetched once when
+            you first ask — the chips answer before it loads, and the model caches after that;
+            a cosine matcher picks the answer locally. Nothing is sent to a server, and when
+            your question is outside the bank it says so instead of improvising.
           </p>
           <p style={{ marginTop: '0.8rem' }}>
             The /uiux case studies run their prototypes in iframes on purpose: real,

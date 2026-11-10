@@ -128,7 +128,7 @@ Relay case study assets: `public/work/relay/` (cover, diagrams, screens) — sou
 ### Add a project
 
 1. Append an entry to `uiuxProjects` in `src/data/uiuxProjects.ts`: `slug`, `number`, `title`, `tagline`, `status` (`In progress` / `Complete`), `accent` + `accentDark` (AA-lightened for dark mode), `problem` (two lines for the index row), `role[]`, `tools[]`, the three URL fields, `tryIt`, and `sections` — nine of them, in order: The problem · Research · Who it's for · Flow · Wireframes · Design decisions · Visual system · Usability test · Build & next.
-2. Create `src/app/uiux/<slug>/page.tsx` — copy one of the existing three; it only resolves the entry + per-route metadata (title, description, canonical, OG with a placeholder image path) and the prev/next neighbours.
+2. Create `src/app/uiux/<slug>/page.tsx` — copy one of the existing three; it only resolves the entry + per-route metadata (title, description, canonical, per-page OG + twitter pointing at `/og/uiux-<slug>.png` — render it with `scripts/gen-og-images.py`) and the prev/next neighbours. If the app runs on this site, also add `src/app/uiux/<slug>/prototype/embed/page.tsx` (copy Taar's; a chrome-free noindex stage) and fill `prototypeUrl` + `prototypeEmbedUrl`.
 3. Add the route to `src/app/sitemap.ts`.
 
 Section content is a list of typed blocks the renderer already understands: `paragraph`, `list` (ordered/unordered), `hypotheses`, `table`, `personas`, `flow`, `wireframes` (inline SVG art — add a drawing to `WireframeArt.tsx`), `decisions` (title / rationale / trade-off), `swatches`, `typeSpecimen`, `rules`, `slot`.
@@ -138,16 +138,17 @@ Section content is a list of typed blocks the renderer already understands: `par
 Deploy each app separately (Vite → Vercel, no config), then fill the placeholders at the top of its entry in `src/data/uiuxProjects.ts`:
 
 ```ts
-prototypeUrl: '',  // Vercel URL of the deployed app — empty = the "Try it" section is hidden
-figmaUrl: '',      // Figma share link — empty = the "Design file" section is hidden
-repoUrl: '',       // GitHub — empty = the button is hidden
+prototypeUrl: '',      // deployed app URL or an internal /uiux/<slug>/prototype route — empty = "Try it" is hidden
+prototypeEmbedUrl: '', // chrome-free stage for the DeviceFrame iframe (defaults to prototypeUrl)
+figmaUrl: '',          // Figma share link — empty = the "Design file" section is hidden
+repoUrl: '',           // GitHub — empty = the button is hidden
 ```
 
 Empty means hidden — the site never renders "link pending". The "Try it" embed is a 390×844 `DeviceFrame` (aspect-ratio reserved, no layout shift, `sandbox`ed iframe that mounts only near the viewport on viewports ≥768px; phones get a poster + "Open prototype" button).
 
 ### Unfinished evidence
 
-Sections whose evidence isn't collected yet stay honest: a `{ type: 'slot' }` block renders a dashed placeholder in development and disappears from the production build; a table with `filled: false` renders the dashed skeleton in development and one quiet "Research in progress" line in production. Keep the `In progress` status tag until the owner flips it.
+Sections whose evidence isn't collected yet stay honest: a `{ type: 'slot' }` block renders a dashed placeholder in development and disappears from the production build; a table with `filled: false` renders the dashed skeleton in development and one quiet "Research in progress" line in production. And since [1.5.4]: a section made **only** of unfinished evidence collapses entirely in production (empty headings read as broken pages) and the surviving sections renumber 01..N. Development keeps everything. Keep the `In progress` status tag until the owner flips it.
 
 ## Design system notes (Apple UX web kit)
 
@@ -190,5 +191,6 @@ src/
 public/
   work/relay/                   # Relay case study: cover, diagrams/, screens/
   case-studies/                 # 6 Liquid Glass case study PDFs
-  og.png                        # + og/uiux-*.png placeholders for the case studies
+  og.png                        # + og/ — one 1200x630 share card per route (scripts/gen-og-images.py)
+  resume.pdf                    # the resume, hosted on-site (was a Google Drive link)
 ```

@@ -39,7 +39,7 @@ export type FaqEntry = {
 const L = {
   email: { href: 'mailto:omkarkardileatwork@gmail.com', label: 'Email Omkar' },
   resume: {
-    href: 'https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=sharing',
+    href: '/resume.pdf',
     label: 'Open resume',
   },
   github: { href: 'https://github.com/OmKardile', label: 'GitHub profile' },

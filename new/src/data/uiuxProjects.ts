@@ -11,11 +11,17 @@
 //       { type: 'slot' }                → dashed placeholder in development,
 //                                         hidden in production.
 //       { type: 'table', filled:false } → dashed placeholder in development,
-//                                         one quiet "Research in progress"
-//                                         line in production.
+//                                         gone from production — a section
+//                                         made only of unfinished evidence
+//                                         collapses entirely (and the
+//                                         survivors renumber), so prod never
+//                                         ships a bare heading.
 //   - prototypeUrl / figmaUrl / repoUrl stay empty until each app is
 //     deployed; empty = the section is not rendered at all (never
-//     "link pending").
+//     "link pending"). prototypeUrl may be an internal route — the
+//     prototypes of Taar and Sutra run on this site under /uiux/<slug>/
+//     prototype, with prototypeEmbedUrl as the chrome-free stage the
+//     DeviceFrame iframe embeds.
 
 export type Block =
   | { type: 'paragraph'; text: string }
@@ -57,8 +63,11 @@ export type UiuxProject = {
   problem: string;
   role: string[];
   tools: string[];
-  /** Vercel URL of the deployed app — empty = the "Try it" section is hidden. */
+  /** Vercel URL of the deployed app — empty = the "Try it" section is hidden.
+      Internal routes count: the Taar and Sutra prototypes live on this site. */
   prototypeUrl: string;
+  /** Chrome-free stage for the DeviceFrame iframe — defaults to prototypeUrl. */
+  prototypeEmbedUrl?: string;
   /** Figma share link — empty = the "Design file" section is hidden. */
   figmaUrl: string;
   /** GitHub repository — empty = the button is hidden. */
@@ -113,9 +122,10 @@ export const uiuxProjects: UiuxProject[] = [
     accentDark: '#A8B7D4',
     problem:
       'Fashion discovery usually makes the shopper do the work — filters buried screens deep, results that don’t move until you commit. Taar flips that: narrowing happens in one place, the count updates live, and availability is honest before you commit to anything.',
-    role: ['UX research', 'UI design', 'Front-end'],
+    role: ['UX design', 'UI design', 'Front-end'],
     tools: ['React', 'Vite', 'lucide-react'],
-    prototypeUrl: '',
+    prototypeUrl: '/uiux/taar/prototype',
+    prototypeEmbedUrl: '/uiux/taar/prototype/embed',
     figmaUrl: '',
     repoUrl: '',
     tryIt: {
@@ -139,7 +149,7 @@ export const uiuxProjects: UiuxProject[] = [
       },
       {
         n: '02',
-        title: 'Research',
+        title: 'Design rationale',
         blocks: [
           {
             type: 'hypotheses',
@@ -278,7 +288,7 @@ export const uiuxProjects: UiuxProject[] = [
         blocks: [
           {
             type: 'paragraph',
-            text: 'The React build is the study’s evidence — filters that actually filter, sizes that actually sell out, a grid that can actually end up empty. It deploys separately and embeds on this page once its URL is set.',
+            text: 'The React build is the study’s evidence — filters that actually filter, sizes that actually sell out, a grid that can actually end up empty. It runs live on this site: the embed on this page is the real app, not a video of it.',
           },
           {
             type: 'list',
@@ -471,7 +481,8 @@ export const uiuxProjects: UiuxProject[] = [
       'A checkout is the one screen where friction converts directly into abandonment — and the usual failure modes are all self-inflicted: surprise fees shown after commitment, errors yelled mid-keystroke, a dead end for every mistake. Sutra’s bet: if every step is forgiving, reversible and priced up front, the flow survives contact with real people.',
     role: ['UX design', 'Design system', 'Front-end'],
     tools: ['React', 'Vite', 'lucide-react'],
-    prototypeUrl: '',
+    prototypeUrl: '/uiux/sutra/prototype',
+    prototypeEmbedUrl: '/uiux/sutra/prototype/embed',
     figmaUrl: '',
     repoUrl: '',
     tryIt: {
@@ -644,7 +655,6 @@ export const uiuxProjects: UiuxProject[] = [
               'A Figma library with variables for the tokens and components with variants.',
               'The card form — number, expiry, CVV — as the third payment method.',
               'A usability round with five people, focused on the error-recovery paths.',
-              'Deploy separately; the embed lands here when the URL is set.',
             ],
           },
         ],

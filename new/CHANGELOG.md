@@ -3,6 +3,24 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.4] — 2026-11-10
+
+### Changed
+
+- **The case studies stopped advertising what isn't done.** A section whose only content is unfinished evidence ({type: 'slot'} or an unfilled table) now collapses **entirely in production** — no more "Who it's for" as a bare heading on all three studies, no more "Usability test" as a one-line placeholder, and the survivors renumber 01..N so there is no numbering gap. Development keeps every section as dashed placeholders, so the work queue is unchanged. Taar's "Research" section — which is design rationale, no users involved — is retitled **"Design rationale"**, and its role line drops the "UX research" claim.
+- **The Taar and Sutra prototypes are embedded on their case studies.** They already ran on this site (`/uiux/<slug>/prototype`); the case studies just never pointed at them. New chrome-free embed stages (`/uiux/<slug>/prototype/embed`, noindexed) pin the app to the DeviceFrame iframe — header, AskOmkar pill, view notice and footer all suppressed; the site header's own-chrome list learned the /embed routes. "Try it" renders after Wireframes on both studies; Ghar stays honest (no prototype yet, so no embed and its "deploy separately" next-step stays).
+- **Every page has its own share card.** /now, /colophon and /library carried the home page's og title/url/image, and /uiux plus the case studies had og tags but the home's twitter block. All seven routes now declare their own `openGraph` and `twitter`, and the seven referenced `/og/*.png` images actually exist now — 1200×630 cards rendered by `scripts/gen-og-images.py` from the site's own ink system (per-page accent: uiux orange, Taar navy, Ghar terracotta, Sutra blue).
+- **The library stat stopped leaning on a fork.** `edit` (the FMHY docs mirror — 186 of the 423 markdown docs, torrent-site notes in the visible list) leaves the curated index. The stats line computes honestly: **7 of 29 public repos · 237 markdown documents · 3 design systems**. A short note under the section now pre-empts the AI question — AGENT_LOG, CLAUDE.md and PROMPT.md are on purpose; the tools draft, Omkar decides, and the decision docs make the split auditable.
+- **The colophon's answer count is computed, not typed.** "82 pre-written answers" vs /library's "72" was two real numbers describing different banks — the served bank is 82 (72 hand-written + 10 derived from the project data). The colophon now imports the bank and renders the split, so the two pages can't drift again.
+- **Skill chips wear the verified-claims rule.** UX Research, Usability & User Testing, Framer and Native iOS have no shipped evidence on the site — each is now marked **"· learning"** on its chip, with a one-line legend ("evidence pending, the receipts land as they ship"). Everything unmarked has receipts.
+- **AskOmkar downloads nothing on chat open.** The 700ms-after-open model warm-up is gone; opening the drawer is free, chips answer with no model at all, and the first free-typed question is answered **by keyword immediately** while the ~23 MB model warms in the background (with a progress line) — later questions match by meaning.
+- **Home copy de-jargoned.** "Links point only to verified destinations" (process talk) becomes "Every link opens the real thing."
+
+### Added
+
+- **Resume at /resume.pdf.** The Google Drive link — clunky on mobile, blocked on some corporate networks — is replaced by the PDF hosted on-site (same file, verified); the nav, the contact links, AskOmkar's CTA bar and the answer bank all point at it.
+- **"last commit" chips on the live work cards.** The five shipped projects backed by public repos (SSShopee, ServePoint, PatelNetworks, tech // site, HandOff) carry their repo's last-push date, fetched from each repo's commits Atom feed at build time (revalidated daily — the uncapped HTML-side feed, not the 60/h REST API); a failed fetch omits the chip instead of lying.
+
 ## [1.5.3] — 2026-11-10
 
 ### Added

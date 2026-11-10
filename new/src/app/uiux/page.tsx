@@ -30,7 +30,13 @@ export const metadata: Metadata = {
     url: `${site.url}/uiux`,
     title: `${site.name} | UI/UX Design Portfolio`,
     description: uiux.description,
-    /* Placeholder path — replace with a real screenshot. */
+    /* Rendered from the site's own tokens — scripts/gen-og-images.py */
+    images: ['/og/uiux.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${site.name} | UI/UX Design Portfolio`,
+    description: uiux.description,
     images: ['/og/uiux.png'],
   },
 };

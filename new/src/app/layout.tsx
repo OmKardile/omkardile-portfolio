@@ -27,7 +27,12 @@ export const metadata: Metadata = {
     description: site.description,
     images: ['/og.png'],
   },
-  twitter: { card: 'summary_large_image', title: `${site.name} | ${site.role}`, description: site.description },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${site.name} | ${site.role}`,
+    description: site.description,
+    images: ['/og.png'],
+  },
 };
 
 export const viewport: Viewport = {

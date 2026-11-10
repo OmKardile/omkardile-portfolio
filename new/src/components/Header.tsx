@@ -43,12 +43,15 @@ export function Header() {
 
   // The /uiux portfolio (index + the three case studies) has its own slim
   // nav — the site header would double it. Legacy prototype stages
-  // (/uiux/*/prototype) keep the site chrome. Explicit list on purpose.
+  // (/uiux/*/prototype) keep the site chrome; the chrome-free embed stages
+  // (/uiux/*/prototype/embed — what the DeviceFrame iframes load) suppress
+  // it along with the rest of the global chrome. Explicit list on purpose.
   const uiuxOwnChrome =
     pathname === '/uiux' ||
     pathname === '/uiux/taar' ||
     pathname === '/uiux/ghar' ||
-    pathname === '/uiux/sutra';
+    pathname === '/uiux/sutra' ||
+    (pathname.startsWith('/uiux/') && pathname.endsWith('/embed'));
 
   // NOTE: no pathname effect needed — every element that triggers a route
   // change (sheet links, Resume, the switch pill below) closes the sheet in

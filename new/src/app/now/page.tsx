@@ -9,6 +9,22 @@ export const metadata: Metadata = {
   description:
     'What Omkar Kardile is building and looking for right now — updated November 2026.',
   alternates: { canonical: './' },
+  openGraph: {
+    type: 'website',
+    siteName: site.name,
+    url: `${site.url}/now`,
+    title: 'Now — what Omkar is building right now',
+    description:
+      'What Omkar Kardile is building and looking for right now — the bench, the playlists, the reading. Updated November 2026.',
+    images: ['/og/now.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Now — what Omkar is building right now',
+    description:
+      'What Omkar Kardile is building and looking for right now — the bench, the playlists, the reading. Updated November 2026.',
+    images: ['/og/now.png'],
+  },
 };
 
 /* /now — the nownownow convention: what I'm building and looking for at
@@ -58,7 +74,13 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.5.3] just shipped: the site-wide custom pointer with hints riding
+              Version [1.5.4] just shipped: the honesty pass — case-study sections with no
+              evidence behind them vanish from production and the survivors renumber, the
+              Taar and Sutra prototypes embed live on their case studies, every page got its
+              own share card with rendered OG images, the resume moved on-site to
+              /resume.pdf, the skill chips wear their learning marks, the library index
+              dropped the fork that inflated its count, and AskOmkar downloads nothing until
+              you actually ask. Before that: the site-wide custom pointer with hints riding
               it ([1.4.6]), the footer motion toggle for reduced-motion machines ([1.4.7]),
               this page and /colophon ([1.4.8]), the /library docs room gone repo-wide
               ([1.4.9]–[1.5.0]), the listening playlists with a playing/paused state

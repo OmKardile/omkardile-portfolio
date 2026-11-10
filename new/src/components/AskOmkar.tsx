@@ -3,9 +3,12 @@
 // AskOmkar — the portfolio's resident bot.
 //
 // A floating pill opens a drawer that answers recruiter questions about Omkar
-// from a fully pre-written bank. Free-typed questions are matched IN-BROWSER
-// by a small embedding model (lazy-loaded from CDN, ~23 MB once, cached);
-// suggested chips bypass the model entirely and answer instantly.
+// from a fully pre-written bank. Free-typed questions are matched IN-BROWSER;
+// suggested chips answer instantly with no model at all. The embedding model
+// (~23 MB, cached after the first fetch) is triggered by the FIRST free-typed
+// question — never by opening the drawer: the first question is answered by
+// keyword matching while the model warms in the background, and every later
+// question matches by meaning. Nothing downloads on chat open.
 //
 // Guarantees by construction:
 //   - no server calls at answer time (the only network fetch is the one-time
@@ -246,17 +249,10 @@ export function AskOmkar() {
     };
   }, [open]);
 
-  // Quietly warm the model once the panel has been open for a moment.
-  useEffect(() => {
-    if (!open || warm !== 'idle') return;
-    const t = window.setTimeout(() => {
-      setWarm('warming');
-      loadEmbedder((f) => setProgress(f))
-        .then(() => setWarm('ready'))
-        .catch(() => setWarm('failed'));
-    }, 700);
-    return () => window.clearTimeout(t);
-  }, [open, warm]);
+  // The model is NOT warmed on open — a drawer peek on mobile data should
+  // not cost a ~23 MB download. The first free-typed question triggers the
+  // warm-up (see send): keyword matching answers it immediately, the model
+  // loads in the background, and every later question matches by meaning.
 
   // First open plants the intro message (never inside a state updater —
   // updater functions must stay pure or React can drop the update).
@@ -285,25 +281,42 @@ export function AskOmkar() {
     setMsgs((m) => [...m, { role: 'user', text: q }]);
     try {
       let match: MatchResult;
-      try {
+      let warmNote: string | undefined;
+      if (warm === 'ready') {
         const embed = await loadEmbedder();
         const vectors = await loadVectors();
         const qvec = await embed(q);
         match = rankByVector(qvec, vectors);
-        if (warm !== 'ready') setWarm('ready');
-      } catch {
-        // Model or CDN unavailable — keyword fallback keeps the bot usable.
+      } else {
+        // Model not warm yet: answer NOW by keyword instead of holding the
+        // question hostage to a ~23 MB download, and warm the model in the
+        // background so the next question matches by meaning.
         match = rankByKeywords(q);
-        setWarm('failed');
+        if (warm === 'idle') {
+          setWarm('warming');
+          loadEmbedder((f) => setProgress(f))
+            .then(() => setWarm('ready'))
+            .catch(() => setWarm('failed'));
+        }
+        warmNote =
+          warm === 'failed'
+            ? undefined
+            : 'Matched by keyword while the local matcher warms up (~23 MB, one-time, cached) — ask again and it matches by meaning.';
       }
       logAsk(q, match.best.entry.id, match.best.score, match.tier);
       const { entry } = match.best;
+      const relatedNote =
+        match.tier === 'related'
+          ? 'Closest match from my bank — rephrase if this is not what you meant.'
+          : undefined;
+      const note = [warmNote, relatedNote].filter(Boolean).join(' ') || undefined;
       if (match.tier === 'fallback') {
         setMsgs((m) => [
           ...m,
           {
             role: 'bot',
             text: FALLBACK_TEXT,
+            note,
             chips: match.alternatives.length
               ? match.alternatives.map((a) => a.entry)
               : suggestedIds.map((id) => byId.get(id)).filter((e): e is FaqEntry => Boolean(e)).slice(0, 3),
@@ -316,7 +329,7 @@ export function AskOmkar() {
             role: 'bot',
             text: entry.a,
             links: entry.links,
-            note: match.tier === 'related' ? 'Closest match from my bank — rephrase if this is not what you meant.' : undefined,
+            note,
             chips: match.tier === 'related' ? match.alternatives.map((a) => a.entry) : undefined,
           },
         ]);
@@ -423,6 +436,12 @@ export function AskOmkar() {
                 </div>
               </div>
             )}
+            {warm === 'warming' && !busy && (
+              <p className="ao-degraded">
+                Warming the local matcher… {progress > 0 ? `${Math.round(progress * 100)}%` : ''} — keyword
+                answers meanwhile. One-time ~23 MB, cached after this.
+              </p>
+            )}
             {warm === 'failed' && !busy && (
               <p className="ao-degraded">Matcher offline — answering by keyword. Everything still runs locally.</p>
             )}
@@ -436,11 +455,7 @@ export function AskOmkar() {
             <a href="https://www.linkedin.com/in/omkar-kardile-49501b213/" target="_blank" rel="noopener noreferrer">
               LinkedIn
             </a>
-            <a
-              href="https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=sharing"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
               Resume
             </a>
           </div>

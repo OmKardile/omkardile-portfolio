@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Metadata } from 'next';
 import { Footer } from '@/components/Footer';
-import { projects, experience, capabilities } from '@/data/site';
+import { site, projects, experience, capabilities } from '@/data/site';
 import { hand } from '@/data/askomkar/hand';
 import { uiuxProjects } from '@/data/uiuxProjects';
 import { ghRepos, GH_INDEXED } from '@/data/library';
@@ -14,6 +14,22 @@ export const metadata: Metadata = {
   description:
     'The docs library — this site\u2019s system documents rendered whole at build time, plus the design systems and the doc collections across the GitHub repos with the design-system folders downloadable as zips, and the sites guide: what every site runs on.',
   alternates: { canonical: './' },
+  openGraph: {
+    type: 'website',
+    siteName: site.name,
+    url: `${site.url}/library`,
+    title: 'Library — the docs, as shipped',
+    description:
+      'The system documents rendered whole, the design systems across the repos downloadable as zips, and the guide to what every site runs on.',
+    images: ['/og/library.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Library — the docs, as shipped',
+    description:
+      'The system documents rendered whole, the design systems across the repos downloadable as zips, and the guide to what every site runs on.',
+    images: ['/og/library.png'],
+  },
 };
 
 /* /library — the docs live with the code they describe, on this site and
@@ -331,6 +347,17 @@ export default function LibraryPage() {
           {ghRepos.length} of 29 public repos · {totalDocs} markdown documents ·{' '}
           {designSystemCount} design systems, downloadable · the rest are repos, not
           docs · indexed {GH_INDEXED}
+        </p>
+        <p
+          data-reveal
+          suppressHydrationWarning
+          style={{ color: 'var(--muted)', marginBlock: '0.4rem 0.6rem', maxWidth: '40rem' }}
+        >
+          About the AI you&apos;ll see in these repos — AGENT_LOG, CLAUDE.md, PROMPT.md are
+          real files on purpose. The tools draft; Omkar decides, reviews and ships. Each
+          repo&apos;s decision docs record what was chosen and why, so the division of
+          labor is auditable rather than implied — and the curation and the counts on
+          this page are computed from the files, not typed by hand.
         </p>
         <div className="lg-list" data-reveal suppressHydrationWarning>
           {ghRepos.map((r, ri) => {
