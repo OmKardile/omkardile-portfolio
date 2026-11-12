@@ -69,21 +69,34 @@
   will-change: transform;
 }
 
+/* Anti-aliasing — dot and ring are rasterized at 2× their visual size and
+   scaled 0.5 in Cursor's per-frame transform (the SS factor there). The
+   compositor then resamples a doubled raster at every fractional offset
+   and rotation, so edges render smooth instead of stair-stepped — which is
+   exactly what a raw 6px square and a 1px border show on 1×-DPR screens,
+   worst on the ring's 4px corner arcs. Visual geometry is unchanged:
+   6px dot + 1px halo, 32px ring + 1px border + 4px radius. The chip and
+   hint are text — glyphs are already anti-aliased by the font rasterizer,
+   and scaling them down would blur them, so they stay 1:1. */
+
 .ux-cursor-dot {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
+  /* 2× raster of the 6px dot: 12px element, halo doubled to 2px (→1px visual) */
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
   background: var(--fg);
-  box-shadow: 0 0 0 1px var(--bg);
+  box-shadow: 0 0 0 2px var(--bg);
 }
 
 .ux-cursor-ring {
-  width: 32px;
-  height: 32px;
-  margin: -16px 0 0 -16px;
-  border: 1px solid var(--fg);
-  border-radius: 4px;
-  box-shadow: 0 0 0 1px var(--bg); /* same halo, same reason */
+  /* 2× raster of the 32px ring: 64px element, border doubled to 2px (→1px
+     visual), radius doubled to 8px (→4px visual), halo doubled */
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border: 2px solid var(--fg);
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px var(--bg); /* same halo, same reason */
   opacity: 0.55;
   transition: opacity 0.2s ease;
 }

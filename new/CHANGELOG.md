@@ -3,6 +3,12 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.5] — 2026-11-12
+
+### Fixed
+
+- **The custom pointer is anti-aliased.** The 6px ink dot and the 32px wireframe ring are tiny composited boxes animated at fractional pixel offsets and rotations every frame — at their raw sizes their edges stair-step on 1×-DPR screens, worst on the ring's 1px corner arcs. Both now raster at **twice their visual size** (12px / 64px elements, borders and halos doubled to 2px, radius to 8px) and scale back down **0.5 inside Cursor's per-frame transform** — the compositor then resamples a doubled raster at every fractional offset, so edges render smooth. Visual geometry is unchanged: same 6px dot with its 1px halo, same 32px ring with its 1px border and 4px radius, same press/link/label scales (the scale lerp still works in visual units; the factor folds into the written transform only). The chip and hint are deliberately untouched — glyphs are already anti-aliased by the font rasterizer, and downscaling them would blur text.
+
 ## [1.5.4] — 2026-11-10
 
 ### Changed

@@ -85,9 +85,12 @@ ancestor transform can offset them and no shell scoping can hide them.
 
 - **dot** — 6px ink square (`var(--fg)`), centered by −3px margins, 1px
   `var(--bg)` halo so it stays readable on ink surfaces (hovered inverted
-  buttons).
+  buttons). Rasterized at 2× (a 12px element with a 2px halo) and scaled
+  0.5 in the JS transform — see "Anti-aliasing" below.
 - **ring** — 32px wireframe square, 4px radius, 1px ink border, resting
-  opacity 0.55. Trails on the slow lerp with the velocity lean.
+  opacity 0.55. Trails on the slow lerp with the velocity lean. Rasterized
+  at 2× (64px element, 2px border, 8px radius) and scaled 0.5 in the JS
+  transform — see "Anti-aliasing" below.
 - **chip** — the `[data-cursor]` label. Filled ink, Fragment Mono
   (`--mono` set explicitly — portal children sit outside every shell scope,
   so shell-scoped font vars silently resolved to nothing once), 0.62rem
@@ -121,6 +124,21 @@ the `translate3d(...) scale(...)` string written per frame. Targets —
 dot: 1.6 pressed / 0.6 over links; ring: 0.85 pressed / 1.45 over links;
 chip: 1 in label mode / 0.4 otherwise.
 
+## Anti-aliasing — the 2× raster ([1.5.5])
+
+The dot and ring are tiny composited boxes animated at fractional pixel
+offsets and rotations every frame — at their raw sizes the edges stair-step
+on 1×-DPR screens, worst on the ring's 1px corner arcs. Fix: **supersample**.
+`cursor.css` declares both at twice their visual size (dot 12px + 2px halo,
+ring 64px + 2px border + 8px radius + 2px halo) and `Cursor.tsx` writes
+`scale(visual × 0.5)` into the per-frame transform (`const SS = 0.5`). The
+compositor then resamples a doubled raster at every fractional offset and
+rotation, so edges render smooth. The scale lerp still works in visual
+units (press 1.6×, link 1.45×, squeeze 0.85× are unchanged); the factor
+folds into the written transform only. Chip and hint are text and stay 1:1
+— glyphs are already anti-aliased by the font rasterizer, and scaling them
+down would blur them.
+
 ## The motion preference — "Cursor: auto / on / off" (footer)
 
 The site's motion philosophy is "always on" (Lenis, reveals, progress bar
@@ -148,8 +166,9 @@ every theme (light, dark, the /uiux paper theme) for free. The 1px
 
 ## Verification
 
-Scripts live in `scripts/` (gitignored, never committed) and run against
-Playwright/chromium with real mouse simulation:
+Scripts live in `scripts/` and are tracked in git (since [1.5.4] — they used
+to be gitignored and were rewritten from scratch every session) and run
+against Playwright/chromium with real mouse simulation:
 
 | Script | Checks | Notes |
 | --- | --- | --- |
@@ -163,6 +182,9 @@ before/after pair for the reduced-motion fix).
 
 ## History
 
+- **[1.5.5]** — the dot and ring raster at 2× their visual size and scale
+  0.5 in the JS transform: anti-aliased edges at every fractional offset
+  and rotation, identical geometry (see "Anti-aliasing" above).
 - **[1.4.6]** `ef42f9b` — site-wide replacement (the native pointer used to
   pop back over global chrome), hints anchored to the pointer with edge/floor
   flips, chip measured centering, portal font fix.

@@ -74,14 +74,21 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.5.4] just shipped: the honesty pass — case-study sections with no
-              evidence behind them vanish from production and the survivors renumber, the
-              Taar and Sutra prototypes embed live on their case studies, every page got its
-              own share card with rendered OG images, the resume moved on-site to
-              /resume.pdf, the skill chips wear their learning marks, the library index
-              dropped the fork that inflated its count, and AskOmkar downloads nothing until
-              you actually ask. Before that: the site-wide custom pointer with hints riding
-              it ([1.4.6]), the footer motion toggle for reduced-motion machines ([1.4.7]),
+              Version [1.5.5] just shipped: the custom pointer is anti-aliased —
+              the ink dot and the wireframe ring raster at twice their visual
+              size and scale back down inside the engine&apos;s per-frame
+              transform, so their edges render smooth instead of stair-stepped;
+              the geometry, the states and the hints are all unchanged. Before
+              that: the honesty pass ([1.5.4]) — case-study sections with no
+              evidence behind them vanish from production and the survivors
+              renumber, the Taar and Sutra prototypes embed live on their case
+              studies, every page got its own share card with rendered OG
+              images, the resume moved on-site to /resume.pdf, the skill chips
+              wear their learning marks, the library index dropped the fork
+              that inflated its count, and AskOmkar downloads nothing until
+              you actually ask. And before that: the site-wide custom pointer
+              with hints riding it ([1.4.6]), the footer motion toggle for
+              reduced-motion machines ([1.4.7]),
               this page and /colophon ([1.4.8]), the /library docs room gone repo-wide
               ([1.4.9]–[1.5.0]), the listening playlists with a playing/paused state
               ([1.5.1]), the design-system zips built right in the browser with the chips

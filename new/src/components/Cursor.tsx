@@ -114,6 +114,16 @@ export function Cursor() {
     let ry = ty;
     let raf = 0;
 
+    /* Anti-aliasing: dot and ring raster at 2× their visual size (cursor.css)
+       and scale 0.5 inside the transform written below — the compositor then
+       resamples a doubled raster at every fractional offset and rotation, so
+       their edges render smooth instead of stair-stepped (a raw 6px dot and
+       a 1px border are exactly where the jaggies show on 1× displays). The
+       scale lerp still works in VISUAL units (1 = full size); SS folds into
+       the written transform only. Chip/hint are text — the font rasterizer
+       already anti-aliases glyphs, and scaling them down would blur them. */
+    const SS = 0.5;
+
     /* Scale lives in the JS transform, not the CSS `scale` property: the
        individual property composes BEFORE `transform`, so a scaled element
        would render at scale× the pointer position (the ring used to land at
@@ -183,8 +193,8 @@ export function Cursor() {
         s[k] += (t[k] - s[k]) * 0.2;
         if (Math.abs(s[k] - t[k]) < 0.001) s[k] = t[k];
       }
-      dot.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${s.dot.toFixed(3)})`;
-      ring.style.transform = `translate3d(${rx.toFixed(1)}px, ${ry.toFixed(1)}px, 0) rotate(${(-5 + vel).toFixed(2)}deg) scale(${s.ring.toFixed(3)})`;
+      dot.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${(s.dot * SS).toFixed(4)})`;
+      ring.style.transform = `translate3d(${rx.toFixed(1)}px, ${ry.toFixed(1)}px, 0) rotate(${(-5 + vel).toFixed(2)}deg) scale(${(s.ring * SS).toFixed(4)})`;
       /* chip centered on the pointer by measured size — a fixed margin
          hangs it off-side the moment the text is wider than ~28px */
       chip.style.transform = `translate3d(${(rx - chipW / 2).toFixed(1)}px, ${(ry - chipH / 2).toFixed(1)}px, 0) rotate(${(-2 + vel * 0.4).toFixed(2)}deg) scale(${s.chip.toFixed(3)})`;
