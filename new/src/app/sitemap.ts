@@ -9,6 +9,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site.url}/now`, lastModified: new Date(), priority: 0.6 },
     { url: `${site.url}/colophon`, lastModified: new Date(), priority: 0.6 },
     { url: `${site.url}/library`, lastModified: new Date(), priority: 0.6 },
+    // The one-source outputs — resume route and the candidate receipt
+    { url: `${site.url}/resume`, lastModified: new Date(), priority: 0.5 },
+    { url: `${site.url}/receipt`, lastModified: new Date(), priority: 0.5 },
     // UI/UX case studies
     { url: `${site.url}/uiux/taar`, lastModified: new Date(), priority: 0.8 },
     { url: `${site.url}/uiux/ghar`, lastModified: new Date(), priority: 0.8 },

@@ -108,12 +108,6 @@ export const ledgerOwed: LedgerOwed[] = [
     logged: '2026-11-10',
   },
   {
-    item: 'Resume cut to one page',
-    detail:
-      '/resume.pdf runs six pages — a 1–2 page cut replaces it, because six pages reads as padding',
-    logged: '2026-11-11',
-  },
-  {
     item: 'Figma view-links on the case studies',
     detail: 'the high-fidelity wires, linkable frame by frame, next to the live prototypes',
     logged: '2026-11-13',
@@ -130,10 +124,23 @@ export const ledgerOwed: LedgerOwed[] = [
       'the interactive apps live in the old codebase and the site says so — either they get the new home or the entries are written off, not left hanging',
     logged: '2026-11-10',
   },
+  {
+    item: 'SSShopee GST receipt credit',
+    detail:
+      '"Software by Omkar Kardile · omkardile.is-a.dev" plus a QR on the store\u2019s printed bills — a freelance lead channel; it\u2019s the family\u2019s store, so it waits on their sign-off and a read-only endpoint',
+    logged: '2026-11-13',
+  },
 ];
 
 /** Settled — promises kept and corrections made, each stamp a real version. */
 export const ledgerSettled: LedgerSettled[] = [
+  {
+    item: 'Resume cut to one page',
+    detail:
+      'the six-pager is gone — [1.5.9] rebuilds the resume as a route rendered from src/data/site.ts (the /resume print route, printed to /resume.pdf by scripts/build-resume-pdf.py), and the contact line that had drifted (the old PDF\u2019s omkardile84@gmail.com) now comes from the same fields as the site',
+    closedIn: '1.5.9',
+    kind: 'promise',
+  },
   {
     item: 'The colophon said 82 answers; /library said 72',
     detail:

@@ -3729,3 +3729,25 @@ html.js-reveal .relay-fig[data-curtain].curtain-in {
   padding: 0.1rem 0.45rem;
   white-space: nowrap;
 }
+
+/* Print — [1.5.9]. The chrome leaves, the content stays: Ctrl+P on any
+   page (the receipt, the resume route) prints the artifact without the
+   nav, the bot, the pointer or the toggles. The resume PDF is printed
+   from the /resume route through this same rule set. */
+@media print {
+  .site-header,
+  .site-footer,
+  .motion-toggle,
+  .ux-cursor,
+  [class*='ao-'],
+  [class*='scroll-progress'] {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #18181b !important;
+  }
+  .section {
+    padding-block: 0.6rem !important;
+  }
+}

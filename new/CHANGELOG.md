@@ -3,6 +3,17 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.9] — 2026-11-13
+
+### Added
+
+- **One source, many outputs.** The resume is a route now: **/resume** renders from `src/data/site.ts` — contact (email, phone, location, URL), roles, the first four live projects with their verified repo scans, skills — plus the education rows only the resume knows (`src/data/resume.ts`); single column, real text, one page, ATS-safe by construction. `scripts/build-resume-pdf.py` prints the route to `public/resume.pdf` and refuses to ship a second page or a drifted contact line. **/llms.txt** compiles the facts, the builds with their repo scans, the routes and the dated ledger for assistants, from the same data files, at build time. **/receipt** — the candidate receipt: thermal-receipt styling in Fragment Mono, the three best proofs with verified stacks, the totals (including "unverifiable claims: 0"), the open promises with their dates, and a vCard QR generated at build time from site.ts's own contact fields (`scripts/build-receipt-qr.py`) — the page is fully static, so nothing about a visit leaves the browser.
+
+### Changed
+
+- **The ledger worked.** "Resume cut to one page" is settled, stamped [1.5.9] — the cut had quietly shipped, but with a drifted contact line: the old PDF carried `omkardile84@gmail.com` and `omkardile-portfolio.vercel.app` against the site's real email and `omkardile.is-a.dev`. The rebuild renders the contact from the same fields as every other page, so it can't drift again. New owed entry, dated: the **SSShopee GST receipt credit** ("Software by Omkar Kardile" + QR on printed bills) — waiting on the family's sign-off and a read-only endpoint. Open count stays at five.
+- **PatelNetworks' stack line** — flagged as evasive-by-contrast by a cold recruiter-read of the live site: the vague "E-commerce platform" line now leads with the manifest-verified stack from the [1.5.8] repo scan (Next.js 16 · React 19 · Prisma 6 · Tailwind CSS 4 · Razorpay payments · GST invoicing). `/resume` and `/receipt` joined the sitemap.
+
 ## [1.5.8] — 2026-11-13
 
 ### Changed

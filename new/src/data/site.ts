@@ -30,6 +30,10 @@ export const site = {
   description:
     'Portfolio of Omkar Kardile, designer and developer in Pune. Product and UI/UX design paired with the engineering to ship the result in code.',
   email: 'omkarkardileatwork@gmail.com',
+  // The one phone number, carried from the public resume — every surface
+  // (the resume route, the PDF, the vCard QR) renders from here, so they
+  // can't drift the way the old resume's contact line did.
+  phone: '+91 88887 85222',
   heroLine: 'Designer and developer in Pune. I design digital products and ship them in code.',
   statement:
     'I design and build thoughtful digital products that are simple, useful and human: product and UI/UX design paired with the engineering to ship the result in code.',
@@ -93,7 +97,7 @@ export const projects: Project[] = [
     status: 'live',
     summary:
       'Shipped to client: a storefront for a Surat-based surveillance and networking hardware business — categorized product catalog, exclusive CCTV kit bundles, Razorpay checkout with COD, GST invoicing with serial-tracked warranty, OTP customer accounts with order history and one-tap reorders, WhatsApp ordering and order tracking. Demo is live.',
-    stack: 'E-commerce platform · Razorpay payments · GST invoicing',
+    stack: 'Next.js 16 · React 19 · Prisma 6 · Tailwind CSS 4 · Razorpay payments · GST invoicing',
     links: [
       { href: 'https://patelnetworks-5ne3.onrender.com/', label: 'Open live demo' },
       { href: 'https://patelnetworks-5ne3.onrender.com/admin', label: 'Open admin dashboard' },
