@@ -188,4 +188,11 @@ export const ledgerSettled: LedgerSettled[] = [
     closedIn: '1.5.5',
     kind: 'promise',
   },
+  {
+    item: 'The library said 29 public repos',
+    detail:
+      'the count was typed, not scanned — it computes from the repositories page now (35 source repos), the reading room pulls every build\u2019s own docs whole, and /colophon\u2019s fleet verifies each build\u2019s stack from its repo manifest',
+    closedIn: '1.5.8',
+    kind: 'correction',
+  },
 ];

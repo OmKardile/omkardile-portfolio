@@ -6,13 +6,14 @@ import { site, projects, experience, capabilities } from '@/data/site';
 import { hand } from '@/data/askomkar/hand';
 import { uiuxProjects } from '@/data/uiuxProjects';
 import { ghRepos, GH_INDEXED } from '@/data/library';
+import { acrossBuildsDocs, buildScans, PUBLIC_SOURCE_REPOS, BUILDS_INDEXED } from '@/data/builds';
 import { Markdown } from '@/lib/md';
 import { DesignSystemDownload } from '@/components/DesignSystemDownload';
 
 export const metadata: Metadata = {
   title: 'Library',
   description:
-    'The docs library — this site\u2019s system documents rendered whole at build time, plus the design systems and the doc collections across the GitHub repos with the design-system folders downloadable as zips, and the sites guide: what every site runs on.',
+    'The docs library — system documents rendered whole at build time across all the builds, plus the design systems and the doc collections across the GitHub repos with the design-system folders downloadable as zips, and the sites guide: what every site runs on.',
   alternates: { canonical: './' },
   openGraph: {
     type: 'website',
@@ -33,20 +34,21 @@ export const metadata: Metadata = {
 };
 
 /* /library — the docs live with the code they describe, on this site and
-   across every repo. The reading room renders the system documents whole
-   from the repo at build time; 02 / Across GitHub is curated to the repos
-   where the docs are the point — the design systems and the doc
-   collections — generated into src/data/library.ts by
-   scripts/curate-library.py from a live scan (git clone --depth 1 per
-   repo, trees listed with ls-tree, node_modules excluded). Every
-   collection stat is computed from real files — nothing here is a number
-   that was typed by hand. The design-system folders download as zips —
-   the chip sits on the row itself, assembled in the browser by
+   across every build. The reading room renders the system documents whole
+   from the repo at build time — and, since [1.5.8], the other builds' own
+   docs too (README + design-system/README per build repo, generated into
+   src/data/builds.ts by scripts/curate-builds.py from a live clone scan,
+   capped at 64 KB with truncation flagged). 02 / Across GitHub is curated
+   to the repos where the docs are the point — the design systems and the
+   doc collections — generated into src/data/library.ts; every collection
+   stat is computed from real files — nothing here is a number that was
+   typed by hand. The design-system folders download as zips — the chip
+   sits on the row itself, assembled in the browser by
    src/components/DesignSystemDownload.tsx. 03 / The sites is the guide to
    what my sites run on — every site and app, this one included, the stack
    in plain sight on the row, rendered from src/data/site.ts (the
-   portfolio\u2019s machine line from /colophon); 04 / Collections keeps
-   the data files this site renders from, stats computed at build time. */
+   portfolio's machine line from /colophon); 04 / Collections keeps the
+   data files this site renders from, stats computed at build time. */
 
 const REPO_BLOB =
   'https://github.com/OmKardile/omkardile-portfolio/blob/main/new';
@@ -249,11 +251,12 @@ export default function LibraryPage() {
         </h1>
         <p style={{ color: 'var(--muted)', marginBlock: '1rem 0', maxWidth: '34rem' }}>
           The docs live with the code they describe — on this site and across every
-          repo. The system documents are rendered whole from the build; the GitHub
-          index carries the design systems and the doc collections — the repos
-          where the docs are the point — with the design-system folders
-          downloadable as zips, built in your browser; and the sites guide at the
-          bottom says what every one of my sites runs on. No number was typed by hand.
+          build. The reading room renders this repo&apos;s system documents whole from
+          the build, then the other builds&apos; own docs below them; the GitHub index
+          carries the design systems and the doc collections — the repos where the docs
+          are the point — with the design-system folders downloadable as zips, built in
+          your browser; and the sites guide at the bottom says what every one of my
+          sites runs on. No number was typed by hand.
         </p>
       </section>
 
@@ -328,8 +331,66 @@ export default function LibraryPage() {
             );
           })}
         </div>
-      </section>
 
+        {/* Across the builds — [1.5.8]. The other builds' own docs, pulled
+            whole by scripts/curate-builds.py at index time, capped at 64 KB
+            with truncation flagged and every card linked back to its repo. */}
+        <div className="lg-list" data-reveal suppressHydrationWarning style={{ marginTop: '2.2rem' }}>
+          <p
+            className="mono"
+            style={{ fontSize: '0.68rem', color: 'var(--muted)', letterSpacing: '0.08em', marginBlock: '0 0.5rem' }}
+          >
+            ACROSS THE BUILDS · {acrossBuildsDocs.length} DOCS RENDERED WHOLE · SCANNED {BUILDS_INDEXED}
+          </p>
+          <p style={{ color: 'var(--muted)', marginBlock: '0 0.6rem', maxWidth: '40rem' }}>
+            The reading room is no longer just this site&apos;s docs — every build&apos;s README
+            and design-system front page renders whole below, pulled from its repo at index
+            time and capped at 64 KB, with the uncapped original one click away.
+          </p>
+          {acrossBuildsDocs.map((d, di) => {
+            const branch = buildScans.find((b) => b.slug === d.slug)?.branch ?? 'main';
+            return (
+              <details className="lg-row" name="library-builds" key={`${d.repo}/${d.path}`}>
+                <summary>
+                  <span className="lg-idx mono">{String(di + 1).padStart(2, '0')}</span>
+                  <span className="lg-head">
+                    <span className="lg-line">
+                      <span className="lg-name">{d.name}</span>
+                      <span className="lg-kind"> · {d.kind}</span>
+                    </span>
+                    <span className="lg-sum">
+                      {d.repo} · {d.lines} lines · {d.kb} KB{d.truncated ? ' · capped' : ''}
+                    </span>
+                  </span>
+                  <span className="ch-chev" aria-hidden="true">
+                    +
+                  </span>
+                </summary>
+                <div className="lg-body">
+                  <p className="mono" style={{ fontSize: '0.74rem', color: 'var(--muted)' }}>
+                    {d.path} · {d.lines} lines · {d.kb} KB ·{' '}
+                    <a
+                      href={ghBlob(d.repo, branch, d.path)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-hint="Source · new tab"
+                    >
+                      source ↗
+                    </a>
+                  </p>
+                  <Markdown source={d.text} />
+                  {d.truncated && (
+                    <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.76rem' }}>
+                      …this doc ran past the 64 KB shelf cap — the uncapped original is the
+                      source link above.
+                    </p>
+                  )}
+                </div>
+              </details>
+            );
+          })}
+        </div>
+      </section>
       {/* 02 / Across GitHub */}
       <section className="section container" aria-labelledby="github-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
@@ -344,8 +405,8 @@ export default function LibraryPage() {
           className="mono"
           style={{ color: 'var(--muted)', fontSize: '0.76rem', marginBottom: '0.6rem' }}
         >
-          {ghRepos.length} of 29 public repos · {totalDocs} markdown documents ·{' '}
-          {designSystemCount} design systems, downloadable · the rest are repos, not
+          {ghRepos.length} of {PUBLIC_SOURCE_REPOS} public source repos · {totalDocs} markdown
+          documents · {designSystemCount} design systems, downloadable · the rest are repos, not
           docs · indexed {GH_INDEXED}
         </p>
         <p
@@ -607,7 +668,7 @@ export default function LibraryPage() {
       <section className="section container">
         <p data-reveal suppressHydrationWarning className="mono" style={{ color: 'var(--muted)', fontSize: '0.78rem' }}>
           Set whole from the repo at build time · {versions.length} versions and counting ·
-          the GitHub index generated {GH_INDEXED}.
+          the GitHub index generated {GH_INDEXED} · the builds scanned {BUILDS_INDEXED}.
         </p>
       </section>
 
