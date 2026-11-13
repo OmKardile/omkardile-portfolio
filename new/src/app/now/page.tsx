@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Footer } from '@/components/Footer';
 import { site } from '@/data/site';
-import { nowPlaying, playlist, playlists, appleMusicEmbed, reading, learning, ledgerOwed, ledgerSettled } from '@/data/now';
+import { nowPlaying, playlist, playlists, appleMusicEmbed, reading, learning, screens, ledgerOwed, ledgerSettled } from '@/data/now';
 
 export const metadata: Metadata = {
   title: 'Now',
@@ -52,8 +52,9 @@ export default function NowPage() {
         </h1>
         <p style={{ color: 'var(--muted)', marginBlock: '1rem 0', maxWidth: '34rem' }}>
           Designer and developer in Pune. This page says what I&apos;m building, what I
-          owe, what I&apos;m looking for, what I&apos;m listening to and what I&apos;m reading
-          at this exact moment — dated, so it can go stale honestly.
+          owe, what I&apos;m looking for and what&apos;s off the clock at this exact
+          moment — the rotation, the shelf, the other screens — dated, so it can
+          go stale honestly.
         </p>
       </section>
 
@@ -74,20 +75,26 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.5.6] just shipped: the ledger below — open promises on
-              one page, dated when they were logged; settled ones stamped with
-              the version that closed them, corrections included. The counts
-              compute from the data, and a verifier fails the build past five
-              open lines or a stamp the CHANGELOG can&apos;t back. Before that:
-              the anti-aliased custom pointer ([1.5.5]) and the honesty pass
-              ([1.5.4]) — case-study sections with no
+              Version [1.5.7] just shipped: the off-the-clock sections grew
+              honest and loud — the player says LAST PLAYED instead of
+              pretending to stream, the rotation swapped to this month&apos;s
+              queue (Her&apos;s, Niyam, and the Daft Punk that stays), the bag
+              grew genre chips and Marathi lit, sharpening picked up
+              ServiceNow, and Ko-fi joined Elsewhere. Before that: the ledger
+              below ([1.5.6]) — open promises on one page, dated when they
+              were logged; settled ones stamped with the version that closed
+              them, corrections included; the counts compute from the data,
+              and a verifier fails the build past five open lines or a stamp
+              the CHANGELOG can&apos;t back. And before that: the anti-aliased
+              custom pointer ([1.5.5]) and the honesty pass ([1.5.4]) —
+              case-study sections with no
               evidence behind them vanish from production and the survivors
               renumber, the Taar and Sutra prototypes embed live on their case
               studies, every page got its own share card with rendered OG
               images, the resume moved on-site to /resume.pdf, the skill chips
               wear their learning marks, the library index dropped the fork
               that inflated its count, and AskOmkar downloads nothing until
-              you actually ask. And before that: the site-wide custom pointer
+              you actually ask. And before that, further back: the site-wide custom pointer
               with hints riding it ([1.4.6]), the footer motion toggle for
               reduced-motion machines ([1.4.7]),
               this page and /colophon ([1.4.8]), the /library docs room gone repo-wide
@@ -199,7 +206,7 @@ export default function NowPage() {
         </div>
       </section>
 
-      {/* 03 / Listening */}
+      {/* 04 / Listening */}
       <section className="section container" aria-labelledby="listening-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
           <p className="section-index mono">04 / Listening</p>
@@ -208,41 +215,39 @@ export default function NowPage() {
           </h2>
         </div>
         <div data-reveal suppressHydrationWarning style={{ maxWidth: '38rem' }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: '0.6rem',
-              paddingBlock: '0.9rem',
-              borderBottom: '1px solid var(--line)',
-            }}
-          >
+          <div className="player-card">
             <span
+              className={`disc${nowPlaying.status === 'now-playing' ? ' disc--spin' : ''}`}
               aria-hidden="true"
-              style={{
-                display: 'inline-block',
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: nowPlaying.status === 'playing' ? 'var(--green)' : 'transparent',
-                border: nowPlaying.status === 'playing' ? 'none' : '1.5px solid var(--muted)',
-                flexShrink: 0,
-                transform: 'translateY(-1px)',
-              }}
-            />
-            <p style={{ margin: 0 }}>
-              <span
-                className="mono"
-                style={{ fontSize: '0.68rem', color: 'var(--muted)', marginRight: '0.6rem', letterSpacing: '0.08em' }}
-              >
-                {nowPlaying.status === 'playing' ? 'NOW PLAYING' : 'PAUSED'}
-              </span>
-              <strong style={{ fontWeight: 600 }}>{nowPlaying.title}</strong>
-              <span style={{ color: 'var(--muted)' }}> — {nowPlaying.artist}</span>
-              <span className="mono" style={{ color: 'var(--muted)', fontSize: '0.76rem' }}>
-                {' '}· {nowPlaying.note}
-              </span>
-            </p>
+            >
+              <span className="disc-hole" />
+            </span>
+            <div>
+              <p className="player-state mono">
+                <span
+                  aria-hidden="true"
+                  style={{
+                    display: 'inline-block',
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: nowPlaying.status === 'now-playing' ? 'var(--green)' : 'transparent',
+                    border: nowPlaying.status === 'now-playing' ? 'none' : '1.5px solid var(--muted)',
+                    flexShrink: 0,
+                  }}
+                />
+                {nowPlaying.status === 'now-playing'
+                  ? 'NOW PLAYING'
+                  : nowPlaying.status === 'last-played'
+                    ? 'LAST PLAYED'
+                    : 'PAUSED'}
+              </p>
+              <p className="player-track">
+                {nowPlaying.title}{' '}
+                <span style={{ color: 'var(--muted)', fontWeight: 400 }}>— {nowPlaying.artist}</span>
+              </p>
+              <p className="player-note">{nowPlaying.note}</p>
+            </div>
           </div>
           {playlist.map((t) => (
             <div
@@ -262,8 +267,17 @@ export default function NowPage() {
               </p>
               <span
                 className="mono"
-                style={{ color: 'var(--muted)', fontSize: '0.74rem', textAlign: 'right', flexShrink: 0 }}
+                style={{
+                  color: 'var(--muted)',
+                  fontSize: '0.74rem',
+                  textAlign: 'right',
+                  flexShrink: 0,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
               >
+                {t.tag && <span className="tag-chip">{t.tag}</span>}
                 {t.note}
               </span>
             </div>
@@ -362,8 +376,17 @@ export default function NowPage() {
               </p>
               <span
                 className="mono"
-                style={{ color: 'var(--muted)', fontSize: '0.74rem', textAlign: 'right', flexShrink: 0 }}
+                style={{
+                  color: 'var(--muted)',
+                  fontSize: '0.74rem',
+                  textAlign: 'right',
+                  flexShrink: 0,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
               >
+                {b.kind && <span className="tag-chip">{b.kind}</span>}
                 {b.note}
               </span>
             </div>
@@ -371,10 +394,46 @@ export default function NowPage() {
         </div>
       </section>
 
-      {/* 05 / Learning */}
+      {/* 06 / On the side */}
+      <section className="section container" aria-labelledby="screens-title">
+        <div className="section-head" data-reveal suppressHydrationWarning>
+          <p className="section-index mono">06 / On the side</p>
+          <h2 id="screens-title" className="section-title" data-split suppressHydrationWarning>
+            The other screens.
+          </h2>
+        </div>
+        <div data-reveal suppressHydrationWarning style={{ maxWidth: '38rem' }}>
+          {screens.map((s) => (
+            <div
+              key={s.label}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'baseline',
+                gap: '1rem',
+                paddingBlock: '0.8rem',
+                borderBottom: '1px solid var(--line)',
+              }}
+            >
+              <p style={{ margin: 0, fontWeight: 600 }}>{s.label}</p>
+              <span
+                className="mono"
+                style={{ color: 'var(--muted)', fontSize: '0.74rem', textAlign: 'right', flexShrink: 0 }}
+              >
+                {s.note}
+              </span>
+            </div>
+          ))}
+          <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.72rem', marginTop: '0.9rem' }}>
+            music · film · books · games — the four hobbies; the picks rotate faster than the ledger closes
+          </p>
+        </div>
+      </section>
+
+      {/* 07 / Learning */}
       <section className="section container" aria-labelledby="learning-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">06 / Learning</p>
+          <p className="section-index mono">07 / Learning</p>
           <h2 id="learning-title" className="section-title" data-split suppressHydrationWarning>
             Sharpening.
           </h2>
@@ -404,10 +463,10 @@ export default function NowPage() {
         </div>
       </section>
 
-      {/* 06 / Elsewhere */}
+      {/* 08 / Elsewhere */}
       <section className="section container" aria-labelledby="elsewhere-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">07 / Elsewhere</p>
+          <p className="section-index mono">08 / Elsewhere</p>
           <h2 id="elsewhere-title" className="section-title" data-split suppressHydrationWarning>
             The rest of me.
           </h2>

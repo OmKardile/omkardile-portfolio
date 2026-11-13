@@ -3,6 +3,12 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.7] — 2026-11-13
+
+### Changed
+
+- **/now's off-the-clock sections got honest and grew.** The player no longer pretends to stream: the status is a real state machine (`now-playing` / `last-played` / `paused`) and the featured track wears the truthful **LAST PLAYED** label — the ink disc (grooves in `--fg`, theme-inverting, compositor-only) spins only when the state actually says playing, and reduced-motion machines get a still disc. The rotation swapped to the November queue — Her's ("Harvey", plus the full *Invitation to Her's* EP queued as one), Niyam's "zikr", and the cut-exempt "Something About Us" wearing an ON REPEAT chip. The bag grew genre chips (Marathi · Romance · Manga · Design) and four additions: **Vapurza** (V. P. Kale), Durjoy Datta's campus romance, and Berserk + Vagabond for the panel craft. Sharpening picked up ServiceNow, Devanagari typography and design tokens. A new **"On the side"** section names the other two hobbies (film, games) honestly — rotating too fast to fake a live feed. Ko-fi joined the socials everywhere through the one source (`site.ts`); /now renumbers (Learning → 07, Elsewhere → 08).
+
 ## [1.5.6] — 2026-11-13
 
 ### Added

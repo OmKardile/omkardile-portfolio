@@ -3638,3 +3638,94 @@ html.js-reveal .relay-fig[data-curtain].curtain-in {
     margin-top: 1.4rem;
   }
 }
+
+/* ---- /now off-the-clock ([1.5.7]) ------------------------------------------
+   The player card: an ink disc that spins only when the state really is
+   'now-playing' — LAST PLAYED is the honest default, so the disc sits
+   still. The groove texture is two compositor-only gradients in --fg, so
+   it inverts with the theme for free. Chips carry genre/rotation tags in
+   the same voice as the ledger stamps; reduced-motion machines get a
+   still disc. */
+.player-card {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.disc {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: repeating-radial-gradient(
+    circle,
+    color-mix(in srgb, var(--fg) 55%, transparent) 0 1px,
+    transparent 1px 4px
+  );
+}
+
+.disc-hole {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+}
+
+.disc--spin {
+  animation: disc-spin 9s linear infinite;
+}
+
+@keyframes disc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disc--spin {
+    animation: none;
+  }
+}
+
+.player-state {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.player-track {
+  margin: 0.3rem 0 0;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.player-note {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.tag-chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+  white-space: nowrap;
+}

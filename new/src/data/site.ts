@@ -38,6 +38,7 @@ export const site = {
   socials: [
     { label: 'GitHub', href: 'https://github.com/OmKardile' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/omkar-kardile-49501b213/' },
+    { label: 'Ko-fi', href: 'https://ko-fi.com/whysoserious_omik' },
     { label: 'Resume', href: '/resume.pdf' },
   ],
   // Interactive Liquid Glass apps live in the old codebase. When they get a new

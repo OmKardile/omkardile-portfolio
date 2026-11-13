@@ -5,19 +5,23 @@
 
    The listening entries below are the November 2026 rotation. */
 
-export type Track = { title: string; artist: string; note: string };
-export type Book = { title: string; author: string; note: string };
+export type Track = { title: string; artist: string; note: string; tag?: string };
+export type Book = { title: string; author: string; note: string; kind?: string };
 export type Topic = { topic: string; note: string };
-export type NowPlaying = Track & { status: 'playing' | 'paused' };
+export type Screen = { label: string; note: string };
+/* The honest state machine: this page is static and never claims to be
+   streaming. 'last-played' is the truthful default; 'paused' marks a
+   deliberate stop; 'now-playing' is only ever set when it really is. */
+export type NowPlaying = Track & { status: 'now-playing' | 'last-played' | 'paused' };
 export type PlaylistLink = { name: string; platform: string; href: string; note: string };
 
-/** The track with the status dot right now — status is 'playing' for the
-    green dot + NOW PLAYING label, 'paused' for the hollow ring + PAUSED. */
+/** The featured track and its honest state — LAST PLAYED, because the page
+    does not pretend to stream. */
 export const nowPlaying: NowPlaying = {
-  title: 'cold/mess',
-  artist: 'Prateek Kuhad',
-  note: 'the late-night build soundtrack',
-  status: 'playing',
+  title: 'zikr',
+  artist: 'Niyam',
+  note: 'the honest label — nothing here streams live',
+  status: 'last-played',
 };
 
 /** The proper playlists — links verified live before shipping. */
@@ -40,26 +44,38 @@ export const playlists: PlaylistLink[] = [
 export const appleMusicEmbed =
   'https://embed.music.apple.com/in/playlist/vibin-in-classroom/pl.u-aZb0N5vC17LZqva';
 
-/** The current rotation, roughly in order of plays. */
+/** The current rotation — the November queue. Daft Punk was cut-exempt. */
 export const playlist: Track[] = [
-  { title: 'Holocene', artist: 'Bon Iver', note: 'for the long render waits' },
-  { title: 'The Less I Know the Better', artist: 'Tame Impala', note: 'UI polish pace' },
-  { title: 'Alright', artist: 'Kendrick Lamar', note: 'deadline fuel' },
-  { title: 'Something About Us', artist: 'Daft Punk', note: 'slow commits, deep focus' },
-  { title: 'Space Song', artist: 'Beach House', note: 'cleanup and changelogs' },
+  { title: 'Harvey', artist: "Her's", note: 'the Liverpool duo — guitars like a monsoon reel' },
+  { title: "Invitation to Her's", artist: "Her's", note: 'the full EP queued as one — Harvey lives here', tag: 'EP' },
+  { title: 'zikr', artist: 'Niyam', note: 'Delhi pop duo — the current replay' },
+  { title: 'Something About Us', artist: 'Daft Punk', note: 'slow commits, deep focus', tag: 'ON REPEAT' },
 ];
 
-/** Off the clock — the shelf. */
+/** Off the clock — the shelf, genre-chipped. Marathi lit on top where it belongs. */
 export const reading: Book[] = [
-  { title: 'The Design of Everyday Things', author: 'Don Norman', note: 'the classic, re-read' },
-  { title: 'Refactoring UI', author: 'Wathan & Schoger', note: 'the practical half of the job' },
-  { title: 'Shape Up', author: 'Ryan Singer', note: 'how to size the bench' },
+  { title: 'Vapurza', author: 'V. P. Kale', note: "Va Pu's Marathi classic — the household-quotes one", kind: 'Marathi' },
+  { title: 'Of Course I Love You!.. Till I Find Someone Better', author: 'Durjoy Datta (with Maanvi Ahuja)', note: 'the campus romance, read purely for fun', kind: 'Romance' },
+  { title: 'Berserk', author: 'Kentaro Miura', note: 'every spread is composition homework', kind: 'Manga' },
+  { title: 'Vagabond', author: 'Takehiko Inoue', note: 'brushwork in ink — the samurai study', kind: 'Manga' },
+  { title: 'The Design of Everyday Things', author: 'Don Norman', note: 'the classic, re-read', kind: 'Design' },
+  { title: 'Refactoring UI', author: 'Wathan & Schoger', note: 'the practical half of the job', kind: 'Design' },
+  { title: 'Shape Up', author: 'Ryan Singer', note: 'how to size the bench', kind: 'Design' },
 ];
 
 /** What is being sharpened next. */
 export const learning: Topic[] = [
+  { topic: 'ServiceNow', note: 'the workflow platform — next on the list' },
   { topic: 'WebGL & GLSL shaders', note: 'the wave hero opened the door' },
   { topic: 'Variable font axes', note: "Archivo's wdth as a design material" },
+  { topic: 'Devanagari typography', note: 'the hero cross-fade, done properly' },
+  { topic: 'Design tokens', note: 'the ink system formalized — /colophon as coursework' },
+];
+
+/** The other screens — film and games rotate too fast to fake a live feed. */
+export const screens: Screen[] = [
+  { label: 'Film', note: 'the queue rotates weekly — the constant is subtitles on' },
+  { label: 'Games', note: 'the backlog is a shelf of its own — currently between runs' },
 ];
 
 /* The ledger — an udhar book for my own promises, in the spirit of the one
