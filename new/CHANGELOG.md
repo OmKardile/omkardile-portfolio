@@ -3,6 +3,12 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.5.6] — 2026-11-13
+
+### Added
+
+- **The ledger — /now's accountability section.** An udhar book for the site's own promises, in the spirit of the credit ledger SSShopee built for a real shop: an **OWED** page (open promises, each with the date it was logged — the Sutra five-person test, the one-page resume cut, Figma view-links, the SSShopee/PatelNetworks card screenshots, the Liquid Glass rehost-or-retire call; **five lines, maximum**) and a **SETTLED** page (closed entries stamped with the CHANGELOG version that closed them, corrections included — the 82-vs-72 answer-count drift [1.5.4], the library count that leaned on a fork [1.5.4], the assistant's overclaims [1.4.5], plus the promises the pointer and AskOmkar work paid off). The counts render from the data arrays, never typed, and `scripts/verify-ledger.py` fails the build if more than five lines stay open, if a `logged` date isn't a real ISO date, or if a stamp names a version the CHANGELOG doesn't have — because a stale ledger is worse than none. /now's later sections renumber to make room (Looking for → 03 … Elsewhere → 07).
+
 ## [1.5.5] — 2026-11-12
 
 ### Fixed

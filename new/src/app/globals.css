@@ -3530,3 +3530,111 @@ html.js-reveal .relay-fig[data-curtain].curtain-in {
   color: var(--accent-dev);
   text-underline-offset: 3px;
 }
+
+/* ---- the ledger (/now) ------------------------------------------------------
+   An udhar book for the site's own promises: two pages side by side with a
+   binding rule between them — OWED (open, dated when logged) and SETTLED
+   (stamped with the CHANGELOG version that closed it). Rows run dotted
+   leaders between item and stamp, the way a paper ledger does. Entries live
+   in src/data/now.ts; the counts line renders from the arrays, and
+   scripts/verify-ledger.py fails the build past five open lines or a stamp
+   that names a version the CHANGELOG doesn't have. */
+.ledger-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 46rem;
+}
+
+.ledger-page--owed {
+  border-right: 1px solid var(--line); /* the binding */
+  padding-right: 1.6rem;
+}
+
+.ledger-page--settled {
+  padding-left: 1.6rem;
+}
+
+.ledger-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0 0 0.15rem;
+}
+
+.ledger-row {
+  padding-block: 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.ledger-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+
+.ledger-item {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-wrap: balance;
+}
+
+.ledger-leader {
+  flex: 1 1 auto;
+  min-width: 1.2rem;
+  border-bottom: 1px dotted var(--line-strong);
+  align-self: flex-end;
+  margin-bottom: 0.32em;
+}
+
+.ledger-date {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ledger-stamp {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--fg);
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  padding: 0.14rem 0.4rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ledger-detail {
+  margin: 0.32rem 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  max-width: 30rem;
+}
+
+.ledger-kind {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+@media (max-width: 56rem) {
+  .ledger-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ledger-page--owed {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .ledger-page--settled {
+    padding-left: 0;
+    margin-top: 1.4rem;
+  }
+}

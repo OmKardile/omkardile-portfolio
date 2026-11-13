@@ -61,3 +61,115 @@ export const learning: Topic[] = [
   { topic: 'WebGL & GLSL shaders', note: 'the wave hero opened the door' },
   { topic: 'Variable font axes', note: "Archivo's wdth as a design material" },
 ];
+
+/* The ledger — an udhar book for my own promises, in the spirit of the one
+   SSShopee built for a real shop. Two pages: OWED holds open promises with
+   the date each was logged; SETTLED holds closed ones, stamped with the
+   version in the CHANGELOG that closed them (corrections included — the
+   times the site itself was wrong and got fixed count double).
+
+   The honesty contract, enforced by scripts/verify-ledger.py:
+   - at most FIVE open entries — a stale ledger is worse than none;
+   - every `logged` date is a real ISO date;
+   - every `closedIn` stamp must exist as a `## [version]` heading in the
+     CHANGELOG, or the verifier fails the build;
+   - closed entries don't get deleted: they are the receipts. */
+
+export type LedgerOwed = { item: string; detail: string; logged: string };
+export type LedgerSettled = {
+  item: string;
+  detail: string;
+  closedIn: string;
+  kind: 'promise' | 'correction';
+};
+
+/** Open promises — five lines, maximum. */
+export const ledgerOwed: LedgerOwed[] = [
+  {
+    item: 'Sutra usability test, five people',
+    detail:
+      'real sessions, findings on the case study — retires the "· learning" mark on the research chips',
+    logged: '2026-11-10',
+  },
+  {
+    item: 'Resume cut to one page',
+    detail:
+      '/resume.pdf runs six pages — a 1–2 page cut replaces it, because six pages reads as padding',
+    logged: '2026-11-11',
+  },
+  {
+    item: 'Figma view-links on the case studies',
+    detail: 'the high-fidelity wires, linkable frame by frame, next to the live prototypes',
+    logged: '2026-11-13',
+  },
+  {
+    item: 'SSShopee + PatelNetworks card screenshots',
+    detail:
+      'the two work items with no pictures — real screens, with customer names, phones and udhar balances blurred or seeded first',
+    logged: '2026-11-11',
+  },
+  {
+    item: 'Liquid Glass apps: rehost or retire',
+    detail:
+      'the interactive apps live in the old codebase and the site says so — either they get the new home or the entries are written off, not left hanging',
+    logged: '2026-11-10',
+  },
+];
+
+/** Settled — promises kept and corrections made, each stamp a real version. */
+export const ledgerSettled: LedgerSettled[] = [
+  {
+    item: 'The colophon said 82 answers; /library said 72',
+    detail:
+      'both were real numbers describing different banks — the colophon now imports the bank and renders the split (82 = 72 hand-written + 10 derived), so the pages cannot drift again',
+    closedIn: '1.5.4',
+    kind: 'correction',
+  },
+  {
+    item: 'The library count leaned on a fork',
+    detail:
+      'the FMHY mirror was 186 of the 423 markdown docs — the fork left the index and the stats line computes honestly: 7 of 29 public repos · 237 documents',
+    closedIn: '1.5.4',
+    kind: 'correction',
+  },
+  {
+    item: 'The assistant claimed things the site does not say',
+    detail:
+      '"five complete case studies" when /uiux publishes three written ones — every pre-written answer reworded to what the site actually publishes',
+    closedIn: '1.4.5',
+    kind: 'correction',
+  },
+  {
+    item: 'The prototypes lived behind a separate deploy',
+    detail: 'Taar and Sutra now embed live on their case studies, chrome-free, no second URL',
+    closedIn: '1.5.4',
+    kind: 'promise',
+  },
+  {
+    item: 'AskOmkar downloaded ~23 MB just by opening',
+    detail:
+      'opening the drawer is free; the model warms only when you actually ask — and never on a metered connection',
+    closedIn: '1.5.4',
+    kind: 'promise',
+  },
+  {
+    item: 'Hover states went stale under inertial scroll',
+    detail:
+      'the View chip and hints stayed painted over content that had scrolled away — every state now re-derives per frame from one hit test',
+    closedIn: '1.4.6',
+    kind: 'promise',
+  },
+  {
+    item: 'The native pointer popped back over global chrome',
+    detail: 'the custom cursor replaced it on every route, hints riding beside the pointer',
+    closedIn: '1.4.6',
+    kind: 'promise',
+  },
+  {
+    item: 'The cursor edges stair-stepped',
+    detail:
+      'the ink dot and the wireframe ring raster at twice their visual size and scale back down — smooth at every fractional offset, geometry unchanged',
+    closedIn: '1.5.5',
+    kind: 'promise',
+  },
+];

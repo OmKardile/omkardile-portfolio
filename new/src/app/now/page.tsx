@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Footer } from '@/components/Footer';
 import { site } from '@/data/site';
-import { nowPlaying, playlist, playlists, appleMusicEmbed, reading, learning } from '@/data/now';
+import { nowPlaying, playlist, playlists, appleMusicEmbed, reading, learning, ledgerOwed, ledgerSettled } from '@/data/now';
 
 export const metadata: Metadata = {
   title: 'Now',
@@ -51,9 +51,9 @@ export default function NowPage() {
           Now.
         </h1>
         <p style={{ color: 'var(--muted)', marginBlock: '1rem 0', maxWidth: '34rem' }}>
-          Designer and developer in Pune. This page says what I&apos;m building, what
-          I&apos;m looking for, what I&apos;m listening to and what I&apos;m reading at
-          this exact moment — dated, so it can go stale honestly.
+          Designer and developer in Pune. This page says what I&apos;m building, what I
+          owe, what I&apos;m looking for, what I&apos;m listening to and what I&apos;m reading
+          at this exact moment — dated, so it can go stale honestly.
         </p>
       </section>
 
@@ -74,12 +74,13 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.5.5] just shipped: the custom pointer is anti-aliased —
-              the ink dot and the wireframe ring raster at twice their visual
-              size and scale back down inside the engine&apos;s per-frame
-              transform, so their edges render smooth instead of stair-stepped;
-              the geometry, the states and the hints are all unchanged. Before
-              that: the honesty pass ([1.5.4]) — case-study sections with no
+              Version [1.5.6] just shipped: the ledger below — open promises on
+              one page, dated when they were logged; settled ones stamped with
+              the version that closed them, corrections included. The counts
+              compute from the data, and a verifier fails the build past five
+              open lines or a stamp the CHANGELOG can&apos;t back. Before that:
+              the anti-aliased custom pointer ([1.5.5]) and the honesty pass
+              ([1.5.4]) — case-study sections with no
               evidence behind them vanish from production and the survivors
               renumber, the Taar and Sutra prototypes embed live on their case
               studies, every page got its own share card with rendered OG
@@ -124,10 +125,63 @@ export default function NowPage() {
         </div>
       </section>
 
-      {/* 02 / Looking for */}
+      {/* 02 / The ledger */}
+      <section className="section container" aria-labelledby="ledger-title">
+        <div className="section-head" data-reveal suppressHydrationWarning>
+          <p className="section-index mono">02 / The ledger</p>
+          <h2 id="ledger-title" className="section-title" data-split suppressHydrationWarning>
+            Owed and settled.
+          </h2>
+        </div>
+        <div data-reveal suppressHydrationWarning>
+          <p style={{ color: 'var(--muted)', marginBlock: '0 1.3rem', maxWidth: '36rem' }}>
+            An udhar book for my own promises — the same ledger SSShopee built for a
+            real shop, pointed at me. What I owe sits on the left page with the date
+            it was logged; what&apos;s settled carries the stamp of the version that
+            closed it. Five open lines, maximum — a stale ledger is worse than none.
+          </p>
+          <div className="ledger-grid">
+            <div className="ledger-page--owed">
+              <p className="ledger-label">OWED · {ledgerOwed.length} OPEN</p>
+              {ledgerOwed.map((e) => (
+                <div key={e.item} className="ledger-row">
+                  <div className="ledger-line">
+                    <p className="ledger-item">{e.item}</p>
+                    <span className="ledger-leader" aria-hidden="true" />
+                    <span className="ledger-date">logged {e.logged}</span>
+                  </div>
+                  <p className="ledger-detail">{e.detail}</p>
+                </div>
+              ))}
+            </div>
+            <div className="ledger-page--settled">
+              <p className="ledger-label">SETTLED · {ledgerSettled.length} CLOSED</p>
+              {ledgerSettled.map((e) => (
+                <div key={e.item} className="ledger-row">
+                  <div className="ledger-line">
+                    <p className="ledger-item">{e.item}</p>
+                    <span className="ledger-leader" aria-hidden="true" />
+                    <span className="ledger-stamp">[{e.closedIn}]</span>
+                  </div>
+                  <p className="ledger-detail">
+                    {e.kind === 'correction' && <span className="ledger-kind">Correction · </span>}
+                    {e.detail}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.72rem', marginTop: '0.9rem' }}>
+            {ledgerOwed.length} open · {ledgerSettled.length} settled · every stamp is a
+            version in the repo&apos;s CHANGELOG · {NOW_STAMP}
+          </p>
+        </div>
+      </section>
+
+      {/* 03 / Looking for */}
       <section className="section container" aria-labelledby="looking-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">02 / Looking for</p>
+          <p className="section-index mono">03 / Looking for</p>
           <h2 id="looking-title" className="section-title" data-split suppressHydrationWarning>
             Let&apos;s make something useful.
           </h2>
@@ -148,7 +202,7 @@ export default function NowPage() {
       {/* 03 / Listening */}
       <section className="section container" aria-labelledby="listening-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">03 / Listening</p>
+          <p className="section-index mono">04 / Listening</p>
           <h2 id="listening-title" className="section-title" data-split suppressHydrationWarning>
             The current rotation.
           </h2>
@@ -284,7 +338,7 @@ export default function NowPage() {
       {/* 04 / Reading */}
       <section className="section container" aria-labelledby="reading-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">04 / Reading</p>
+          <p className="section-index mono">05 / Reading</p>
           <h2 id="reading-title" className="section-title" data-split suppressHydrationWarning>
             In the bag.
           </h2>
@@ -320,7 +374,7 @@ export default function NowPage() {
       {/* 05 / Learning */}
       <section className="section container" aria-labelledby="learning-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">05 / Learning</p>
+          <p className="section-index mono">06 / Learning</p>
           <h2 id="learning-title" className="section-title" data-split suppressHydrationWarning>
             Sharpening.
           </h2>
@@ -353,7 +407,7 @@ export default function NowPage() {
       {/* 06 / Elsewhere */}
       <section className="section container" aria-labelledby="elsewhere-title">
         <div className="section-head" data-reveal suppressHydrationWarning>
-          <p className="section-index mono">06 / Elsewhere</p>
+          <p className="section-index mono">07 / Elsewhere</p>
           <h2 id="elsewhere-title" className="section-title" data-split suppressHydrationWarning>
             The rest of me.
           </h2>
