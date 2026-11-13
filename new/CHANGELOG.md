@@ -12,7 +12,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - **The ledger worked.** "Resume cut to one page" is settled, stamped [1.5.9] — the cut had quietly shipped, but with a drifted contact line: the old PDF carried `omkardile84@gmail.com` and `omkardile-portfolio.vercel.app` against the site's real email and `omkardile.is-a.dev`. The rebuild renders the contact from the same fields as every other page, so it can't drift again. New owed entry, dated: the **SSShopee GST receipt credit** ("Software by Omkar Kardile" + QR on printed bills) — waiting on the family's sign-off and a read-only endpoint. Open count stays at five.
-- **PatelNetworks' stack line** — flagged as evasive-by-contrast by a cold recruiter-read of the live site: the vague "E-commerce platform" line now leads with the manifest-verified stack from the [1.5.8] repo scan (Next.js 16 · React 19 · Prisma 6 · Tailwind CSS 4 · Razorpay payments · GST invoicing). `/resume` and `/receipt` joined the sitemap.
+- **PatelNetworks' stack line** — flagged as evasive-by-contrast by a cold recruiter-read of the live site: the vague "E-commerce platform" line now leads with the manifest-verified stack from the [1.5.8] repo scan (Next.js 16 · React 19 · Prisma 6 · Tailwind CSS 4 · Razorpay payments · GST invoicing). `/resume` and `/receipt` joined the sitemap. The /now bench narrative caught up with itself — it still opened with "[1.5.7] just shipped" two versions later, the same typed-marker drift the ledger polices; it now leads with the one-source outputs and keeps the older versions in their order.
 
 ## [1.5.8] — 2026-11-13
 

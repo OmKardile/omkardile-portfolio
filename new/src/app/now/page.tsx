@@ -75,17 +75,24 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.5.7] just shipped: the off-the-clock sections grew
-              honest and loud — the player says LAST PLAYED instead of
-              pretending to stream, the rotation swapped to this month&apos;s
-              queue (Her&apos;s, Niyam, and the Daft Punk that stays), the bag
-              grew genre chips and Marathi lit, sharpening picked up
-              ServiceNow, and Ko-fi joined Elsewhere. Before that: the ledger
-              below ([1.5.6]) — open promises on one page, dated when they
-              were logged; settled ones stamped with the version that closed
-              them, corrections included; the counts compute from the data,
-              and a verifier fails the build past five open lines or a stamp
-              the CHANGELOG can&apos;t back. And before that: the anti-aliased
+              Version [1.5.9] just shipped: one source, many outputs — the resume is a route
+              printed to /resume.pdf from the same fields the site renders from (the old
+              PDF&apos;s drifted contact line is what proved the point), /llms.txt compiles
+              the facts and the dated ledger for assistants, and /receipt is the candidate
+              receipt — the three best proofs with their verified stacks, the open promises
+              with their dates, a vCard QR, and nothing about your visit leaving the
+              browser. Before that: the fleet ([1.5.8]) — the colophon and the reading
+              room widened from this site to everything built, every stack verified from
+              its own repo manifest. And before that: the off-the-clock sections grew
+              honest and loud ([1.5.7]) — the player says LAST PLAYED instead of
+              pretending to stream, the rotation swapped to this month&apos;s queue (Her&apos;s,
+              Niyam, and the Daft Punk that stays), the bag grew genre chips and Marathi
+              lit, sharpening picked up ServiceNow, and Ko-fi joined Elsewhere. The ledger
+              below keeps the same rule it has since [1.5.6] — open promises on one page,
+              dated when they were logged; settled ones stamped with the version that
+              closed them, corrections included; the counts compute from the data, and a
+              verifier fails the build past five open lines or a stamp the CHANGELOG
+              can&apos;t back. And before that: the anti-aliased
               custom pointer ([1.5.5]) and the honesty pass ([1.5.4]) —
               case-study sections with no
               evidence behind them vanish from production and the survivors
