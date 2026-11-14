@@ -3,6 +3,12 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.6.0] — 2026-11-13
+
+### Added
+
+- **Pages for the actual reader.** `/for/<company>` — one unlisted page per real application target, from one data file (`src/data/applications.ts`): three teardown notes on the company's product, written from its public documentation only, the three shipped proofs that match the role (each carrying its verified repo scan), the fit paragraph and the resume. `noindex`, outside the sitemap, and the slug doubles as the tracker — the URL that got opened tells you which application worked, with the caveat printed on the page itself: email link scanners inflate counts, so the pages count nothing. `dynamicParams = false` means only seeded targets exist; a bogus slug 404s. Two seeds, both chosen for product overlap with what is already shipped and repo-verified: **Zoho Books** (counter-sales lane, e-invoice status as an invoice-list column, the udhar ledger Books doesn't offer) and **Razorpay** (Single View Reconciliation beyond Optimizer, a one-screen simple mode for Route, settled-vs-pending leading the dashboard home). At most five targets, enforced by `scripts/verify-for-pages.py` — these ride on applications actually going out, and a stale page is worse than none.
+
 ## [1.5.9] — 2026-11-13
 
 ### Added

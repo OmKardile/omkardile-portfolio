@@ -75,7 +75,13 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.5.9] just shipped: one source, many outputs — the resume is a route
+              Version [1.6.0] just shipped: pages for the actual reader — /for/&lt;company&gt;,
+              one per application going out: three notes on their product written from public
+              documentation, the three shipped proofs that match the role, the resume —
+              noindex and outside the sitemap, the slug doubling as the tracker for which
+              application got opened, and nothing counted, because email link scanners
+              inflate everything. Before that: one source, many outputs ([1.5.9]) — the
+              resume is a route
               printed to /resume.pdf from the same fields the site renders from (the old
               PDF&apos;s drifted contact line is what proved the point), /llms.txt compiles
               the facts and the dated ledger for assistants, and /receipt is the candidate
