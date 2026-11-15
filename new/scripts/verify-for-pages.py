@@ -41,6 +41,13 @@ project_slugs = set(re.findall(r"slug: '([^']+)'", site_ts))
 proof_lists = re.findall(r"proofs: \[([^\]]*)\]", app_ts)
 notes_lists = re.findall(r"notes: \[", app_ts)
 sent_dates = re.findall(r"sent: '(\d{4}-\d{2}-\d{2})'", app_ts)
+# [1.6.1] the pipeline is private: real targets live in a gitignored JSON,
+# so the committed file must hold specimens only — no sent dates at all.
+private_path = ROOT / "src" / "data" / "applications.private.json"
+private_count = 0
+if private_path.exists():
+    import json
+    private_count = len(json.loads(private_path.read_text()))
 
 results = []
 
@@ -50,12 +57,14 @@ def check(name, ok, detail=""):
     print(f"  {'PASS' if ok else 'FAIL'}  {name}" + (f"  — {detail}" if detail and not ok else ""))
 
 
-check("S1 at most five targets", len(entries) <= 5, f"{len(entries)} entries")
+check("S1 at most five targets (specimens + private)",
+      len(entries) + private_count <= 5, f"{len(entries)} committed + {private_count} private")
 check("S2a every proof slug is a real project",
       all(s.strip().strip("'\"") in project_slugs
           for lst in proof_lists for s in lst.split(",")))
-check("S2b three notes + a sent date per entry",
-      len(notes_lists) == len(entries) and len(sent_dates) == len(entries))
+check("S2b three notes per entry", len(notes_lists) == len(entries))
+check("S2c the committed file claims no applications (no sent dates)",
+      len(sent_dates) == 0, f"{len(sent_dates)} sent dates committed")
 check("S3a sitemap.ts has no /for/", "/for/" not in sitemap_ts)
 
 print(f"\n== rendered: {BASE}/for/* ==")
@@ -69,9 +78,12 @@ with sync_playwright() as p:
         ok_robots = 'noindex' in html
         company = app_ts.split(f"slug: '{slug}'")[1].split("product:")[0]
         company_name = re.search(r"company: '([^']+)'", company).group(1)
-        check(f"R1 {slug}: 200 + noindex + content",
+        check(f"R1 {slug}: 200 + noindex + specimen, claims nothing",
               ok_robots and company_name in body
-              and "THREE NOTES ON" in body and "SENT" in body
+              and "THREE NOTES ON" in body
+              and "SPECIMEN · NOT AN APPLICATION" in body
+              and "CLAIMS NOTHING" in body
+              and not re.search(r"SENT \d{4}", body)
               and "verified from the repo manifest" in body
               and "/resume.pdf" in body,
               f"noindex={ok_robots}")
