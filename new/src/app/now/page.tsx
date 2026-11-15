@@ -75,48 +75,26 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.6.0] just shipped: pages for the actual reader — /for/&lt;company&gt;,
-              one per application going out: three notes on their product written from public
-              documentation, the three shipped proofs that match the role, the resume —
-              noindex and outside the sitemap, the slug doubling as the tracker for which
-              application got opened, and nothing counted, because email link scanners
-              inflate everything. Before that: one source, many outputs ([1.5.9]) — the
-              resume is a route
-              printed to /resume.pdf from the same fields the site renders from (the old
-              PDF&apos;s drifted contact line is what proved the point), /llms.txt compiles
-              the facts and the dated ledger for assistants, and /receipt is the candidate
-              receipt — the three best proofs with their verified stacks, the open promises
-              with their dates, a vCard QR, and nothing about your visit leaving the
-              browser. Before that: the fleet ([1.5.8]) — the colophon and the reading
-              room widened from this site to everything built, every stack verified from
-              its own repo manifest. And before that: the off-the-clock sections grew
-              honest and loud ([1.5.7]) — the player says LAST PLAYED instead of
-              pretending to stream, the rotation swapped to this month&apos;s queue (Her&apos;s,
-              Niyam, and the Daft Punk that stays), the bag grew genre chips and Marathi
-              lit, sharpening picked up ServiceNow, and Ko-fi joined Elsewhere. The ledger
-              below keeps the same rule it has since [1.5.6] — open promises on one page,
-              dated when they were logged; settled ones stamped with the version that
-              closed them, corrections included; the counts compute from the data, and a
-              verifier fails the build past five open lines or a stamp the CHANGELOG
-              can&apos;t back. And before that: the anti-aliased
-              custom pointer ([1.5.5]) and the honesty pass ([1.5.4]) —
-              case-study sections with no
-              evidence behind them vanish from production and the survivors
-              renumber, the Taar and Sutra prototypes embed live on their case
-              studies, every page got its own share card with rendered OG
-              images, the resume moved on-site to /resume.pdf, the skill chips
-              wear their learning marks, the library index dropped the fork
-              that inflated its count, and AskOmkar downloads nothing until
-              you actually ask. And before that, further back: the site-wide custom pointer
-              with hints riding it ([1.4.6]), the footer motion toggle for
-              reduced-motion machines ([1.4.7]),
-              this page and /colophon ([1.4.8]), the /library docs room gone repo-wide
-              ([1.4.9]–[1.5.0]), the listening playlists with a playing/paused state
-              ([1.5.1]), the design-system zips built right in the browser with the chips
-              living on the rows themselves ([1.5.2]), and the /library sites guide —
-              what my sites run on, all eleven of them, the stack in plain sight on
-              every row ([1.5.3]). Every change is logged in the
-              repo&apos;s CHANGELOG.
+              Version [1.6.1] just shipped: the resume is parser-safe now — plain headings
+              that extract whole instead of splitting into S UMMA R Y, inline role lines
+              that don&apos;t glue words together, usage lines instead of file counts, no
+              phone on the printed page, and a Word copy built from the same fields for the
+              portals that ask for one. The /for pages [1.6.0] added stay specimens until
+              real applications go out, and the real targets live in a gitignored file —
+              the pipeline doesn&apos;t ship in a public repo. The full run, version by
+              version, is the{' '}
+              <a
+                href="https://github.com/OmKardile/omkardile-portfolio/blob/main/new/CHANGELOG.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-hint="The CHANGELOG · new tab"
+              >
+                CHANGELOG
+              </a>
+              , and the ledger below still tells you what closed in which version — open
+              promises dated when they were logged, settled ones stamped, corrections
+              included, the counts computed from the data, and a verifier failing the build
+              past five open lines or a stamp the CHANGELOG can&apos;t back.
             </p>
             <p className="mono" style={{ color: 'var(--muted)', fontSize: '0.78rem', marginTop: '0.45rem' }}>
               Next.js 16 · React 19 · Tailwind CSS 4 · Lenis

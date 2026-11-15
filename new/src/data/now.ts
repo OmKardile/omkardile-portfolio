@@ -119,21 +119,28 @@ export const ledgerOwed: LedgerOwed[] = [
     logged: '2026-11-11',
   },
   {
-    item: 'Liquid Glass apps: rehost or retire',
-    detail:
-      'the interactive apps live in the old codebase and the site says so — either they get the new home or the entries are written off, not left hanging',
-    logged: '2026-11-10',
-  },
-  {
     item: 'SSShopee GST receipt credit',
     detail:
       '"Software by Omkar Kardile · omkardile.is-a.dev" plus a QR on the store\u2019s printed bills — a freelance lead channel; it\u2019s the family\u2019s store, so it waits on their sign-off and a read-only endpoint',
+    logged: '2026-11-13',
+  },
+  {
+    item: 'Experience bullets on the resume',
+    detail:
+      'the route renders bullets for a role only when the facts exist in resume.ts\u2019s roleBullets — the SWAAS, Arrow and Bharat entries need three to four true lines each, in the candidate\u2019s own words; nothing ships as placeholder',
     logged: '2026-11-13',
   },
 ];
 
 /** Settled — promises kept and corrections made, each stamp a real version. */
 export const ledgerSettled: LedgerSettled[] = [
+  {
+    item: 'Liquid Glass apps: rehost or retire — retired',
+    detail:
+      'written off in [1.6.1]: the decision the entry was always asking for. The interactive apps stay in the old codebase as history, the site\u2019s entries stop pointing at them, and the attention goes to the products that shipped since — an unretired decision was costing more than a retired app',
+    closedIn: '1.6.1',
+    kind: 'correction',
+  },
   {
     item: 'Resume cut to one page',
     detail:

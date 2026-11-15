@@ -50,7 +50,7 @@ with sync_playwright() as p:
 
 reader = PdfReader(OUT)
 pages = len(reader.pages)
-text = pdf_text(OUT)
+text = pdf_text(OUT).replace("\u00a0", " ")
 print(f"wrote {OUT} — {pages} page(s), {OUT.stat().st_size // 1024} KB")
 if pages != 1:
     sys.exit(f"FAIL: the resume promised one page, printed {pages}")
@@ -58,4 +58,14 @@ if text:
     for must in ("omkarkardileatwork@gmail.com", "omkardile.is-a.dev"):
         if must not in text:
             sys.exit(f"FAIL: the contact line drifted — {must} missing from the PDF text")
-    print("contact line verified against the one source: email + site URL present")
+    if "88887" in text:
+        sys.exit("FAIL: the phone number leaked into the public PDF — it lives on /receipt's vCard QR")
+    # [1.6.1] extraction hygiene: the glued-word and split-heading bugs an
+    # ATS parser hits must not come back with the print styling.
+    for glued in ("ERPthat", "ERPfor"):
+        if glued in text:
+            sys.exit(f"FAIL: glued word in extraction — {glued}")
+    for heading in ("Summary", "Experience", "Projects", "Education", "Skills"):
+        if heading not in text:
+            sys.exit(f"FAIL: section heading did not extract — {heading}")
+    print("verified: contact from the one source, no phone, no glued words, headings intact")

@@ -3,6 +3,19 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.6.1] — 2026-11-13
+
+### Added
+
+- **The .docx copy.** Some portals want Word — `scripts/build-resume-docx.py` prints the same one source into an ATS-safe .docx (single column, real text, plain headings, no tables), with the same assertions: contact from site.ts, no phone, the keyword staples present. It lands in `download/resume.docx` and regenerates from the data, so it can't drift from the PDF the way typed copies do.
+
+### Changed
+
+- **The resume is parser-safe now.** An extraction review of the printed PDF (the same way many ATS parsers read it) found tracked headings splitting into "S UMMA R Y" and joined text runs gluing words like "ERPthat": section headings are plain words with no letter-spacing, roles and education are single inline lines instead of flex rows, the Projects heading lost its decoration, and the print script now refuses a PDF whose text extracts with glued words or missing headings. The repo-manifest file counts stayed on the site — the resume says what each product does for a real person instead. The keyword staples a parser looks for (JavaScript, HTML5/CSS3, REST, Git, MongoDB and the rest) joined as a resume-only line, every one grounded in the resume's own earlier skills section. The phone number left the printed page — email is the contact, and the vCard QR on /receipt carries the phone for anyone who wants it.
+- **The /for pages claim nothing.** The two seeds were the agent's picks, not applications that went out, so they carry sent dates no more: they are relabeled **specimens** — "SPECIMEN · NOT AN APPLICATION · UNLISTED", "NO DATE — CLAIMS NOTHING" — and the committed data file holds no sent dates at all. Real targets live in `src/data/applications.private.json`, gitignored, merged at build time and capped at five with the specimens; a fresh clone without the file builds fine. The [1.6.0] wording that called the slug "the tracker" while the pages "count nothing" is corrected in the same pass: the slug names which application a page was written for; counting waits for the analytics work.
+- **The /now lead card** stopped being a ~450-word changelog run-on: the latest release, the one before it in a sentence, and the CHANGELOG link for the rest.
+- **The ledger freed a slot the honest way.** "Liquid Glass apps: rehost or retire" was a decision waiting to be made — it is retired as a correction in [1.6.1]: the apps stay in the old codebase as history, the entries stop pointing at them (nothing renders the old app links), and the attention goes to what shipped. A new owed entry took the slot and states the real dependency: the resume renders experience bullets only for orgs whose facts exist in `resume.ts`'s `roleBullets` — the SWAAS, Arrow and Bharat lines are waiting on the candidate's own three-to-four true facts each, and nothing ships as placeholder.
+
 ## [1.6.0] — 2026-11-13
 
 ### Added

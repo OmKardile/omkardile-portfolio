@@ -37,3 +37,37 @@ export const resumeSummary =
   'React, Next.js, TypeScript, Node.js and Supabase — and designs them in Figma first. ' +
   'Shipped a retail ERP that runs a real store on web, Android and Windows, a café ' +
   'operations platform, and a real-time client e-commerce build.';
+
+/* The ATS keyword line, resume-only — the site's skill chips are curated
+   and deliberately narrow, but a resume parser looks for staples. Every
+   keyword here comes from the resume's own previous skills section (the
+   candidate's earlier artifact), so none of it is invented for the
+   parser's sake. */
+export const resumeSkills =
+  'JavaScript · HTML5 · CSS3 · REST APIs · Git · GitHub · MongoDB · MySQL · Firebase · ' +
+  'Express.js · React Native · Kotlin · Electron · Capacitor · Expo · PWA · SSR/SSG · ' +
+  'responsive design · authentication and role-based access · Postman · npm · Vercel · Render';
+
+/* Usage lines replace the repo-manifest file counts on the resume itself:
+   a recruiter reads what the product does for a real person, the site
+   keeps the scans. Keys are project slugs from site.ts. */
+export const proofUsage: Record<string, string> = {
+  ssshopee:
+    'Runs a real kirana store daily — billing at the counter, inventory and restock, customer credit ledgers, purchase and expense tracking.',
+  servepoint:
+    'Runs a café counter end to end — ordering with GST checkout, live kitchen queue, bill collection and the end-of-day close.',
+  patelnetworks:
+    'Shipped to a paying client — storefront with catalog and exclusive bundles, Razorpay checkout, GST invoicing with serial-tracked warranty.',
+};
+
+/* Experience bullets, waiting on the only input that cannot be
+   reconstructed: what the work actually was, in the candidate's own
+   words. Keys are the org names from site.ts's experience array. The
+   route renders bullets for an org only when facts exist here — no
+   placeholder sentences ship. */
+export const roleBullets: Record<string, string[]> = {
+  // 'SWAAS TECHNO, Khardi': [
+  //   '— facts pending from the candidate —',
+  // ],
+};
+

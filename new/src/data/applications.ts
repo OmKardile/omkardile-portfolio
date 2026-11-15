@@ -1,21 +1,22 @@
-/* /for/<slug> — per-application pages from [1.6.0]. One page per real
-   application target: three teardown notes on the company's product
+/* /for/<slug> — per-application pages from [1.6.0], tightened in [1.6.1].
+   One page per target: three teardown notes on the company's product
    (written from public documentation only — no internal info, no
    speculation about their roadmap), the three shipped proofs that match
-   the role, and the resume. The slug doubles as tracking: the URL sent
-   in the application tells you which one was opened.
+   the role, and the resume.
 
    The rule set, enforced by scripts/verify-for-pages.py:
-   - at most FIVE entries — these ride on applications actually going
-     out, and a stale page is worse than none;
+   - at most FIVE entries, specimens and real targets together;
    - every proof slug must exist in site.ts's projects (verified from
      their repos, so the page can't claim anything unshipped);
    - every page is noindex, outside the sitemap — unlisted is not
-     private, so the notes stay constructive and public-info only.
+     private, so the notes stay constructive and public-info only;
+   - the committed file claims nothing: the two seeds are SPECIMENS with
+     no sent dates, and real targets live in the gitignored
+     applications.private.json below — the application pipeline doesn't
+     ship in a public repo the colophon links as source. */
 
-   The two seeded targets were picked because their products overlap
-   what is already shipped and repo-verified here. Role titles are the
-   only per-application field to set when a real posting is attached. */
+import fs from 'node:fs';
+import path from 'node:path';
 
 export type ApplicationNote = {
   title: string;
@@ -27,11 +28,28 @@ export type Application = {
   company: string;
   product: string;
   role: string;
-  sent: string;
+  /** Specimens claim nothing: no sent date, no application. Real entries
+      set status: 'application' and the date the link went out. */
+  status?: 'specimen' | 'application';
+  sent?: string;
   fit: string;
   notes: ApplicationNote[];
   proofs: string[];
 };
+
+/** Real targets live in a gitignored JSON next to this file. Fresh
+    clones without it build fine; the /for pages then show only specimens. */
+function privateTargets(): Application[] {
+  try {
+    const raw = fs.readFileSync(
+      path.join(process.cwd(), 'src', 'data', 'applications.private.json'),
+      'utf8',
+    );
+    return JSON.parse(raw) as Application[];
+  } catch {
+    return [];
+  }
+}
 
 export const applications: Application[] = [
   {
@@ -39,7 +57,7 @@ export const applications: Application[] = [
     company: 'Zoho',
     product: 'Zoho Books',
     role: 'Frontend Engineer / UI-UX Designer',
-    sent: '2026-11-13',
+    status: 'specimen',
     fit: 'The work here is invoicing, GST and small-retail money flows — which is what the SSShopee ERP ships for a real store: POS with barcode scanning, GST receipts, udhar ledgers, serial-tracked warranty. Built the domain first, in production, before ever applying to build it at scale.',
     notes: [
       {
@@ -65,7 +83,7 @@ export const applications: Application[] = [
     company: 'Razorpay',
     product: 'the Razorpay Dashboard',
     role: 'Frontend Engineer / UI-UX Designer',
-    sent: '2026-11-13',
+    status: 'specimen',
     fit: 'Payments dashboards live or die on trust: money shown accurately, settled money distinguished from pending money, and reconciliation a merchant can do alone. PatelNetworks runs Razorpay checkout inside a real client storefront with GST invoicing, and SSShopee tracks every rupee of purchases, income and expenses for a real shop — the merchant side of the same table.',
     notes: [
       {
@@ -86,4 +104,5 @@ export const applications: Application[] = [
     ],
     proofs: ['patelnetworks', 'ssshopee', 'servepoint'],
   },
+  ...privateTargets(),
 ];

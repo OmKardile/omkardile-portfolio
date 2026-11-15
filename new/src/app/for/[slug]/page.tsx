@@ -65,14 +65,19 @@ export default async function ForPage({
     <section className="section container" aria-labelledby="for-title">
       <div style={{ maxWidth: '42rem', margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', alignItems: 'baseline' }}>
-          <p style={{ ...label, margin: 0 }}>UNLISTED · FOR ONE READER</p>
-          <p style={{ ...label, margin: 0 }}>SENT {a.sent}</p>
+          <p style={{ ...label, margin: 0 }}>
+            {a.status === 'application' ? 'UNLISTED · FOR ONE READER' : 'SPECIMEN · NOT AN APPLICATION · UNLISTED'}
+          </p>
+          <p style={{ ...label, margin: 0 }}>
+            {a.status === 'application' && a.sent ? `SENT ${a.sent}` : 'NO DATE — CLAIMS NOTHING'}
+          </p>
         </div>
         <hr style={RULE} />
         <h1 id="for-title" style={{ fontSize: '1.7rem', letterSpacing: '-0.01em', margin: 0 }}>
           For {a.company}
         </h1>
         <p style={{ color: 'var(--muted)', margin: '0.4rem 0 0', fontSize: '0.95rem' }}>
+          {a.status === 'application' ? '' : 'A specimen page: the format a real application gets, seeded on products this work already overlaps. '}
           {a.role} · three notes on {a.product}, written from its public documentation, and the
           three shipped proofs that match the role.
         </p>
