@@ -171,8 +171,11 @@ export default function ReceiptPage() {
             the ledger · /now
           </a>{' '}
           ·{' '}
-          <a href="/resume.pdf" data-hint="The resume">
-            the resume · /resume.pdf
+          <a
+            href="https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=drive_link"
+            data-hint="The resume"
+          >
+            the resume · Drive
           </a>{' '}
           ·{' '}
           <a href="/library" data-hint="The library">

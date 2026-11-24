@@ -85,7 +85,7 @@ with sync_playwright() as p:
               and "CLAIMS NOTHING" in body
               and not re.search(r"SENT \d{4}", body)
               and "verified from the repo manifest" in body
-              and "/resume.pdf" in body,
+              and "drive.google.com" in html,
               f"noindex={ok_robots}")
         if slug == entries[0]:
             page.screenshot(path=str(EVIDENCE / "for-zoho-books.png"), full_page=True)

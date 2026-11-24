@@ -29,7 +29,13 @@ export async function GET() {
   lines.push(`- Site: ${site.url}`);
   lines.push('- GitHub: https://github.com/OmKardile');
   lines.push('- LinkedIn: https://www.linkedin.com/in/omkar-kardile-49501b213/');
-  lines.push('- Resume: ' + url('/resume.pdf') + ' (print route: ' + url('/resume') + ')');
+  lines.push(
+    '- Resume: https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=drive_link (print route: ' +
+      url('/resume') +
+      ', PDF copy: ' +
+      url('/resume.pdf') +
+      ')',
+  );
   lines.push('');
   lines.push(`## Builds (${projects.length + 1}, every stack verified from the repo manifest)`);
   lines.push('');

@@ -75,14 +75,17 @@ export default function NowPage() {
               </span>
             </h3>
             <p style={{ color: 'var(--muted)', marginBlock: '0.4rem', maxWidth: '36rem' }}>
-              Version [1.6.1] just shipped: the resume is parser-safe now — plain headings
-              that extract whole instead of splitting into S UMMA R Y, inline role lines
-              that don&apos;t glue words together, usage lines instead of file counts, no
-              phone on the printed page, and a Word copy built from the same fields for the
-              portals that ask for one. The /for pages [1.6.0] added stay specimens until
-              real applications go out, and the real targets live in a gitignored file —
-              the pipeline doesn&apos;t ship in a public repo. The full run, version by
-              version, is the{' '}
+              Version [1.6.2] just shipped: the Resume button opens the Google Drive file
+              again — the candidate&apos;s own call, back to the destination the portfolio
+              carried before [1.5.4] moved it on-site. The on-site /resume.pdf and the
+              print route stay for parsers, rendered from the same data files, so the two
+              copies can&apos;t disagree. The parser-safety pass from [1.6.1] — plain
+              headings that extract whole instead of splitting into S UMMA R Y, inline role
+              lines that don&apos;t glue words together, no phone on the printed page, a
+              Word copy built from the same fields — still stands underneath. The /for pages
+              [1.6.0] added stay specimens until real applications go out, and the real
+              targets live in a gitignored file — the pipeline doesn&apos;t ship in a public
+              repo. The full run, version by version, is the{' '}
               <a
                 href="https://github.com/OmKardile/omkardile-portfolio/blob/main/new/CHANGELOG.md"
                 target="_blank"

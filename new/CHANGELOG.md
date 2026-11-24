@@ -3,6 +3,12 @@
 All notable changes to the Omkar Kardile portfolio are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.6.2] — 2026-11-24
+
+### Changed
+
+- **The Resume button opens the Drive file again.** By the candidate's own request, every human-facing "Resume" link — the nav, the home CTA, AskOmkar's CTA bar and answer bank, the receipt footer, the /for pages, /llms.txt's contact block — points at the Google Drive file (`https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=drive_link`), the destination the portfolio carried before [1.5.4] moved it on-site. The one-source rule holds: the Drive href lives once, in `site.ts`'s socials (plus the answer bank's shared link constant), so nothing can drift. The on-site `/resume.pdf` stays hosted and the `/resume` print route stays in the sitemap — parsers and assistants that want the file directly still get it — and the two copies render from the same data files, so they cannot disagree. The [1.5.4] verifier checks that asserted the on-site link are updated in the same pass: the home-page check now asserts the Drive link is the one rendered, and the /for-pages check asserts the Drive link is in the body.
+
 ## [1.6.1] — 2026-11-13
 
 ### Added

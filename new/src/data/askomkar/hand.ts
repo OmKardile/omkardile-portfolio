@@ -39,7 +39,8 @@ export type FaqEntry = {
 const L = {
   email: { href: 'mailto:omkarkardileatwork@gmail.com', label: 'Email Omkar' },
   resume: {
-    href: '/resume.pdf',
+    // The Drive file, back by request [1.6.2] — same PDF as the on-site copy.
+    href: 'https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=drive_link',
     label: 'Open resume',
   },
   github: { href: 'https://github.com/OmKardile', label: 'GitHub profile' },

@@ -47,7 +47,7 @@ check("home: 5 last-commit chips rendered", len(re.findall(r"last commit [A-Za-z
 check("home: work note visitor-voiced", "Every link opens the real thing" in ht and "verified destinations" not in ht)
 check("home: learning chips marked", "UX Research · learning" in ht and "Native iOS · learning" in ht)
 check("home: learning legend", "evidence pending, the receipts land as they ship" in ht)
-check("home: resume hosted on-site", "/resume.pdf" in h and "drive.google.com" not in ht)
+check("home: resume links to the Drive file", "/resume.pdf" not in h and "drive.google.com" in h)
 check("home: og.png self card", 'property="og:image"' in h and "/og.png" in h)
 
 # ------------------------------------------------------- case studies

@@ -480,7 +480,11 @@ export function AskOmkar() {
             <a href="https://www.linkedin.com/in/omkar-kardile-49501b213/" target="_blank" rel="noopener noreferrer">
               LinkedIn
             </a>
-            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=drive_link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Resume
             </a>
           </div>

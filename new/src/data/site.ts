@@ -43,7 +43,10 @@ export const site = {
     { label: 'GitHub', href: 'https://github.com/OmKardile' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/omkar-kardile-49501b213/' },
     { label: 'Ko-fi', href: 'https://ko-fi.com/whysoserious_omik' },
-    { label: 'Resume', href: '/resume.pdf' },
+    // The Drive link, back by request [1.6.2]: the on-site /resume.pdf stays
+    // hosted for parsers and /llms.txt, but every "Resume" button people click
+    // opens the Drive file — the previous, canonical destination.
+    { label: 'Resume', href: 'https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=drive_link' },
   ],
   // Interactive Liquid Glass apps live in the old codebase. When they get a new
   // home, change this one constant — every app link derives from it.

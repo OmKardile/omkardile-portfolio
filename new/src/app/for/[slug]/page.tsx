@@ -129,8 +129,11 @@ export default async function ForPage({
 
         <p style={{ margin: 0, fontSize: '0.95rem' }}>
           The resume is{' '}
-          <a href="/resume.pdf" data-hint="The resume">
-            /resume.pdf
+          <a
+            href="https://drive.google.com/file/d/19PxUGcMTALOfNKFbVObd4E0xLKVGGWkZ/view?usp=drive_link"
+            data-hint="The resume"
+          >
+            on Google Drive
           </a>{' '}
           — one page, rendered from the same data files this site renders from. The forwardable
           version of the proofs is{' '}

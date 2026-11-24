@@ -192,5 +192,5 @@ public/
   work/relay/                   # Relay case study: cover, diagrams/, screens/
   case-studies/                 # 6 Liquid Glass case study PDFs
   og.png                        # + og/ — one 1200x630 share card per route (scripts/gen-og-images.py)
-  resume.pdf                    # the resume, hosted on-site (was a Google Drive link)
+  resume.pdf                    # the parser-safe PDF copy; the Resume links point at the Google Drive file (site.ts socials, [1.6.2])
 ```
